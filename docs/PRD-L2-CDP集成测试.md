@@ -136,10 +136,10 @@ L1 纯函数单元测试（100 个）已完成并全部通过，覆盖了 guards
 - 4.1 剩余天数=0 触发 Phase 2
 - 4.2 Phase 2 冻结 NPC 变量
 
-**Phase 5: 非法类型注入（3 个，WARN）**
-- 5.1 null 值输入
-- 5.2 字符串数字输入
-- 5.3 Infinity 输入
+**Phase 5: 脏数据类型强制转换（3 个，PASS）**
+- 5.1 null → 0
+- 5.2 string 999 → 999
+- 5.3 Infinity → 100
 
 ### 已有测试基础
 
@@ -187,6 +187,8 @@ L1 纯函数单元测试（100 个）已完成并全部通过，覆盖了 guards
 | waitForStableState | 比固定 sleep 更快更可靠 |
 | Phase 5 标记 WARN | 非法类型行为需实际运行确认 |
 | 原生 WebSocket | Node v25 内置，零依赖 |
+| coerceNumeric 脏数据处理 | replaceMvuData 绕过 Zod coerce，需显式处理 |
+| __TEST_applyValidatedUpdate 测试管线 | 直接调用 validateVariables，绕过事件系统 |
 
 ### 产出文件
 
@@ -201,3 +203,67 @@ L1 纯函数单元测试（100 个）已完成并全部通过，覆盖了 guards
 2. 运行测试，根据结果修复发现的问题
 3. （P2）JSON 报告输出 + CI 集成
 4. （P3）Headless 自动启动 + Fuzz Testing
+
+---
+
+## 关键发现 — replaceMvuData 行为
+
+在 L2 测试实现过程中发现的核心架构问题：
+
+- Mvu.replaceMvuData() 是低级数据替换 API，**不触发** VARIABLE_UPDATE_ENDED 事件
+- 这是 MVU 框架设计，不是 bug（事件触发有性能开销，某些场景需要静默更新）
+- 导致最初 11/21 测试失败的根因：校验函数从未被调用
+- 解决方案：创建 __TEST_applyValidatedUpdate 测试管线，直接调用 alidateVariables
+
+### 数据流路径对比
+
+| 路径 | 方式 | 是否触发校验 |
+|------|------|----------|
+| AI 输出 → parseMessage → replaceMvuData | 正常消息流 | ✅ 触发 |
+| replaceMvuData (直接调用) | 低级 API | ❌ 不触发 |
+| __TEST_applyValidatedUpdate | L2 测试管线 | ✅ 直接调用 |
+## __TEST_applyValidatedUpdate 测试管线
+
+在 index.ts 中暴露的统一测试入口：
+
+- 接收 [path, value] pairs，描述测试意图
+- 内部统一执行 normalize → validate → replace
+- 返回 { stat_data, trace }：最终状态 + 规则命中日志
+- 通过 CDP iframe context 调用（Runtime.evaluate({contextId})）
+- 不修改 validate.ts，测试管线完全在 index.ts 中实现
+## coerceNumeric 脏数据处理
+
+在 validateVariables 入口添加显式类型强制转换，处理 AI 原始数据：
+
+| 输入 | 输出 | 说明 |
+|------|------|------|
+| null | 0 | 空值 → min |
+| NaN | 0 | 无效数字 → min |
+| Infinity | max(100) | 无穷大 → clamp 上限 |
+| 字符串 999 | 999 | Number() 转换，再 clamp |
+| 非数字字符串 abc | 0 | 无法解析 → min |
+
+灵石上限为 Infinity(无上限)，其他字段均有明确上限。
+
+原因：replaceMvuData 绕过 Zod z.coerce，AI 原始数据未经清洗即进入 validateVariables。
+## dist/backend_validate.js 重建流程
+
+webpack 不编译此文件，需用 esbuild 手动重建：
+
+1. esbuild 打包：npx esbuild src/.../index.ts --bundle --format=esm --platform=browser --external:lodash --outfile=dist/backend_validate.js --target=esnext
+2. Patch import：将 import 替换为 const _2 = window._
+3. Patch export：移除 export 关键字
+4. 浏览器缓存：CDP Page.reload({ignoreCache: true}) 刷新
+
+## 最终测试结果
+
+### L1 单元测试
+
+- 60 validate.test.ts + 6 dirty data + 40 guards.test.ts = 106/106 PASS
+- 新增 6 个脏数据测试：null/NaN/Infinity/字符串数字/非数字字符串/灵石字符串
+
+### L2 CDP 集成测试
+
+- 21/21 PASS，0 FAIL，0 WARN
+- Phase 5 从 WARN 升级为 PASS（coerceNumeric 使行为可预测）
+- Git 4 commits，完整历史可追溯
