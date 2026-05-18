@@ -613,3 +613,56 @@ describe('Edge cases', () => {
     expect(() => validateVariables(new_data, old_data)).not.toThrow();
   });
 });
+
+// ══════════════════════════════════════════
+// Scenario: dirty data type coercion
+// ══════════════════════════════════════════
+describe('Scenario: dirty data type coercion', () => {
+  it('null 好感度 → coerced to 0', () => {
+    const old_data = makeData();
+    const new_data = makeData();
+    (new_data.NPC as any)['白芷'].好感度 = null;
+    validateVariables(new_data, old_data);
+    expect(new_data.NPC['白芷'].好感度).toBe(0);
+  });
+
+  it('string "999" 好感度 → coerced to 100 (clamp)', () => {
+    const old_data = makeData();
+    const new_data = makeData();
+    (new_data.NPC as any)['白芷'].好感度 = "999";
+    validateVariables(new_data, old_data);
+    expect(new_data.NPC['白芷'].好感度).toBe(100);
+  });
+
+  it('Infinity 好感度 → coerced to 100', () => {
+    const old_data = makeData();
+    const new_data = makeData();
+    (new_data.NPC as any)['白芷'].好感度 = Infinity;
+    validateVariables(new_data, old_data);
+    expect(new_data.NPC['白芷'].好感度).toBe(100);
+  });
+
+  it('NaN 好感度 → coerced to 0', () => {
+    const old_data = makeData();
+    const new_data = makeData();
+    (new_data.NPC as any)['白芷'].好感度 = NaN;
+    validateVariables(new_data, old_data);
+    expect(new_data.NPC['白芷'].好感度).toBe(0);
+  });
+
+  it('non-numeric string "abc" 好感度 → coerced to 0', () => {
+    const old_data = makeData();
+    const new_data = makeData();
+    (new_data.NPC as any)['白芷'].好感度 = "abc";
+    validateVariables(new_data, old_data);
+    expect(new_data.NPC['白芷'].好感度).toBe(0);
+  });
+
+  it('string "50" 灵石 → coerced to 50', () => {
+    const old_data = makeData();
+    const new_data = makeData();
+    (new_data.系统 as any).灵石 = "50";
+    validateVariables(new_data, old_data);
+    expect(new_data.系统.灵石).toBe(50);
+  });
+});

@@ -167,11 +167,11 @@ async function main(){
     R.push({id:'4.2',name:'Phase 2 freeze',pass:v===0,actual:v,expected:0});
   });
 
-  // ═══ Phase 5: Illegal Types (WARN) ═══
-  console.log('\n--- Phase 5: Illegal ---');
-  await run('5.1','null',async()=>{await evalCtx(iframeCtx,'__L2_restore()');await evalCtx(iframeCtx,'__L2_writeVar("NPC.\u767d\u82b7.\u597d\u611f\u5ea6",null)');const v=await evalCtx(iframeCtx,'__L2_readVar("NPC.\u767d\u82b7.\u597d\u611f\u5ea6")');R.push({id:'5.1',name:'null',pass:true,actual:v,expected:'observed',isWarn:true});},true);
-  await run('5.2','string num',async()=>{await evalCtx(iframeCtx,'__L2_restore()');await evalCtx(iframeCtx,'__L2_writeVar("\u7cfb\u7edf.\u7075\u77f3","999")');const v=await evalCtx(iframeCtx,'__L2_readVar("\u7cfb\u7edf.\u7075\u77f3")');R.push({id:'5.2',name:'string num',pass:true,actual:v,expected:'observed',isWarn:true});},true);
-  await run('5.3','Infinity',async()=>{await evalCtx(iframeCtx,'__L2_restore()');await evalCtx(iframeCtx,'__L2_writeVar("NPC.\u767d\u82b7.\u597d\u611f\u5ea6",Infinity)');const v=await evalCtx(iframeCtx,'__L2_readVar("NPC.\u767d\u82b7.\u597d\u611f\u5ea6")');R.push({id:'5.3',name:'Infinity',pass:true,actual:v,expected:'observed',isWarn:true});},true);
+  // ═══ Phase 5: Dirty Data Coercion ═══
+  console.log('\n--- Phase 5: Dirty Data ---');
+  await run('5.1','null→0',async()=>{await evalCtx(iframeCtx,'__L2_restore()');const raw=await evalCtx(iframeCtx,'(async()=>JSON.stringify(await __TEST_applyValidatedUpdate([["NPC.白芷.好感度",null]])))()');const r=JSON.parse(raw);const v=r.stat_data.NPC['白芷']['好感度'];R.push({id:'5.1',name:'null→0',pass:v===0,actual:v,expected:0});});
+  await run('5.2','string→999',async()=>{await evalCtx(iframeCtx,'__L2_restore()');const raw=await evalCtx(iframeCtx,'(async()=>JSON.stringify(await __TEST_applyValidatedUpdate([["系统.灵石","999"]])))()');const r=JSON.parse(raw);const v=r.stat_data['系统']['灵石'];R.push({id:'5.2',name:'string→999',pass:v===999,actual:v,expected:999});});
+  await run('5.3','Infinity→100',async()=>{await evalCtx(iframeCtx,'__L2_restore()');const raw=await evalCtx(iframeCtx,'(async()=>JSON.stringify(await __TEST_applyValidatedUpdate([["NPC.白芷.好感度",Infinity]])))()');const r=JSON.parse(raw);const v=r.stat_data.NPC['白芷']['好感度'];R.push({id:'5.3',name:'Infinity→100',pass:v===100,actual:v,expected:100});});
 
   // Report
   report(R);

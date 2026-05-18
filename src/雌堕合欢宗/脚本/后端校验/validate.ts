@@ -10,6 +10,7 @@ const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as co
 function coerceNumeric(value: any, max: number = 100, min: number = 0): number {
   if (value === null || value === undefined) return min;
   if (typeof value === 'number') {
+    if (isNaN(value)) return min;
     if (!isFinite(value)) return max;
     return Math.max(min, Math.min(max, value));
   }
