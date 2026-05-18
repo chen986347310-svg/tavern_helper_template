@@ -1,0 +1,1214 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2026-03-01T19:10:44+08:00" />
+    <title>进阶技巧 &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/" />
+    <link rel="icon" href="../../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../../search/" />
+    <link rel="next" title="附.Cursor 实用功能" href="../cursor实用功能/" />
+    <link rel="prev" title="实际编写" href="../实际编写/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-03-01 19:10:44"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../络络/作品集/">作品集</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../络络/教程/">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/">手写 MVU zod 变量卡</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/变量提示词/">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/脚本控制变量/">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/状态栏/">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../络络/教程/生成立绘、表情差分和cg/">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../提示词个人写法/">提示词个人写法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/额外输出格式/">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/多角色/">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/">实时编写角色卡、世界书或预设</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/使用说明/">使用说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/用法提示/">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">实时编写前端界面或脚本</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../环境准备/">环境准备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../阅读示例/">阅读示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../实际编写/">实际编写</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>进阶技巧</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">常用资源网站</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">免费字体</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">免费图标</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cdn">免费 CDN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">颜色对比度检查器</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">前端界面正则的推荐写法</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">提高正则容错率</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">避免渲染卡顿</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#xxx">怎么实现xxx功能</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">酒馆助手有哪些功能?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#figma-ppt">用 figma 像做 PPT 一样设计界面</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stscript">执行酒馆的 /STScript 命令</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jquery">在脚本中用 jquery 修改酒馆页面、添加新界面等</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">制作流式或同层界面</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">同层前端界面</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">流式楼层界面</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">对发送出的提示词进行修改</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">控制世界书条目的激活</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">发布会自动更新的前端界面、脚本或美化样式</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#github-jsdelivr">利用 github 和 jsdelivr</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cloudflare-r2">利用 cloudflare r2</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">发布会自动更新角色卡</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">导入文件文本内容</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">与外部应用程序通信</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">调整模板配置</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">自定义项目配置</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vue">使用 vue 编写前端界面</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">允许代码分块</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">混淆代码</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">不自动打包代码</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tailwindcss">自定义 tailwindcss 配置</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>进阶技巧<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>请选择你感兴趣的部分进行阅读.</p>
+<section id="id2">
+<h2>常用资源网站<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>免费字体<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>你可以从 <a class="reference external" href="https://fonts.zeoseven.com/">ZeoSeven Fonts</a> 中找到很多免费字体.</p>
+<p>以 <code class="docutils literal notranslate"><span class="pre">Sarasa</span> <span class="pre">Gothic</span> <span class="pre">更纱黑体</span> <span class="pre">Mono</span></code> 为例, 我们搜索到它, 进入它的页面, 点击右上角的<span class="menuselection">嵌入到 Web 项目</span>即会跳转到对应内容, 选择<span class="menuselection">常规 CSS</span> 然后点击复制即可.</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%85%8D%E8%B4%B9%E5%AD%97%E4%BD%93.png" src="../../../../_images/%E5%85%8D%E8%B4%B9%E5%AD%97%E4%BD%93.png" />
+</figure>
+</section>
+<section id="id4">
+<h3>免费图标<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>你可以从 <a class="reference external" href="https://fontawesome.com/">FontAwesome</a> 中找到很多免费图标. 它们在前端界面中直接可用.</p>
+</section>
+<section id="cdn">
+<h3>免费 CDN<a class="headerlink" href="#cdn" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://www.jsdelivr.com/">jsdelivr</a> 为所有 npm 库和 github 文件提供了 CDN 支持, 你可以直接在脚本或界面中引用它们.</p>
+<p>需要注意的是, 你应该用 <code class="docutils literal notranslate"><span class="pre">https://testingcf.jsdelivr.net</span></code> 这个国内也能访问的镜像, 而不是直接用 <code class="docutils literal notranslate"><span class="pre">https://cdn.jsdelivr.net</span></code>.</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>如果是需要为项目加入第三方库, 推荐直接通过 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">add</span> <span class="pre">第三方库</span></code> 来添加它们, 模板文件夹已经配置好会在打包时将第三方库转换为 jsdelivr 链接, 从而避免在多个脚本或界面中重复打包它们, 具体见下文 &quot;调整模板配置&quot; 部分.</p>
+</div>
+</section>
+<section id="id5">
+<h3>颜色对比度检查器<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>无论界面设计成什么样, 你都应该保证界面的可读性.</p>
+<p>其中重要的一点是, 保证背景颜色和文字颜色之间的对比足够强, 让玩家能看清楚文字. 为此你可以使用 <a class="reference external" href="https://color.adobe.com/zh/create/color-contrast-analyzer">Adobe 颜色对比度检查器</a>.</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E9%A2%9C%E8%89%B2%E5%AF%B9%E6%AF%94%E5%BA%A6%E6%A3%80%E6%9F%A5%E5%99%A8.png" src="../../../../_images/%E9%A2%9C%E8%89%B2%E5%AF%B9%E6%AF%94%E5%BA%A6%E6%A3%80%E6%9F%A5%E5%99%A8.png" />
+</figure>
+</section>
+</section>
+<section id="id6">
+<h2>前端界面正则的推荐写法<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<section id="id7">
+<h3>提高正则容错率<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<p>你的前端界面可能对应于 AI 很复杂的输出格式, 但这些格式应该由前端界面的代码通过 <code class="docutils literal notranslate"><span class="pre">getChatMessages</span></code> 获取楼层消息内容后处理, 而不应该在酒馆正则里拿 <code class="docutils literal notranslate"><span class="pre">$1</span></code> 等处理.</p>
+<p><strong>前端界面正则唯一要做的是定位前端界面应该在的位置, 而不是处理输出数据</strong>.</p>
+<p>例如, 如果你的输出格式是: (并不是说我推荐这种格式)</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;status&gt;
+心情:→(平静通话)
+衣着:居家长T恤
+角色阶段:暗中观察
+位置:自己房间
+行动:结束与user通话
+下一步行动:准备就寝
+身体:及腰银发散落,深紫色的眼眸中带着一丝遗憾,白皙的肌肤在月光下泛着珍珠般的光泽,散发着淡淡的茶香
+内心:心爱找他有什么事呢...不知道他会不会陪我过生日...
+求签问卦:月下逢君意/花开并蒂时/缘定三生后
+&lt;/status&gt;
+</pre></div>
+</div>
+<p>前端界面正则只需要定位这一段文本即可:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">脚本名称</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">界面</span><span class="p p-Indicator">]</span><span class="l l-Scalar l-Scalar-Plain">状态栏</span>
+<span class="hll"><span class="nt">查找正则表达式</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;status&gt;.*&lt;/status&gt;</span><span class="w"> </span><span class="c1"># 正则不需要在意里面具体是什么</span>
+</span><span class="nt">替换为</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">前端界面的 html 代码块</span>
+<span class="nt">作用范围</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">用户输入</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI输出</span>
+<span class="nt">短暂</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅格式显示</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅格式提示词</span>
+</pre></div>
+</div>
+<p>而在代码中, 要求 AI 使用 <code class="docutils literal notranslate"><span class="pre">getChatMessages</span></code> 获取整条消息, 然后告诉 AI 对应的数据是什么格式:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="c1">// 获取整条消息</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">chat_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getChatMessages</span><span class="p">(</span><span class="nx">getCurrentMessageId</span><span class="p">())[</span><span class="mf">0</span><span class="p">];</span>
+
+<span class="c1">// AI 按照你给定的格式自行捕获数据... 例如这里是 `&lt;status&gt;(.*)&lt;/status&gt;`</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">chat_message</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/&lt;status&gt;(.*)&lt;\/status&gt;/</span><span class="p">);</span>
+
+<span class="cm">/* AI 继续拆分数据里的各段文字, 从而在前端界面上使用 */</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h3>避免渲染卡顿<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<p>前端界面的渲染过程为: 酒馆正则将内容替换成代码块并渲染出来 -&gt; 酒馆助手将代码块替换为前端界面 (仅需几毫秒) -&gt; 前端界面按代码加载 (取决于网络和设备性能).</p>
+<p>也就是说, <strong>其实酒馆助手负责的部分仅需几毫秒, 前端界面的加载速度完全取决于玩家的网络、设备性能和……&quot;酒馆正则将内容替换成代码块并渲染出来&quot;.</strong> <br />
+酒馆渲染代码块这一过程是不可避免的! 而且, 哪怕酒馆助手已经优化了其中一个环节, 它还是非常卡——前端界面代码越多越卡!</p>
+<p>为此, 你可以像下文<a class="reference internal" href="#id15"><span class="std std-ref">发布会自动更新的前端界面、脚本或美化样式</span></a>那样, 将 html 转换为链接, 而正则代码块里只加载链接. 这样酒馆需要渲染的代码块内容没多少, 自然不会卡顿.</p>
+</section>
+</section>
+<section id="xxx">
+<h2>怎么实现xxx功能<a class="headerlink" href="#xxx" title="Link to this heading">#</a></h2>
+<section id="id9">
+<h3>酒馆助手有哪些功能?<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<p>本编写模板有一个 <code class="docutils literal notranslate"><span class="pre">&#64;types</span></code> 文件夹, 其内是酒馆助手和酒馆的接口类型定义, AI 可以据此了解能对酒馆进行什么操作.</p>
+<p>不过,</p>
+<ul class="simple">
+<li><p>AI 的注意力是有限的, 它也许没注意到酒馆助手直接支持某个功能, 而把代码复杂化;</p></li>
+<li><p>由于你不知道酒馆助手支持某个功能, 你可能完全没想到能实现某件事情. (例如, 你可以在脚本里用一行代码实现角色卡绑定预设!)</p></li>
+</ul>
+<p>因此, 我建议你也通过<a class="reference external" href="https://n0vi028.github.io/JS-Slash-Runner-Doc/guide/%E5%85%B3%E4%BA%8E%E9%85%92%E9%A6%86%E5%8A%A9%E6%89%8B/%E4%BB%8B%E7%BB%8D.html">酒馆助手文档</a>或直接阅读 <code class="docutils literal notranslate"><span class="pre">&#64;types</span></code> 文件来了解一下酒馆助手的功能.</p>
+</section>
+<section id="figma-ppt">
+<h3>用 figma 像做 PPT 一样设计界面<a class="headerlink" href="#figma-ppt" title="Link to this heading">#</a></h3>
+<p>figma 是专业的前端原型设计软件, 它预制了大量模板 (包括很多大厂的原生设计). 通过它, 你可以像做 PPT 一样自己设计界面而不必祈祷 AI 审美足够好.</p>
+<figure  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/figma.mp4" type="video/mp4"></video><figcaption class="align-center"><p style="text-align: left; display:inline-block"><span class="caption-text">在 figma 中用预制组件像做 PPT 一样设计界面</span></p></figcaption></figure><p>在设计完成后, 你可以配置 figma MCP 让 AI 直接按照你设计好的界面编写实际代码, 具体配置方法可能因时间而变而且很简单, 因此请自行研究或阅读<a class="reference external" href="https://discord.com/channels/1134557553011998840/1372487825471176805/1373431639123693659">帖子原帖的旧教程部分</a>. 它不仅配置简单, 使用也很简单, 例如:</p>
+<figure class="align-default" id="id25">
+<img alt="../../../../_images/figma%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8.png" src="../../../../_images/figma%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8.png" />
+<figcaption>
+<p><span class="caption-text">像 PPT 一样做好设计后, 发给 AI 让它实际编写</span><a class="headerlink" href="#id25" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id26">
+<img alt="../../../../_images/figma%E9%85%92%E9%A6%86%E7%BB%93%E6%9E%9C.png" src="../../../../_images/figma%E9%85%92%E9%A6%86%E7%BB%93%E6%9E%9C.png" />
+<figcaption>
+<p><span class="caption-text">编写结果</span><a class="headerlink" href="#id26" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>此外, figma 也推出了 AI 功能. 由于它是专业前端原型设计软件, 它的 AI 设计出的界面一般比其他 AI 好看许多.</p>
+</section>
+<section id="stscript">
+<h3>执行酒馆的 /STScript 命令<a class="headerlink" href="#stscript" title="Link to this heading">#</a></h3>
+<p>你可以通过 <code class="docutils literal notranslate"><span class="pre">triggerSlash</span></code> 或 <code class="docutils literal notranslate"><span class="pre">SillyTavern.executeSlashCommandsWithOptions</span></code> 来执行酒馆的 STScript 命令, 如触发 AI 回复 (<code class="docutils literal notranslate"><span class="pre">triggerSlash('/trigger')</span></code>)、刷新网页 (<code class="docutils literal notranslate"><span class="pre">triggerSlash('/reload-page')</span></code>) 等.</p>
+<p>编写模板已经在 slash_command.txt 中提供了命令列表给 AI; 如果需要人工查询, 请使用<a class="reference external" href="https://rentry.org/sillytavern-script-book">命令手册</a></p>
+</section>
+<section id="jquery">
+<h3>在脚本中用 jquery 修改酒馆页面、添加新界面等<a class="headerlink" href="#jquery" title="Link to this heading">#</a></h3>
+<p>在脚本中, 你可以用 jquery 来</p>
+<ul class="simple">
+<li><p>修改酒馆网页现有元素, 酒馆助手内置库中的<a class="reference internal" href="../../../作品集/"><span class="doc">预设条目更多按钮、预设防误触</span></a>等脚本.</p></li>
+<li><p>添加新界面, 如<a class="reference internal" href="../../../../络络/作品集/"><span class="doc">日记络络中的流式 Galgame 界面</span></a>、<a class="reference internal" href="../../../作品集/"><span class="doc">输入助手、文生图、行动选择框、压缩相邻消息</span></a>等脚本.</p></li>
+</ul>
+<p>也就是说, 给酒馆现在的界面做额外功能、悬浮框、外置手机、流式界面、完全去掉酒馆楼层换成你自己的界面等等, 都能脚本实现.</p>
+<p><strong>编写模板里的 AI 直接会这些</strong>, 而我也在编写模板里提供了 <code class="docutils literal notranslate"><span class="pre">createScriptIdDiv</span></code> 和 <code class="docutils literal notranslate"><span class="pre">createScriptIdIframe</span></code> 方便制作这些功能.</p>
+</section>
+<section id="id10">
+<h3>制作流式或同层界面<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<p><strong>编写模板里的 AI 直接会使用以下列出的两种方案.</strong> 例如, 你可以直接要求:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>制作一个流式楼层界面，它使得楼层只会显示最新一段文本.
+</pre></div>
+</div>
+<figure  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E6%B5%81%E5%BC%8F%E7%95%8C%E9%9D%A2.mp4" type="video/mp4"></video><figcaption class="align-center"><p style="text-align: left; display:inline-block"><span class="caption-text">日记络络中的流式 Galgame 界面</span></p></figcaption></figure><section id="id11">
+<h4>同层前端界面<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
+<p>要简单做流式传输, 我们使用酒馆助手的前端界面, 在其中设计<span class="menuselection">发送</span>按钮来触发酒馆助手的<code class="docutils literal notranslate"><span class="pre">generate</span></code>函数.</p>
+<p>也就是说:</p>
+<ul class="simple">
+<li><p>玩家只在一个前端界面内进行游玩</p></li>
+<li><p>对于玩家的输入, 我们通过前端助手的 <code class="docutils literal notranslate"><span class="pre">generate</span></code>、<code class="docutils literal notranslate"><span class="pre">generateRaw</span></code> 命令自行要求 ai 回复.</p></li>
+<li><p>如果需要流式显示, 我们监听 <code class="docutils literal notranslate"><span class="pre">iframe_events.STREAM_TOKEN_RECEIVED_FULLY</span></code> 事件来获取流式传输文本.</p></li>
+<li><p>我们依旧使用酒馆的楼层机制记录剧情: 将前端界面正则调成最大深度 <code class="docutils literal notranslate"><span class="pre">0</span></code>, 然后用 <code class="docutils literal notranslate"><span class="pre">setChatMessages</span></code>、<code class="docutils literal notranslate"><span class="pre">createChatMessages</span></code>、<code class="docutils literal notranslate"><span class="pre">deleteChatMessages</span></code> 等函数的 <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">refresh:</span> <span class="pre">'none'</span> <span class="pre">}</span></code> 参数来修改消息楼层但不刷新显示. 由于不会刷新显示, 玩家可以继续游玩你的界面, 但剧情记录等又能直接利用酒馆的楼层机制, <strong>你不需要写一堆额外的代码来制作记录剧情功能</strong>.</p></li>
+</ul>
+</section>
+<section id="id12">
+<h4>流式楼层界面<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
+<p>前面提到我们可以在酒馆助手脚本中用 jquery 修改页面元素, 那么我们完全可以把酒馆的楼层显示隐藏起来, 自己在它原本的位置制作一个楼层显示:</p>
+<ul class="simple">
+<li><p>监听 <code class="docutils literal notranslate"><span class="pre">tavern_events.MESSAGE_SEND</span> <span class="pre">-&gt;</span> <span class="pre">message_id</span></code>, 我们可以知道玩家要求了酒馆调用 AI 生成;</p></li>
+<li><p>监听 <code class="docutils literal notranslate"><span class="pre">tavern_events.STREAM_TOKEN_RECEIVED</span> <span class="pre">-&gt;</span> <span class="pre">text</span></code>, 我们可以获取流式传输文本;</p></li>
+<li><p>监听 <code class="docutils literal notranslate"><span class="pre">tavern_events.MESSAGE_RECEIVED</span> <span class="pre">-&gt;</span> <span class="pre">message_id</span></code>, 我们可以知道酒馆结束了回复.</p></li>
+</ul>
+<p>这样一来, 我们可以自己获取流式传输文本, 自己控制该怎么显示界面.</p>
+<p>例如, 假设我们让 AI 以 YAML 的形式发送对话, 流式过程中可能得到:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">角色</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">络络</span>
+<span class="w">  </span><span class="nt">对话</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">杂鱼喵</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">角色</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">青空莉</span>
+<span class="w">  </span><span class="nt">对话</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">杂鱼哦</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">角色</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">络络</span><span class="w"> </span>
+<span class="hll"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">对</span>
+</span></pre></div>
+</div>
+<p>我们可以在还没收到消息时就显示 Galgame 对话界面, 而只将格式已经完整的对话添加到界面中, 允许玩家在流式时就翻页阅读.</p>
+<p><strong>我在 <code class="docutils literal notranslate"><span class="pre">util/streaming.ts</span></code> 中提供了一种流式楼层界面框架, 因此编写模板里的 AI 已经直接会怎么做了.</strong> 例如, 你可以直接要求:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>制作一个流式楼层界面，它使得楼层只会显示最新一段文本.
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id13">
+<h3>对发送出的提示词进行修改<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<p>除了通过 jquery 修改页面元素, 脚本也可以监听酒馆的提示词发送事件, 进而自行修改提示词.</p>
+<p>要做到这一点, 我们可以监听的事件有很多, 如: (按请求生成时事件发生先后顺序)</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tavern_events.GENERATE_AFTER_COMBINE_PROMPTS</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tavern_events.CHAT_COMPLETION_PROMPT_READY</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tavern_events.GENERATE_AFTER_DATA</span></code> (提示词模板、酒馆助手宏发生在这里)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tavern_events.CHAT_COMPLETION_SETTINGS_READY</span></code></p></li>
+</ul>
+<p>此处以 <code class="docutils literal notranslate"><span class="pre">tavern_events.CHAT_COMPLETION_PROMPT_READY</span></code> 为例:</p>
+<div class="literal-block-wrapper docutils container" id="id27">
+<div class="code-block-caption"><span class="caption-text">移除所有 user 提示词</span><a class="headerlink" href="#id27" title="Link to this code">#</a></div>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="nx">eventOn</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">tavern_events</span><span class="p">.</span><span class="nx">CHAT_COMPLETION_PROMPT_READY</span><span class="p">,</span>
+<span class="w">  </span><span class="p">(</span><span class="nx">event_data</span><span class="o">:</span><span class="w"> </span><span class="kt">Parameters</span><span class="o">&lt;</span><span class="nx">ListenerType</span><span class="p">[</span><span class="s1">&#39;chat_completion_prompt_ready&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">_</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="nx">event_data</span><span class="p">.</span><span class="nx">messages</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">role</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;user&#39;</span><span class="p">));</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>noass 等压缩相邻消息、合并消息的功能就是这么做的, 例如<a class="reference internal" href="../../../作品集/"><span class="doc">压缩相邻消息</span></a>.</p>
+<div class="warning admonition">
+<p class="admonition-title">注意修改方式</p>
+<p>不要用 <code class="docutils literal notranslate"><span class="pre">event_data.chat</span> <span class="pre">=</span> <span class="pre">[{role:</span> <span class="pre">'system',</span> <span class="pre">message:</span> <span class="pre">'你好'}]</span></code> 之类的方法, 这是让 <code class="docutils literal notranslate"><span class="pre">event_data.messages</span></code> 指向一个新数组, 而不是修改 <code class="docutils literal notranslate"><span class="pre">event_data.messages</span></code> 原本指向的数组.</p>
+<p>你应该使用：</p>
+<ul class="simple">
+<li><p>lodash 中的某些原地修改函数</p></li>
+<li><p>数组的 <code class="docutils literal notranslate"><span class="pre">splice</span></code>、<code class="docutils literal notranslate"><span class="pre">push</span></code> 等原地修改函数</p></li>
+</ul>
+</div>
+</section>
+<section id="id14">
+<h3>控制世界书条目的激活<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<p>见于<a class="reference internal" href="../../酒馆如何处理世界书/"><span class="doc">酒馆如何处理世界书</span></a>.</p>
+</section>
+<section id="id15">
+<span id="id16"></span><h3>发布会自动更新的前端界面、脚本或美化样式<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<p>还记得我们是如何实现实时修改前端界面或脚本的吗? 我们利用 <span class="menuselection">Go Live</span> 将本地文件夹转换为了网络链接, 而正则或脚本通过网络链接来加载最新打包内容.</p>
+<p>既然这样, 我们完全可以发布一个网络链接给玩家, 从而让玩家永远加载到最新的前端界面或脚本!</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>如果使用自己的服务器来部署链接, 请注意设置 https, 否则使用 https 的云酒馆玩家将不可访问.</p>
+</div>
+<section id="github-jsdelivr">
+<h4>利用 github 和 jsdelivr<a class="headerlink" href="#github-jsdelivr" title="Link to this heading">#</a></h4>
+<p>最简单的方式是利用 <a class="reference external" href="https://www.jsdelivr.com/">jsdelivr</a> 为 github 文件提供的 CDN 功能. 对于上传在 <code class="docutils literal notranslate"><span class="pre">github.com/组织名/仓库名</span></code> 中 <code class="docutils literal notranslate"><span class="pre">路径</span></code> 下的文件, 你可以直接用 <code class="docutils literal notranslate"><span class="pre">https://testingcf.jsdelivr.net/gh/组织名/仓库名/路径</span></code> 来访问它们.</p>
+<p>酒馆助手内置库即采用了这种方法. 例如, 如果你从<span class="menuselection">酒馆助手 ‣ 脚本 ‣ 内置库</span>中导入<a class="reference external" href="https://github.com/StageDog/tavern_resource/blob/main/src/%E9%85%92%E9%A6%86%E5%8A%A9%E6%89%8B/%E6%A0%87%E7%AD%BE%E5%8C%96/index.ts"><code class="docutils literal notranslate"><span class="pre">标签化</span></code></a>, 编辑它就会发现它的代码里仅有一行:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="s1">&#39;https://testingcf.jsdelivr.net/gh/StageDog/tavern_resource/dist/酒馆助手/标签化/index.js&#39;</span>
+</pre></div>
+</div>
+<p>而前端界面可以写成:</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">  </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">load</span><span class="p">(</span><span class="s1">&#39;https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/dist/日记络络/界面/介绍页/index.html&#39;</span><span class="p">)</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<p>甚至, 你也可以用 jsdelivr 发布会自动更新的酒馆美化:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="k">import</span><span class="w"> </span><span class="nt">url</span><span class="o">(</span><span class="s2">&quot;https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/思维链美化/酒馆自带推理块版/暗色.css&quot;</span><span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>为了方便你得到这样的 jsdelivr 链接, 编写模板已经配置了 github 自动工作流. 你可以在 <a class="github reference external" href="https://github.com/StageDog/tavern_helper_template">StageDog/tavern_helper_template</a> 用 <span class="menuselection">Use this template</span> 来创建一个新仓库, 并按照仓库 README 说明进行配置, 然后将它克隆到本地使用. <br />
+这样一来, 你只需要负责在 <code class="docutils literal notranslate"><span class="pre">src</span></code> 文件夹下修改代码, 完成后上传到 github 仓库; 上传后, 自动工作流将会为你自动打包最新结果到 <code class="docutils literal notranslate"><span class="pre">dist</span></code> 文件夹.</p>
+<p>然而, jsdelivr 主服务器、jsdelivr 镜像服务器 (为了国内直连) 和玩家的浏览器都会缓存文件, 因此并不是 github 上文件更新后, 这个链接就会立即得到最新的打包结果.</p>
+<p>除了等待服务器自行刷新缓存, 你可以通过以下方式来加快缓存刷新:</p>
+<ul class="simple">
+<li><p>如果你是从 <a class="github reference external" href="https://github.com/StageDog/tavern_helper_template">StageDog/tavern_helper_template</a> <span class="menuselection">Use this template</span> 来创建的新仓库, 并按照仓库 README 说明完成了配置, 它的自动工作流会自动打包结果并更新版本号, 从而做到 12h 刷新 jsdelivr 主服务器缓存</p></li>
+<li><p>等仓库更新版本号后，在 <a class="reference external" href="https://www.jsdelivr.com/tools/purge">https://www.jsdelivr.com/tools/purge</a> 中输入要使用的链接, 将 <code class="docutils literal notranslate"><span class="pre">testingcf.jsdelivr</span></code> 改成 <code class="docutils literal notranslate"><span class="pre">cdn.jsdelivr</span></code>, 然后点击确认, 能立即刷新 jsdelivr 主服务器缓存, 但镜像服务器缓存不会刷新</p></li>
+<li><p>玩家主动清除浏览器缓存</p></li>
+</ul>
+<p>或者, 你可以暂时换个还没缓存你文件的镜像网站来访问:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>testingcf.jsdelivr.net
+fastly.jsdelivr.net
+gcore.jsdelivr.net
+</pre></div>
+</div>
+</section>
+<section id="cloudflare-r2">
+<h4>利用 cloudflare r2<a class="headerlink" href="#cloudflare-r2" title="Link to this heading">#</a></h4>
+<p>cloudflare 免费为你提供了 10GB 对象存储服务, 你可以将它作为图床、前端界面或脚本的上传仓库……具体用法请在网上搜索教程.</p>
+</section>
+</section>
+<section id="id17">
+<h3>发布会自动更新角色卡<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>我已经制作了泛用的<a class="reference internal" href="../../../作品集/#id22"><span class="std std-ref">自动更新角色卡、预设脚本</span></a>, 如果不想知道原理, 可以直接使用.</p>
+</div>
+<p>酒馆助手提供了导入/更新角色卡的接口 <code class="docutils literal notranslate"><span class="pre">importRawCharacter</span></code>, 我们可以利用它编写一个脚本来实现角色卡的自动更新.</p>
+<p>总的来说, 你需要以下内容:</p>
+<dl class="simple myst">
+<dt>能够获取最新角色卡文件</dt><dd><p>你可以直接像上文我们自动更新前端界面、脚本一样, 使用 jsdelivr 网络链接 (<code class="docutils literal notranslate"><span class="pre">fetch(链接,</span> <span class="pre">{</span> <span class="pre">cache:</span> <span class="pre">'no-store'</span> <span class="pre">})</span></code>); 也可以用你自己的云存储链接.</p>
+</dd>
+<dt>能够获取角色卡最新版本号</dt><dd><p>针对这个, 你也可以上传一个 <code class="docutils literal notranslate"><span class="pre">版本号</span></code> 文件到 github 仓库中, 然后通过 jsdelivr 网络链接获取它.</p>
+</dd>
+<dt>能够获取玩家当前所用角色卡的版本号</dt><dd><p>你可以使用<span class="menuselection">酒馆角色卡面板 ‣ 地球仪旁边的高级定义按钮 ‣ 创作者的元数据 ‣ 角色版本</span>来记录版本号, 这在脚本中可以用 <code class="docutils literal notranslate"><span class="pre">getCharacter</span></code> 接口获取.</p>
+</dd>
+</dl>
+<p>这样一来, 只要我们在更新角色卡后, 将最新角色卡文件和最新版本号上传到 github 仓库, 玩家就会收到角色卡更新了.</p>
+<p>为了让这个更新过程更为自动化, 你可以学习<a class="reference internal" href="../../实时编写角色卡、世界书或预设/"><span class="doc">实时编写角色卡、世界书或预设</span></a>, 然后调整模板文件夹中的 <code class="docutils literal notranslate"><span class="pre">tavern_sync.yaml</span></code> 配置文件:</p>
+<ul class="simple">
+<li><p>你可以像<code class="docutils literal notranslate"><span class="pre">示例/角色卡示例</span></code>那样, 在 Cursor/VSCode 里让 AI 或自己修改角色卡的第一条消息、世界书、版本号等;</p></li>
+<li><p>修改完成后, 你直接将更改上传到 github, github 会自动打包你配置了的所有角色卡、世界书或预设;</p>
+<ul>
+<li><p>例如, 你可以删掉<code class="docutils literal notranslate"><span class="pre">示例/角色卡示例/角色卡示例.png</span></code>, 然后运行 <code class="docutils literal notranslate"><span class="pre">node</span> <span class="pre">tavern_sync.mjs</span> <span class="pre">bundle</span> <span class="pre">all</span></code>. 完成后, 就会发现 <code class="docutils literal notranslate"><span class="pre">示例/角色卡示例/角色卡示例.png</span></code> 又出现了.</p></li>
+</ul>
+</li>
+<li><p>由于 github 上的角色卡、世界书或预设文件已经更新, 脚本会检测到版本号不同, 从而为玩家更新角色卡.</p></li>
+</ul>
+</section>
+<section id="id18">
+<h3>导入文件文本内容<a class="headerlink" href="#id18" title="Link to this heading">#</a></h3>
+<p>你可能需要在代码里获取本地 json 等文件内容, 那么可以直接用 <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">string</span> <span class="pre">from</span> <span class="pre">'./文件?raw'</span></code> 来将文件内容作为字符串导入.</p>
+</section>
+<section id="id19">
+<h3>与外部应用程序通信<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
+<p>模板可以安装和使用 <code class="docutils literal notranslate"><span class="pre">socket.io-client</span></code> 乃至所有浏览器环境支持的第三方库, 从而和外部应用程序进行通信. <a class="reference internal" href="../../实时编写角色卡、世界书或预设/"><span class="doc">实时编写角色卡、世界书或预设</span></a> (<a class="github reference external" href="http://github.com/StageDog/tavern_sync">StageDog/tavern_sync</a>) 就是如此实现的.</p>
+<p>如果你要传输数据, 请注意调整服务器端的 <a class="reference external" href="https://socket.io/docs/v4/server-options/#maxhttpbuffersize"><code class="docutils literal notranslate"><span class="pre">maxHttpBufferSize</span></code></a> 参数, 它默认仅为 1mb.</p>
+</section>
+</section>
+<section id="id20">
+<h2>调整模板配置<a class="headerlink" href="#id20" title="Link to this heading">#</a></h2>
+<section id="id21">
+<h3>自定义项目配置<a class="headerlink" href="#id21" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">.cursor/rules</span></code> 中, 我预先为项目配置了一些编程助手编写规则 (相当于给编程助手添加了一个全局世界书). 你完全可以自行编写更多规则.</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">.cursor/mcp.json</span></code> 中, 我预先设置了 MCP 来让 AI 能够查看酒馆网页. 你完全可以为 AI 找更多好用的 MCP, 如通过 figma MCP, 你可以<strong>用大量预制好的组件像做 PPT 一样设计好界面</strong>, 然后让 AI 生成代码结果.</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">package.json</span></code> 中, 我预先为项目代码添加了 jquery、zod 等方便的第三方库 (具体请查看 <code class="docutils literal notranslate"><span class="pre">dependencies</span></code> 部分). 你可以让 AI 或自己用 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">add</span> <span class="pre">第三方库</span></code> 添加更多需要的第三方库, 它们一般添加上就能直接使用.</p></li>
+</ul>
+</section>
+<section id="vue">
+<h3>使用 vue 编写前端界面<a class="headerlink" href="#vue" title="Link to this heading">#</a></h3>
+<p>酒馆助手前端界面和脚本可以直接使用 vue, 它会让界面制作变得更为简单. <code class="docutils literal notranslate"><span class="pre">示例/前端界面示例</span></code> 就是这么做的.</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>如果你想制作不依赖于酒馆的单独页面, 则也可以使用 <a class="github reference external" href="https://github.com/StageDog/vue_template">StageDog/vue_template</a>.</p>
+</div>
+<p>除了 <a class="reference external" href="https://cn.vuejs.org/">vue</a> 之外, 我还配置了 <a class="reference external" href="https://gsap.com/">gsap</a>、<a class="reference external" href="https://pinia.vuejs.org/">pinia</a>、<a class="reference external" href="https://router.vuejs.org/">vue-router</a>、<a class="reference external" href="https://vueuse.org/">vueuse</a> 等库, 让你无论是实现打字机效果、做可调整元素顺序的列表、给设置做浏览器缓存、让界面全屏、发送系统通知等等都异常简单. <strong>AI 很会, 拷打 AI.</strong></p>
+<p>你可以安装 <a class="reference external" href="https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd">vue.js devtools</a>, 从而在 <kbd class="kbd docutils literal notranslate">F12</kbd> 所打开的开发者工具中新增 vue 选项卡, 得到 vue 更多调试功能.</p>
+<div class="hint dropdown admonition">
+<p class="admonition-title">几行代码实现打字机效果</p>
+<div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E6%89%93%E5%AD%97%E6%9C%BA.mp4" type="video/mp4"></video></div><p><a class="reference external" href="https://codepen.io/GreenSock/pen/xxmaNYj">演示网页</a></p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="nx">gsap</span><span class="p">.</span><span class="nx">registerPlugin</span><span class="p">(</span><span class="nx">SplitText</span><span class="p">);</span>
+<span class="nx">split</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">SplitText</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">&#39;.text&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;chars&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="nx">gsap</span><span class="p">.</span><span class="kr">from</span><span class="p">(</span><span class="nx">split</span><span class="p">.</span><span class="nx">chars</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">opacity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="kt">0.1</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">ease</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;power4&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">stagger</span><span class="o">:</span><span class="w"> </span><span class="kt">0.04</span><span class="p">,</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="hint dropdown admonition">
+<p class="admonition-title">给界面设置浏览器缓存</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">不使用 vue</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">使用 vue</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="c1">// 我们需要从 localStorage 中获取 count 的值</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">);</span>
+
+<span class="c1">// 我们得转换值为字符串再赋值给 count🤢</span>
+<span class="nx">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="mf">5</span><span class="p">);</span>
+
+<span class="c1">// 我们得记住保存变量结果回 localStorage🤢</span>
+<span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">count</span><span class="p">);</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useLocalStorage</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@vueuse/core&#39;</span><span class="p">;</span>
+
+<span class="c1">// 对 `count` 的改变都会被直接保存到浏览器缓存中, 我们可以随便用 `count` 变量!</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useLocalStorage</span><span class="o">&lt;</span><span class="kt">number</span><span class="o">&gt;</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+
+<span class="c1">// 而且变量类型就是我们需要的类型!</span>
+<span class="nx">count</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></div>
+</div>
+<div class="hint dropdown admonition">
+<p class="admonition-title">我觉得很有用的 vueuse 功能</p>
+<p>更多请自行查阅文档(<a class="reference external" href="https://vueuse.org/guide/">英文</a>/<a class="reference external" href="https://vueuse.nodejs.cn/guide/">中文</a>); 当然你可以直接问 ai, 它也许知道.</p>
+<!-- markdownlint-disable MD032 MD007 -->
+<dl class="simple myst">
+<dt>&#64;vueuse/core - 状态 (State)</dt><dd><ul class="simple">
+<li><p>共享 composable 状态: <a class="reference external" href="https://vueuse.org/shared/createSharedComposable/">useSharedComposable</a></p></li>
+<li><p>自动缓存数据到浏览器, 当然你可能更想用下面会提到的 useIDBKeyval: <a class="reference external" href="https://vueuse.org/core/useLocalStorage/">useLocalStorage</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 元素 (Elements)</dt><dd><ul class="simple">
+<li><p>可拖动元素: <a class="reference external" href="https://vueuse.org/core/useDraggable/">useDraggable</a></p></li>
+<li><p>元素大小: <a class="reference external" href="https://vueuse.org/core/useElementSize/">useElementSize</a></p></li>
+<li><p>检测元素大小发生改变: <a class="reference external" href="https://vueuse.org/core/useResizeObserver/">useResizeObserver</a></p></li>
+<li><p>检测 DOM 发生改变: <a class="reference external" href="https://vueuse.org/core/useMutationObserver/">useMutationObserver</a></p></li>
+<li><p>检测页面滚动: <a class="reference external" href="https://vueuse.org/core/useWindowScroll/">useWindowScroll</a></p></li>
+<li><p>标签页间、iframe 间通信: <a class="reference external" href="https://vueuse.org/core/useBroadcastChannel/">useBroadcastChannel</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 浏览器 (Browser)</dt><dd><ul class="simple">
+<li><p>剪贴板: <a class="reference external" href="https://vueuse.org/core/useClipboard/">useClipboard</a> 和 <a class="reference external" href="https://vueuse.org/core/useClipboardItems/">useClipboardItems</a></p></li>
+<li><p>监听事件, 支持组件卸载时自动释放: <a class="reference external" href="https://vueuse.org/core/useEventListener/">useEventListener</a></p></li>
+<li><p>点击导入文件时打开的文件选择框: <a class="reference external" href="https://vueuse.org/core/useFileDialog/">useFileDialog</a></p></li>
+<li><p>全屏化: <a class="reference external" href="https://vueuse.org/core/useFullscreen/">useFullscreen</a></p></li>
+<li><p>从 Blob 创建 URL, 支持组件卸载时自动释放: <a class="reference external" href="https://vueuse.org/core/useObjectUrl/">useObjectUrl</a></p></li>
+<li><p>向页面加载 <code class="docutils literal notranslate"><span class="pre">&lt;script&gt;</span></code>, 支持 <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">'module'</span></code>, 支持组件卸载时自动释放: <a class="reference external" href="https://vueuse.org/core/useScriptTag/">useScriptTag</a></p></li>
+<li><p>向页面加载 <code class="docutils literal notranslate"><span class="pre">&lt;style&gt;</span></code>, 支持组件卸载时自动释放: <a class="reference external" href="https://vueuse.org/core/useStyleTag/">useStyleTag</a></p></li>
+<li><p>自动适配输入框大小: <a class="reference external" href="https://vueuse.org/core/useTextareaAutosize/">useTextareaAutosize</a></p></li>
+<li><p>使用网页通知功能 (我嘞个 AI 回复结束后通知): <a class="reference external" href="https://vueuse.org/core/useWebNotification/">useWebNotification</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 传感器 (Sensors)</dt><dd><ul class="simple">
+<li><p>点击了选定元素之外的地方: <a class="reference external" href="https://vueuse.org/core/onClickOutside/">onClickOutside</a></p></li>
+<li><p>某个元素被移除: <a class="reference external" href="https://vueuse.org/core/useElementRemoval/">useElementRemoval</a></p></li>
+<li><p>某个键盘按键: <a class="reference external" href="https://vueuse.org/core/onKeyStroke/">onKeyStroke</a></p></li>
+<li><p>键盘修饰符: <a class="reference external" href="https://vueuse.org/core/useKeyModifier/">useKeyModifier</a></p></li>
+<li><p>按键组合: <a class="reference external" href="https://vueuse.org/core/useMagicKeys/">useMagicKeys</a></p></li>
+<li><p>长按按钮: <a class="reference external" href="https://vueuse.org/core/onLongPress/">onLongPress</a></p></li>
+<li><p>按键时自动聚焦到输入框: <a class="reference external" href="https://vueuse.org/core/onStartTyping/">onStartTyping</a></p></li>
+<li><p>当前鼠标所在的元素: <a class="reference external" href="https://vueuse.org/core/useElementByPoint/">useElementByPoint</a></p></li>
+<li><p>元素是否被鼠标悬停: <a class="reference external" href="https://vueuse.org/core/useElementHover/">useElementHover</a></p></li>
+<li><p>元素是否被聚焦: <a class="reference external" href="https://vueuse.org/core/useElementFocus/">useElementFocus</a> 和 <a class="reference external" href="https://vueuse.org/core/useFocusWithin/">useFocusWithin</a></p></li>
+<li><p>显示帧数: <a class="reference external" href="https://vueuse.org/core/useFps/">useFps</a></p></li>
+<li><p>用户处于空闲状态, 多少秒没和界面交互过: <a class="reference external" href="https://vueuse.org/core/useIdle/">useIdle</a></p></li>
+<li><p>让元素可以无限滑动: <a class="reference external" href="https://vueuse.org/core/useInfiniteScroll/">useInfiniteScroll</a></p></li>
+<li><p>鼠标位置: <a class="reference external" href="https://vueuse.org/core/useMouse/">useMouse</a></p></li>
+<li><p>鼠标点击: <a class="reference external" href="https://vueuse.org/core/useMousePressed/">useMousePressed</a></p></li>
+<li><p>鼠标不在网页内: <a class="reference external" href="https://vueuse.org/core/usePageLeave/">usePageLeave</a></p></li>
+<li><p>鼠标长按滑动: <a class="reference external" href="https://vueuse.org/core/usePointerSwipe/">usePointerSwipe</a></p></li>
+<li><p>触控滑动: <a class="reference external" href="https://vueuse.org/core/useSwipe/">useSwipe</a></p></li>
+<li><p>元素内的滚动: <a class="reference external" href="https://vueuse.org/core/useScroll/">useScroll</a></p></li>
+<li><p>锁定元素内的滚动: <a class="reference external" href="https://vueuse.org/core/useScrollLock/">useScrollLock</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 网络 (Network)</dt><dd><ul class="simple">
+<li><p>响应式请求 url 内容, 可简单取消请求, 会在 url 变更时重新请求: <a class="reference external" href="https://vueuse.org/core/useFetch/">useFetch</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 动画 (Animation)</dt><dd><ul class="simple">
+<li><p>你可以使用 gsap</p></li>
+<li><p>过一段时间后触发: <a class="reference external" href="https://vueuse.org/shared/useTimeout/">useTimeout</a> 和 <a class="reference external" href="https://vueuse.org/shared/useTimeoutFn/">useTimeoutFn</a></p></li>
+<li><p>每过一段时间触发: <a class="reference external" href="https://vueuse.org/shared/useInterval/">useInterval</a> 和 <a class="reference external" href="https://vueuse.org/shared/useIntervalFn/">useIntervalFn</a></p></li>
+<li><p>当前时间: <a class="reference external" href="https://vueuse.org/core/useNow/">useNow</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 组件 (Component)</dt><dd><ul class="simple">
+<li><p>自己写代码才需要, 可能全都能用上, 因此自行查阅</p></li>
+<li><p>同时进行 <code class="docutils literal notranslate"><span class="pre">computed</span></code> 和 <code class="docutils literal notranslate"><span class="pre">inject</span></code>: <a class="reference external" href="https://vueuse.org/core/computedInject/">computedInject</a></p></li>
+<li><p>在组件中创建可复用的 template: <a class="reference external" href="https://vueuse.org/core/createReusableTemplate/">createReusableTemplate</a></p></li>
+<li><p>在组件中将 template 设置为异步渲染: <a class="reference external" href="https://vueuse.org/core/createAsyncComponent/">createAsyncComponent</a></p></li>
+<li><p>对 <code class="docutils literal notranslate"><span class="pre">v-for</span></code> 绑定 ref: <a class="reference external" href="https://vueuse.org/core/useTemplateRefsList/">useTemplateRefsList</a></p></li>
+<li><p>虚拟列表, 仅渲染实际可见的部分: <a class="reference external" href="https://github.com/Akryum/vue-virtual-scroller">vueVirtualScroller</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 监听 (Watch)</dt><dd><ul class="simple">
+<li><p>自己写代码才需要, 可能全都能用上, 因此自行查阅</p></li>
+<li><p>等待条件满足: <a class="reference external" href="https://vueuse.org/shared/until/">util</a></p></li>
+<li><p>监听数组, 相比于 <code class="docutils literal notranslate"><span class="pre">watch</span></code> 还能得到数组新增元素和移除元素情况: <a class="reference external" href="https://vueuse.org/shared/watchArray/">watchArray</a></p></li>
+<li><p>监听最多 n 次: <a class="reference external" href="https://vueuse.org/shared/watchAtMost/">watchAtMost</a> 和 <a class="reference external" href="https://vueuse.org/shared/watchOnce/">watchOnce</a></p></li>
+<li><p>防抖监听 (仅当一定时间内监听没触发后, 监听所回调的函数才会执行): <a class="reference external" href="https://vueuse.org/shared/watchDebounced/">watchDebounced</a></p></li>
+<li><p>节流监听 (一定时间内仅能执行一次函数): <a class="reference external" href="https://vueuse.org/shared/watchThrottled/">watchThrottled</a></p></li>
+<li><p>可在一定情况下忽略的监听: <a class="reference external" href="https://vueuse.org/shared/watchIgnorable/">watchIgnorable</a></p></li>
+<li><p>可暂停的监听: <a class="reference external" href="https://vueuse.org/shared/watchPausable/">watchPausable</a></p></li>
+<li><p>可主动触发的监听: <a class="reference external" href="https://vueuse.org/shared/watchTriggerable/">watchTriggerable</a></p></li>
+<li><p>仅在条件满足时才触发的监听: <a class="reference external" href="https://vueuse.org/shared/watchWithFilter/">watchWithFilter</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 响应性 (Reactivity)</dt><dd><ul class="simple">
+<li><p>自己写代码才需要, 可能全都能用上, 因此自行查阅</p></li>
+<li><p>异步的计算属性: <a class="reference external" href="https://vueuse.org/core/computedAsync/">computedAsync</a></p></li>
+<li><p>自行定义依赖项的计算属性: <a class="reference external" href="https://vueuse.org/shared/computedWithControl/">computedWithControl</a></p></li>
+<li><p>将非响应式函数转换为响应式函数: <a class="reference external" href="https://vueuse.org/shared/reactify/">reactify</a></p></li>
+<li><p>将对象内的非响应式函数转换为响应式函数: <a class="reference external" href="https://vueuse.org/shared/reactifyObject/">reactifyObject</a></p></li>
+<li><p>响应性地忽略响应式对象中的某些字段: <a class="reference external" href="https://vueuse.org/shared/reactiveOmit/">reactiveOmit</a></p></li>
+<li><p>响应性地提取响应式对象中的某些字段: <a class="reference external" href="https://vueuse.org/shared/reactivePick/">reactivePick</a></p></li>
+<li><p>过段时间后将会重置成默认值的 ref: <a class="reference external" href="https://vueuse.org/shared/refAutoReset/">refAutoReset</a></p></li>
+<li><p>可以自行重置成默认值的 ref: <a class="reference external" href="https://vueuse.org/shared/refManualReset/">refManualReset</a></p></li>
+<li><p>如果值为 undefined 则采用默认值的 ref: <a class="reference external" href="https://vueuse.org/shared/refDefault/">refDefault</a></p></li>
+<li><p>允许自行控制是否触发响应的 ref: <a class="reference external" href="https://vueuse.org/shared/refWithControl/">refWithControl</a></p></li>
+<li><p>防抖响应 (仅当一定时间内 ref 没被改变后, ref 才会被修改): <a class="reference external" href="https://vueuse.org/shared/refDebounced/">refDebounced</a></p></li>
+<li><p>节流响应 (一定时间内 ref 仅能被修改一次): <a class="reference external" href="https://vueuse.org/shared/refThrottled/">refThrottled</a></p></li>
+<li><p>将两个 ref 的响应性同步, 指向同一个响应性对象: <a class="reference external" href="https://vueuse.org/shared/syncRef/">syncRef</a> 和 <a class="reference external" href="https://vueuse.org/shared/syncRefs/">syncRefs</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 数组 (Array)</dt><dd><ul class="simple">
+<li><p>自己写代码才需要, 可能全都能用上, 因此自行查阅</p></li>
+<li><p>简单地说就是数组各个函数的响应性版本</p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - Time (时间)</dt><dd><ul class="simple">
+<li><p>倒计时: <a class="reference external" href="https://vueuse.org/core/useCountdown/">useCountdown</a></p></li>
+<li><p>格式化日期时间: <a class="reference external" href="https://vueuse.org/shared/useDateFormat/">useDateFormat</a></p></li>
+<li><p>计算时间差: <a class="reference external" href="https://vueuse.org/core/useTimeAgo/">useTimeAgo</a> 和 <a class="reference external" href="https://vueuse.org/core/useTimeDiff/">useTimeAgoIntl</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/core - 工具 (Utilities)</dt><dd><ul class="simple">
+<li><p>自己写代码才需要, 可能全都能用上, 因此自行查阅</p></li>
+<li><p>让不接受 ref 的函数能接受 ref (但依旧不是响应式执行): <a class="reference external" href="https://vueuse.org/core/createUnrefFn/">createUnrefFn</a></p></li>
+<li><p>获取变量的 base64 字符串: <a class="reference external" href="https://vueuse.org/core/useBase64/">useBase64</a></p></li>
+<li><p>计数器: <a class="reference external" href="https://vueuse.org/shared/useCounter/">useCounter</a></p></li>
+<li><p>确认框: <a class="reference external" href="https://vueuse.org/core/useConfirmDialog/">useConfirmDialog</a></p></li>
+<li><p>防抖执行 (仅当一定时间内不调用某个函数后, 函数才会执行): <a class="reference external" href="https://vueuse.org/shared/useDebounceFn/">useDebounceFn</a></p></li>
+<li><p>节流执行 (一定时间内仅能执行一次函数): <a class="reference external" href="https://vueuse.org/shared/useThrottleFn/">useThrottleFn</a></p></li>
+<li><p>记忆执行 (执行后, 以后对函数的调用直接返回结果): <a class="reference external" href="https://vueuse.org/core/useMemoize/">useMemoize</a></p></li>
+<li><p>记录 ref 的上一个值 (需要提前创建 ref): <a class="reference external" href="https://vueuse.org/core/usePrevious/">usePrevious</a></p></li>
+<li><p>多步骤向导界面: <a class="reference external" href="https://vueuse.org/core/useStepper/">useStepper</a></p></li>
+<li><p>开关 boolean 值: <a class="reference external" href="https://vueuse.org/shared/useToggle/">useToggle</a></p></li>
+<li><p>响应式转换字符串为数字: <a class="reference external" href="https://vueuse.org/shared/useToNumber/">useToNumber</a></p></li>
+<li><p>响应式转换数字为字符串: <a class="reference external" href="https://vueuse.org/shared/useToString/">useToString</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/integrations</dt><dd><ul class="simple">
+<li><p>表单检验: <a class="reference external" href="https://vueuse.org/integrations/useAsyncValidator/">useAsyncValidator</a></p></li>
+<li><p>自动缓存数据到 indexedDB, 它相比于 useLocalStorage 能存储更多数据: <a class="reference external" href="https://vueuse.org/integrations/useIDBKeyval/">useIDBKeyval</a></p></li>
+<li><p>模糊搜索: <a class="reference external" href="https://vueuse.org/integrations/useFuse/">useFuse</a></p></li>
+<li><p>可调整元素顺序的列表: <a class="reference external" href="https://vueuse.org/integrations/useSortable/">useSortable</a></p></li>
+</ul>
+</dd>
+<dt>&#64;vueuse/sound</dt><dd><ul class="simple">
+<li><p>播放声音: <a class="reference external" href="https://github.com/vueuse/sound#examples">useSound</a></p></li>
+</ul>
+</dd>
+</dl>
+<!-- markdownlint-enable MD032 MD007 -->
+</div>
+</section>
+<section id="id22">
+<h3>允许代码分块<a class="headerlink" href="#id22" title="Link to this heading">#</a></h3>
+<p>默认情况下, 前端界面或脚本会打包成单个文件, 但如果你以网络链接的形式发布前端界面或脚本, 则可以打包成多个文件块让玩家在游玩中按需加载.</p>
+<p>为了允许代码分块, 你需要删去 <code class="docutils literal notranslate"><span class="pre">webpack.config.ts</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">new</span> <span class="pre">webpack.optimize.LimitChunkCountPlugin({</span> <span class="pre">maxChunks:</span> <span class="pre">1</span> <span class="pre">})</span></code> 这一句.</p>
+</section>
+<section id="id23">
+<h3>混淆代码<a class="headerlink" href="#id23" title="Link to this heading">#</a></h3>
+<p>无论前端界面还是脚本, 你都可以在 <code class="docutils literal notranslate"><span class="pre">index.ts</span></code> 中添加一行 <code class="docutils literal notranslate"><span class="pre">//</span> <span class="pre">&#64;obfuscate</span></code> 来指示打包时应该混淆代码.</p>
+<p>混淆后的代码依旧能正常使用, 只是代码本身很难辨认. (当然我更建议你将源代码分享出来供人学习, 我添加这个功能只是因为我将预设及破限塞进了代码里, 如果在 github 仓库里直接发布可能会被注意到)</p>
+<figure class="align-default" id="id28">
+<img alt="../../../../_images/%E6%B7%B7%E6%B7%86%E4%BB%A3%E7%A0%81.png" src="../../../../_images/%E6%B7%B7%E6%B7%86%E4%BB%A3%E7%A0%81.png" />
+<figcaption>
+<p><span class="caption-text">混淆后的代码</span><a class="headerlink" href="#id28" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="id24">
+<h3>不自动打包代码<a class="headerlink" href="#id24" title="Link to this heading">#</a></h3>
+<p>如果你是从模板新建仓库的形式使用编写模板, 那么可以在 <code class="docutils literal notranslate"><span class="pre">index.ts</span></code> 中添加一行 <code class="docutils literal notranslate"><span class="pre">//</span> <span class="pre">&#64;no-ci</span></code> 来指示 CI 工作流不自动打包某个前端界面或脚本.</p>
+</section>
+<section id="tailwindcss">
+<h3>自定义 tailwindcss 配置<a class="headerlink" href="#tailwindcss" title="Link to this heading">#</a></h3>
+<p>tailwindcss 提供了许多组件类, 允许你不总是自定义类然后设置样式:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">不使用 tailwindcss</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">使用 tailwindcss</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;content-text&quot;</span><span class="p">&gt;</span>Hello, world!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="nc">content-text</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">line-height</span><span class="p">:</span><span class="w"> </span><span class="mi">36</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="nv">--tw-font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span><span class="p">;</span>
+<span class="w">  </span><span class="k">font-weight</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span><span class="p">;</span>
+<span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#030712</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;text-3xl font-medium text-gray-950&quot;</span><span class="p">&gt;</span>Hello, world!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+</div></div>
+<p>模板并不强制你用 tailwindcss, 因此没有开启 tailwindcss 很多检查. 如果需要, 你可以自行去 eslint.config.mjs 调整它.</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="hll"><span class="w">  </span><span class="nx">files</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;src/**/*.{html,vue,js,ts}&#39;</span><span class="p">],</span><span class="w">  </span><span class="c1">// 调整检查范围</span>
+</span><span class="w">  </span><span class="nx">plugins</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s1">&#39;better-tailwindcss&#39;</span><span class="o">:</span><span class="w"> </span><span class="nx">eslintPluginBetterTailwindcss</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span><span class="nx">eslintPluginBetterTailwindcss</span><span class="p">.</span><span class="nx">configs</span><span class="p">[</span><span class="s1">&#39;recommended-warn&#39;</span><span class="p">].</span><span class="nx">rules</span><span class="p">,</span>
+<span class="w">    </span><span class="p">...</span><span class="nx">eslintPluginBetterTailwindcss</span><span class="p">.</span><span class="nx">configs</span><span class="p">[</span><span class="s1">&#39;recommended-error&#39;</span><span class="p">].</span><span class="nx">rules</span><span class="p">,</span>
+
+<span class="hll"><span class="w">    </span><span class="c1">// class 过长时自动换行</span>
+</span><span class="hll"><span class="w">    </span><span class="c1">//   这和 Ctrl + S 所触发的自动格式化软件 Prettier 相冲突, 需要时必须在 html 标签上一行加一句 &lt;!-- prettier-ignore-attribute --&gt;</span>
+</span><span class="hll"><span class="w">    </span><span class="s1">&#39;better-tailwindcss/enforce-consistent-line-wrapping&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span class="hll"><span class="w">      </span><span class="s1">&#39;off&#39;</span><span class="p">,</span><span class="w">  </span><span class="c1">// 改为 `warn` 或 `error` 则开启</span>
+</span><span class="hll"><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">printWidth</span><span class="o">:</span><span class="w"> </span><span class="kt">120</span><span class="w"> </span><span class="p">}</span>
+</span><span class="hll"><span class="w">    </span><span class="p">],</span>
+</span>
+<span class="hll"><span class="w">    </span><span class="c1">// 禁止在 html 中使用未经 tailwindcss 注册的类</span>
+</span><span class="hll"><span class="w">    </span><span class="c1">//   由此, 如果写了 tailwindcss 不支持的类, 将会报错</span>
+</span><span class="hll"><span class="w">    </span><span class="s1">&#39;better-tailwindcss/no-unregistered-classes&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span class="hll"><span class="w">      </span><span class="s1">&#39;off&#39;</span><span class="p">,</span>
+</span><span class="hll"><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">ignore</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;fa-*&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// FontAwesome 图标类没有被 tailwindcss 注册, 我们应该让检查忽略它避免报错</span>
+</span><span class="hll"><span class="w">    </span><span class="p">],</span>
+</span><span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">settings</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s1">&#39;better-tailwindcss&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">entryPoint</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;src/global.css&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">tailwindConfig</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;tailwind.config.js&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">},</span>
+<span class="hll"><span class="c1">// 你可以复制上面的 {} 块, 通过改变 `files` 为不同范围设置不同检查</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../实际编写/"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">实际编写</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../cursor实用功能/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">附.Cursor 实用功能</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">常用资源网站</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">免费字体</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">免费图标</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cdn">免费 CDN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">颜色对比度检查器</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">前端界面正则的推荐写法</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">提高正则容错率</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">避免渲染卡顿</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#xxx">怎么实现xxx功能</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">酒馆助手有哪些功能?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#figma-ppt">用 figma 像做 PPT 一样设计界面</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stscript">执行酒馆的 /STScript 命令</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jquery">在脚本中用 jquery 修改酒馆页面、添加新界面等</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">制作流式或同层界面</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">同层前端界面</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">流式楼层界面</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">对发送出的提示词进行修改</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">控制世界书条目的激活</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">发布会自动更新的前端界面、脚本或美化样式</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#github-jsdelivr">利用 github 和 jsdelivr</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cloudflare-r2">利用 cloudflare r2</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">发布会自动更新角色卡</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">导入文件文本内容</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">与外部应用程序通信</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">调整模板配置</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">自定义项目配置</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vue">使用 vue 编写前端界面</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">允许代码分块</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">混淆代码</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">不自动打包代码</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tailwindcss">自定义 tailwindcss 配置</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-03-01 19:10:44.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

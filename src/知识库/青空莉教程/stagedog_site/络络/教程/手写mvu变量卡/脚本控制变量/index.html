@@ -1,0 +1,910 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2026-02-21T01:43:36+08:00" />
+    <title>酒馆助手脚本: 后台控制和利用变量 &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '络络/教程/手写mvu变量卡/脚本控制变量/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/络络/教程/手写mvu变量卡/脚本控制变量/" />
+    <link rel="icon" href="../../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../../search/" />
+    <link rel="next" title="酒馆助手界面: 显示和允许玩家修改变量" href="../状态栏/" />
+    <link rel="prev" title="提示词模板: 动态发送提示词" href="../动态发送提示词/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-02-21 01:43:36"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../作品集/">作品集</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">手写 MVU zod 变量卡</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../变量提示词/">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../状态栏/">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../生成立绘、表情差分和cg/">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../青空莉/作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../青空莉/写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/">提示词个人写法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/额外输出格式/">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/多角色/">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/">实时编写角色卡、世界书或预设</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/使用说明/">使用说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/">实时编写前端界面或脚本</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/环境准备/">环境准备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/阅读示例/">阅读示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/实际编写/">实际编写</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/络络/教程/手写mvu变量卡/脚本控制变量/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/络络/教程/手写mvu变量卡/脚本控制变量/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F络络/教程/手写mvu变量卡/脚本控制变量/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/络络/教程/手写mvu变量卡/脚本控制变量/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>酒馆助手脚本: 后台控制和利用变量</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mvu">监听 MVU 事件</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#command-parsed">COMMAND_PARSED: 变量更新命令解析完成</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variable-update-ended">VARIABLE_UPDATE_ENDED: 变量更新结束</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">仅用于脚本的 MVU 变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">在代码中自行获取、更新 MVU 变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">用变量激活绿灯</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai">在代码中请求 AI 生成并用结果更新变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">用脚本实现更多功能</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>酒馆助手脚本: 后台控制和利用变量<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>我们通过变量结构已经能对变量更新进行很多限制, 例如, 这是我们之前要求门之主写卡助手制作的变量结果:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>请制作变量！
+- 在世界路径下记录当前时间、当前日期和近期事务
+- 记录主角妹妹白娅当前对主角的依存度、着装和称号
+  - 依存度必须在0~100之间
+  - 着装包括上装、下装、内衣、袜子、鞋子和饰品
+  - 称号应该记录称号的效果和白娅对称号的自我评价，如果没填写自我评价则默认设置为&quot;待评价&quot;
+  - 称号有数量上限，依存度越高可以拥有的称号越多（依存度为0时不能拥有称号，1~10时只能拥有1个称号，依次类推），如果称号超过可以拥有的数量，应该移除最旧的称号
+- 记录主角物品栏当前有的物品：它的描述、数量，如果没有填写数量则默认数量为1，如果数量不为正数应该直接删除物品
+</pre></div>
+</div>
+<p>可以发现, 我们在变量结构中已经做到了很多:</p>
+<ul class="simple">
+<li><p>限定变量只能是某些值: &quot;依存度必须在0~100之间&quot;</p></li>
+<li><p>变量值出现某些错误时自动修正: &quot;如果数量不为正数应该直接删除物品&quot;</p></li>
+<li><p>当 AI 插入变量省略了某个字段时, 为字段设置默认值: &quot;如果没有填写数量则默认数量为1&quot;</p></li>
+<li><p>变量数量上限: &quot;称号有数量上限……&quot;</p></li>
+<li><p>……</p></li>
+</ul>
+<p>但变量结构只能用于检验和修复更新后的变量值, 不能获取酒馆其他信息, 不能获取更新前的变量值进行对比, 不能跟酒馆进行其他交互或修改酒馆内容……因此有很多功能是不能做到的, 这时就需要我们用到酒馆助手脚本或酒馆助手界面了.</p>
+<p>例如, 我们希望利用变量制作商品购物等功能, 那么与其让玩家打字输入要买什么商品, 然后由 AI 计算能否购买、扣除金额, 我们完全可以用酒馆助手制作一个前端界面或脚本, 在界面中显示出商品名称、图片、价格, 让玩家可以点击按钮购买, 在所有购买完成后, 才把购买过程日志和结果发送给 AI.</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E7%95%8C%E9%9D%A2%E7%A4%BA%E4%BE%8B.png" src="../../../../_images/%E7%95%8C%E9%9D%A2%E7%A4%BA%E4%BE%8B.png" />
+</figure>
+<p>酒馆助手前端界面或脚本的具体编写方法请参考青空莉的<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>; 在这里, 我会为你介绍一些 MVU 额外提供的代码功能以及对应的例子, 帮助你了解前端界面或脚本可以怎样控制和利用变量. <br />
+(但这并不意味着前端界面或脚本只能做到这些功能, 例如, MVU 本身也是一个酒馆助手脚本!)</p>
+<section id="mvu">
+<h2>监听 MVU 事件<a class="headerlink" href="#mvu" title="Link to this heading">#</a></h2>
+<p>让我们再简单回忆一下 MVU 变量框架是怎么工作的:</p>
+<ul class="simple">
+<li><p>MVU 读取 <code class="docutils literal notranslate"><span class="pre">[initvar]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&lt;initvar&gt;</span></code> 块, 初始化变量</p></li>
+<li><p>MVU解析 <strong>AI 回复或用户输入</strong>中的变量更新命令, 从而更新变量</p></li>
+</ul>
+<p>你可以从这个过程中看到很多个阶段:</p>
+<ol class="arabic simple">
+<li><p>(仅新开聊天时) 变量初始化完成 (<code class="docutils literal notranslate"><span class="pre">VARIABLE_INITIALIZED</span></code>)</p></li>
+<li><p>变量更新开始 (<code class="docutils literal notranslate"><span class="pre">VARIABLE_UPDATE_STARTED</span></code>)</p></li>
+<li><p>变量更新命令解析完成 (<code class="docutils literal notranslate"><span class="pre">COMMAND_PARSED</span></code>)</p></li>
+<li><p>脚本使用解析出的更新命令依次更新变量, 每次更新后都使用变量结构检验/转换结果</p></li>
+<li><p>变量更新结束 (<code class="docutils literal notranslate"><span class="pre">VARIABLE_UPDATE_ENDED</span></code>)</p></li>
+<li><p>脚本将变量结果存储到对应楼层中之前 (<code class="docutils literal notranslate"><span class="pre">BEFORE_MESSAGE_UPDATE</span></code>)</p></li>
+</ol>
+<p>针对这些阶段, MVU 都会发送 &quot;事件和相应的信息&quot;. 我们只要新建一个酒馆助手脚本, 监听这些事件, 就能在对应阶段执行额外功能或调整 MVU 的更新过程:</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>看不懂下面写的是啥? 没关系, 你现在重要的是知道能做到什么! 然后你就能阅读<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>, 把编写模板中的 <code class="docutils literal notranslate"><span class="pre">&#64;types/iframe/exported.mvu.d.ts</span></code> 文件和这里的示例发给 AI 让它学着帮你写.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>在使用下面的功能之前, 你需要在代码开头添加一行 <code class="docutils literal notranslate"><span class="pre">await</span> <span class="pre">waitGlobalInitialized('Mvu');</span></code> 等待 MVU 变量框架初始化完成. <br />
+为了强调这一点, 以下所有例子开头都添加了 <code class="docutils literal notranslate"><span class="pre">await</span> <span class="pre">waitGlobalInitialized('Mvu');</span></code>; 如果你有更复杂的代码, 只需要在代码最开头添加一处 <code class="docutils literal notranslate"><span class="pre">waitGlobalInitialized('Mvu');</span></code> 即可, 不必多次添加.</p>
+</div>
+<section id="command-parsed">
+<h3>COMMAND_PARSED: 变量更新命令解析完成<a class="headerlink" href="#command-parsed" title="Link to this heading">#</a></h3>
+<p>通过监听 &quot;变量更新命令解析完成&quot; 事件 (<code class="docutils literal notranslate"><span class="pre">Mvu.events.COMMAND_PARSED</span></code>), 你可以获取到对应的变量更新命令, 并对其进行修复.</p>
+<p>例如, 修复 gemini 在中文间加入的 <code class="docutils literal notranslate"><span class="pre">-</span></code>, 如将<code class="docutils literal notranslate"><span class="pre">角色.络-络</span></code>修复为<code class="docutils literal notranslate"><span class="pre">角色.络络</span></code>:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">COMMAND_PARSED</span><span class="p">,</span><span class="w"> </span><span class="nx">commands</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">commands</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">command</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">command</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">command</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">replaceAll</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>又比如, 将繁体字修复为简体字, 如将<code class="docutils literal notranslate"><span class="pre">絡絡</span></code>修复为<code class="docutils literal notranslate"><span class="pre">络络</span></code>:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">toSimplified</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;chinese-simple2traditional&#39;</span><span class="p">;</span>
+
+<span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">COMMAND_PARSED</span><span class="p">,</span><span class="w"> </span><span class="nx">commands</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">commands</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">command</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">command</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">toSimplified</span><span class="p">(</span><span class="nx">command</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</section>
+<section id="variable-update-ended">
+<h3>VARIABLE_UPDATE_ENDED: 变量更新结束<a class="headerlink" href="#variable-update-ended" title="Link to this heading">#</a></h3>
+<p>通过监听 &quot;变量更新结束&quot; 事件 (<code class="docutils literal notranslate"><span class="pre">Mvu.events.VARIABLE_UPDATE_ENDED</span></code>), 你可以获取到更新前后的变量, 可以对更新结果进行额外处理.</p>
+<p>比如, 我们可以这样弹窗显示更新前后的变量值:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="nx">old_variables</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">toastr</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="sb">`更新前的白娅依存度是: </span><span class="si">${</span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">old_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">toastr</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="sb">`更新后的白娅依存度是: </span><span class="si">${</span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>或者, 我们可以这样修改更新后的变量值:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 不管更新成了多少, 强行把白娅依存度改成 0</span>
+<span class="w">  </span><span class="nx">_</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>由此我们可以做非常多功能.</p>
+<p>其中一些是在变量结构也能做到的:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">限制依存度在 0 和 100 之间</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">如果数量不为正数应该直接删除物品</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">称号有数量上限，依存度越高越多</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">记录好感度第一次超过 30</button><button aria-controls="panel-0-0-4" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-4" name="0-4" role="tab" tabindex="-1">青空莉死了!</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">_</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">clamp</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">100</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">_</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.主角.物品栏&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">pickBy</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="p">({</span><span class="nx">数量</span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">数量</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">_</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.称号&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">    </span><span class="nx">_</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">entries</span><span class="p">()</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">takeRight</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">10</span><span class="p">))</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">value</span><span class="p">(),</span>
+<span class="w">  </span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-3" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-3" name="0-3" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">30</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">_</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.$flag.白娅依存度突破30&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-4" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-4" name="0-4" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.青空莉.死亡&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 删除所有与青空莉相关的变量</span>
+<span class="w">    </span><span class="nx">_</span><span class="p">.</span><span class="nx">unset</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.青空莉&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div></div>
+<p>但变量结构脚本无法获取以前的变量情况, 因此无法利用 <code class="docutils literal notranslate"><span class="pre">old_variables</span></code> 做到下面这些, 而酒馆助手脚本能做到:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">限制依存度变动幅度不超过 3</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">检测依存度突破 30</button><button aria-controls="panel-1-1-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-2" name="1-2" role="tab" tabindex="-1">让 AI 不能更新变量</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="nx">old_variables</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">old_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">old_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// 新的好感度必须在 旧好感度-3 和 旧好感度+3 之间</span>
+<span class="w">  </span><span class="nx">_</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">clamp</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">old_value</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="nx">old_value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">3</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="nx">old_variables</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">old_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">old_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">new_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">old_value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">30</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">new_value</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">30</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">toastr</span><span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="s1">&#39;白娅依存度突破 30 了!&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-2" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-2" name="1-2" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="nx">old_variables</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 强行将新的白娅依存度设置为旧的, 从而取消 AI 对它的更新</span>
+<span class="w">  </span><span class="nx">_</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">old_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+<section id="id2">
+<h2>仅用于脚本的 MVU 变量<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>既然脚本能做到这么多功能, 那么我们很可能会想设置一些变量只给脚本用……</p>
+<p>还记得在<a class="reference internal" href="../动态发送提示词/#aiai"><span class="std std-ref">让变量不能被 AI 更新或对 AI 不可见</span></a>吗? 我们可以在变量名字前面添加 <code class="docutils literal notranslate"><span class="pre">_</span></code> 来让它不能被 AI 更新, 添加 <code class="docutils literal notranslate"><span class="pre">$</span></code> 来让它对 AI 不可见!</p>
+<p>当然, 刚刚其实我们也演示了, 怎么用 <code class="docutils literal notranslate"><span class="pre">VARIABLE_UPDATE_ENDED</span></code> 来让一个变量不能被 AI 更新:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="nx">old_variables</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 强行将新的白娅依存度设置为旧的, 从而取消 AI 对它的更新</span>
+<span class="w">  </span><span class="nx">_</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">new_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">old_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>在代码中自行获取、更新 MVU 变量<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>除了监听 MVU 事件, 我们还可以自行获取、更新 MVU 变量, 或主动解析文本中的 <code class="docutils literal notranslate"><span class="pre">&lt;JSONPatch&gt;</span></code> 等更新命令.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">获取 MVU 变量</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">更新 MVU 变量</button><button aria-controls="panel-2-2-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-2" name="2-2" role="tab" tabindex="-1">解析文本中的更新命令</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+
+<span class="c1">// 获取第 5 楼的 MVU 变量</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">getMvuData</span><span class="p">({</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="mf">5</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 获取最后一楼的 MVU 变量</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">getMvuData</span><span class="p">({</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="c1">// 或 `message_id: &#39;latest&#39;`</span>
+
+<span class="c1">// 获取倒数第二楼的 MVU 变量</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">getMvuData</span><span class="p">({</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">2</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 在前端界面中, 获取前端界面所在楼层的 MVU 变量</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">getMvuData</span><span class="p">({</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="nx">getCurrentMessageId</span><span class="p">()</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+
+<span class="c1">// 获取本前端界面所在楼层的 MVU 变量</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">mvu_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">getMvuData</span><span class="p">({</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="nx">getCurrentMessageId</span><span class="p">()</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 将白娅依存度增加 5</span>
+<span class="nx">_</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">mvu_data</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">5</span><span class="p">);</span>
+
+<span class="c1">// 将更新后的结果写回楼层</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">replaceMvuData</span><span class="p">(</span><span class="nx">mvu_data</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="nx">getCurrentMessageId</span><span class="p">()</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-2" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-2" name="2-2" role="tabpanel" tabindex="0"><div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">mvu_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">getMvuData</span><span class="p">({</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 解析从某处得到的文本中的更新命令, 此处假设了一段文本, 但你也可以从 `generate` 等地方获取</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;JSONPatch&gt;略&lt;/JSONPatch&gt;&quot;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">new_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">parseMessage</span><span class="p">(</span><span class="nx">content</span><span class="p">,</span><span class="w"> </span><span class="nx">mvu_data</span><span class="p">);</span>
+
+<span class="k">await</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">replaceMvuData</span><span class="p">(</span><span class="nx">new_data</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="nx">getCurrentMessageId</span><span class="p">()</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="id4">
+<h2>用变量激活绿灯<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>我们可以用青空莉在<a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/激活/"><span class="doc">激活</span></a>中提到的 &quot;自行编写代码控制条目的激活&quot; 方法之一——<code class="docutils literal notranslate"><span class="pre">injectPrompts</span></code> 来将变量值转换为可以激活绿灯的预扫描文本:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 获取当前白娅依存度数值</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="nx">injectPrompts</span><span class="p">([</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;激活-白娅依存度&#39;</span><span class="p">,</span><span class="w">  </span><span class="c1">// 这里的 id 是提示词的唯一标识符</span>
+<span class="w">                           </span><span class="c1">// 如果我们之后再对同样的 id 进行 injectPrompts, 则会替换掉之前的提示词</span>
+
+<span class="w">      </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="sb">`白娅依存度=</span><span class="si">${</span><span class="nx">value</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w">  </span><span class="c1">// 注入一段 `白娅依存度=xxx`, 只用于激活绿灯;</span>
+<span class="w">                                     </span><span class="c1">// 这样一来, 绿灯关键字可以填写 `白娅依存度=xxx` 来被激活</span>
+
+<span class="w">      </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">depth</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;user&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">should_scan</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">]);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>这样一来, 当前聊天里就会始终有 <code class="docutils literal notranslate"><span class="pre">白娅依存度=xxx</span></code> 这样的提示词仅用于绿灯激活, 而每次变量更新时, 脚本都会用 <code class="docutils literal notranslate"><span class="pre">injectPrompts</span></code> 更新它, 保证它始终是最新数值.</p>
+<p>当然, 为了让绿灯关键字写起来更简单, 你可以直接注入 <code class="docutils literal notranslate"><span class="pre">白娅阶段一</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">白娅依存度</span></code>:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="nx">eventOn</span><span class="p">(</span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">VARIABLE_UPDATE_ENDED</span><span class="p">,</span><span class="w"> </span><span class="nx">variables</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 获取当前白娅依存度数值</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;白娅阶段&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">20</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">content</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s1">&#39;一&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">40</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">content</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s1">&#39;二&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">60</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">content</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s1">&#39;三&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">80</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">content</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s1">&#39;四&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">content</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s1">&#39;五&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">injectPrompts</span><span class="p">([</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;激活-白娅依存度&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">content</span><span class="p">,</span><span class="w">  </span><span class="c1">// `白娅阶段一`、`白娅阶段二`、...</span>
+<span class="w">      </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">depth</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;user&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">should_scan</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">]);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>另一种方式是利用 <code class="docutils literal notranslate"><span class="pre">injectPrompts</span></code> 的 <code class="docutils literal notranslate"><span class="pre">filter</span></code> 字段, 直接注入一段只有给定条件满足时才使用的提示词. 示例卡中的立即事件脚本就是这么做的:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="nx">injectPrompts</span><span class="p">([</span>
+<span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;激活-依存度最低时立即事件&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="nx">depth</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<span class="w">   </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;system&#39;</span><span class="p">,</span>
+<span class="w">   </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;【【依存度最低时立即事件】】&#39;</span><span class="p">,</span>
+
+<span class="w">   </span><span class="c1">// `getAllVariables()` 获取最新变量, 从中得到白娅依存度, 仅当依存度为 0 时才激活这段提示词</span>
+<span class="w">   </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">getAllVariables</span><span class="p">(),</span><span class="w"> </span><span class="s1">&#39;stat_data.白娅.依存度&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
+
+<span class="w">   </span><span class="nx">should_scan</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w"> </span><span class="p">},</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+<p>当然, <code class="docutils literal notranslate"><span class="pre">injectPrompts</span></code> 除了注入仅用于激活绿灯的提示词外, 还能直接注入 Dn 提示词, 具体请阅读<a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/"><span class="doc">酒馆如何处理世界书</span></a>和<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>.</p>
+</section>
+<section id="ai">
+<h2>在代码中请求 AI 生成并用结果更新变量<a class="headerlink" href="#ai" title="Link to this heading">#</a></h2>
+<p>你当然可以在前端界面或脚本中直接请求 AI 生成, 而生成结果中如果有 <code class="docutils literal notranslate"><span class="pre">&lt;JSONPatch&gt;</span></code> 等变量更新命令, 你也可以解析它并更新变量.</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+
+<span class="c1">// 获取旧变量</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">old_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">getMvuData</span><span class="p">({</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="kt">getCurrentMessageId</span><span class="p">()</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 请求 AI 生成</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">generate</span><span class="p">({</span><span class="w"> </span><span class="nx">user_input</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;你好&#39;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 解析生成结果</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">parseMessage</span><span class="p">(</span><span class="nx">message</span><span class="p">,</span><span class="w"> </span><span class="nx">old_data</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>得到 AI 回复 <code class="docutils literal notranslate"><span class="pre">message</span></code> 和变量更新结果 <code class="docutils literal notranslate"><span class="pre">data</span></code> 后, 你可以自行选择如何使用它们.</p>
+<p>也许这个 AI 请求只是为了专门进行一次变量更新, 那么你可以抛弃 <code class="docutils literal notranslate"><span class="pre">message</span></code>, 将 <code class="docutils literal notranslate"><span class="pre">data</span></code> 写回到当前楼层:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="c1">// 将更新后的变量写回楼层</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">Mvu</span><span class="p">.</span><span class="nx">replaceMvuData</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message_id</span><span class="o">:</span><span class="w"> </span><span class="kt">getCurrentMessageId</span><span class="p">()</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+</div>
+<p>也许你是想让玩家直接在同层界面里玩 AI (具体请参考<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>), 这个 AI 请求是在请求 AI 回复剧情和更新变量, 那么你可以将回复和变量创建成新的楼层:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="c1">// 将回复和变量结果创建为新的楼层</span>
+<span class="k">await</span><span class="w"> </span><span class="nx">createChatMessages</span><span class="p">([{</span><span class="w"> </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;assistant&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="p">}]);</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>用脚本实现更多功能<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>请阅读<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>, 然后把模板文件夹中的 <code class="docutils literal notranslate"><span class="pre">&#64;types/iframe/exported.mvu.d.ts</span></code> 文件发给 AI 让它学着帮你写.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../动态发送提示词/"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">提示词模板: 动态发送提示词</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../状态栏/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">酒馆助手界面: 显示和允许玩家修改变量</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mvu">监听 MVU 事件</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#command-parsed">COMMAND_PARSED: 变量更新命令解析完成</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variable-update-ended">VARIABLE_UPDATE_ENDED: 变量更新结束</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">仅用于脚本的 MVU 变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">在代码中自行获取、更新 MVU 变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">用变量激活绿灯</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai">在代码中请求 AI 生成并用结果更新变量</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">用脚本实现更多功能</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-02-21 01:43:36.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

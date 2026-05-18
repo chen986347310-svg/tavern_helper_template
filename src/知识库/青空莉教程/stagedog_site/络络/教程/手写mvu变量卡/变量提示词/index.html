@@ -1,0 +1,1575 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2026-02-23T12:46:01+08:00" />
+    <title>变量提示词: 让 AI 理解变量 &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '络络/教程/手写mvu变量卡/变量提示词/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/络络/教程/手写mvu变量卡/变量提示词/" />
+    <link rel="icon" href="../../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../../search/" />
+    <link rel="next" title="提示词模板: 动态发送提示词" href="../动态发送提示词/" />
+    <link rel="prev" title="设置和初始化变量" href="../设置和初始化变量/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-02-23 12:46:01"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../作品集/">作品集</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">手写 MVU zod 变量卡</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../脚本控制变量/">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../状态栏/">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../生成立绘、表情差分和cg/">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../青空莉/作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../青空莉/写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/">提示词个人写法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/额外输出格式/">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/多角色/">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/">实时编写角色卡、世界书或预设</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/使用说明/">使用说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/">实时编写前端界面或脚本</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/环境准备/">环境准备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/阅读示例/">阅读示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/实际编写/">实际编写</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/络络/教程/手写mvu变量卡/变量提示词/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/络络/教程/手写mvu变量卡/变量提示词/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F络络/教程/手写mvu变量卡/变量提示词/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/络络/教程/手写mvu变量卡/变量提示词/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>变量提示词: 让 AI 理解变量</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">制作角色卡时的特殊设置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">简单制作三大变量提示词</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">变量列表</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#format-message-variable">酒馆助手宏 <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::变量路径}}</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mvu-ai">选择性地发给 AI 变量列表</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">让 AI 知道变量列表中的值是最新的</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">具体解释变量含义</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">变量更新规则</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">各个字段的意义</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">避免重复书写变量更新规则</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">将变量结构直接用于变量更新规则</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">变量更新规则的插入位置</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">变量输出格式</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">解释</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">酒馆正则</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">变量更新强调</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">为不同开局设置不同变量初始值 (增量方案)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">适配两种变量更新方式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">变量提示词只是提示词</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">测试变量提示词</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">回顾</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="ai">
+<h1>变量提示词: 让 AI 理解变量<a class="headerlink" href="#ai" title="Link to this heading">#</a></h1>
+<p>在上一章中, 我们成功设置和初始化了变量, 但这只是在酒馆层面给角色卡设定了变量, 我们还没让 AI 知道有变量. 嗯……打个比方的话, 角色卡一般有头像, 但你如果问 AI, 它并不知道你为角色卡设定了什么头像.</p>
+<p>那么, 如何让AI &quot;看&quot; 到并根据我们的意图去操作这些变量呢? 这就需要我们在世界书里编写提示词, 告诉 AI 变量的三个基本信息了:</p>
+<dl class="simple myst">
+<dt>变量列表</dt><dd><p>变量当前的值是多少? 它有什么含义? 例如, <code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>这个变量现在的数值是多少? 它是 0、是 100 分别代表什么意思?</p>
+</dd>
+<dt>变量更新规则</dt><dd><p>变量在什么情况下应该被更新、更新成什么值? 例如, <code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>这个变量在发生什么剧情时应该上升, 什么情况下又该下降?</p>
+</dd>
+<dt>变量输出格式</dt><dd><p>AI 应该输出什么来更新变量? 例如, 如果 AI 认为白娅和主角一起去约会所以<code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>应该从 20 上升到 25, 那它该输出什么内容来告诉 MVU 脚本应该将<code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>更新成 25?</p>
+</dd>
+</dl>
+<p>……应该没有懵掉吧qwq 我、我再打个比方! 假如我们要让 AI 能根据剧情发展自己修改角色卡的头像:</p>
+<dl class="simple myst">
+<dt>变量列表</dt><dd><p>角色卡当前的头像是什么? 它有什么含义?</p>
+</dd>
+<dt>变量更新规则</dt><dd><p>角色卡的头像在什么情况下应该被更新、更新成什么头像?</p>
+</dd>
+<dt>变量输出格式</dt><dd><p>AI 应该输出什么来更新头像? 也许是直接输出一张图片! 然后某个头像替换脚本会读取这个图片作为新的角色卡头像.</p>
+</dd>
+</dl>
+<section id="id1">
+<h2>制作角色卡时的特殊设置<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>如果你在使用门之主写卡助手, 会看到输入框上方有个<code class="docutils literal notranslate"><span class="pre">启用/禁用提示词模板和酒馆助手宏</span></code>按钮; 如果没有使用, 你也可以<a class="reference internal" href="../../../../青空莉/作品集/"><span class="doc">单独导入这个按钮</span></a>:</p>
+<ul class="simple">
+<li><p>在制作角色卡时你应该禁用它们, 这样 AI 才能看到原本的提示词而不是处理后的结果;</p></li>
+<li><p>在测试、游玩角色卡时你应该启用它们, 这样 AI 才能看到处理后的结果, 例如看到 <code class="docutils literal notranslate"><span class="pre">好感度:</span> <span class="pre">10</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">好感度:</span> <span class="pre">{{format_message_variable::络络.好感度}}</span></code>.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>简单制作三大变量提示词<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>你可以近乎无脑地得到变量列表、变量更新规则和变量输出格式:</p>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">[mvu_update]变量更新规则</span></code></dt><dd><p>延续之前生成<code class="docutils literal notranslate"><span class="pre">变量结构设计</span></code>所使用的聊天, 切换成门之主写卡助手的<code class="docutils literal notranslate"><span class="pre">变量更新规则</span></code>条目, 输入你想要强调的一些更新规则 (如<code class="docutils literal notranslate"><span class="pre">白娅的称号必须反映白娅对主角的态度</span></code>) 然后让 AI 生成, 最后自己调整一下生成结果.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">[mvu_update]变量输出格式</span></code> 和 <code class="docutils literal notranslate"><span class="pre">变量列表</span></code></dt><dd><p>直接点击复制<a class="reference external" href="https://github.com/StageDog/tavern_helper_template/blob/main/%E5%88%9D%E5%A7%8B%E6%A8%A1%E6%9D%BF/%E8%A7%92%E8%89%B2%E5%8D%A1/%E6%96%B0%E5%BB%BA%E4%B8%BAsrc%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%96%E7%95%8C%E4%B9%A6/%E5%8F%98%E9%87%8F/%E5%8F%98%E9%87%8F%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F.yaml"><code class="docutils literal notranslate"><span class="pre">[mvu_update]变量输出格式</span></code></a>和<a class="reference external" href="https://github.com/StageDog/tavern_helper_template/blob/main/%E5%88%9D%E5%A7%8B%E6%A8%A1%E6%9D%BF/%E8%A7%92%E8%89%B2%E5%8D%A1/%E6%96%B0%E5%BB%BA%E4%B8%BAsrc%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%96%E7%95%8C%E4%B9%A6/%E5%8F%98%E9%87%8F/%E5%8F%98%E9%87%8F%E5%88%97%E8%A1%A8.txt"><code class="docutils literal notranslate"><span class="pre">变量列表</span></code></a>里的内容.</p>
+</dd>
+</dl>
+<p>由此我们就拥有了三大变量提示词条目. 我们按下图这样设置, AI 就能理解变量、更新变量了:</p>
+<figure class="align-default" id="id23">
+<img alt="../../../../_images/%E5%8F%98%E9%87%8F%E6%8F%90%E7%A4%BA%E8%AF%8D.png" src="../../../../_images/%E5%8F%98%E9%87%8F%E6%8F%90%E7%A4%BA%E8%AF%8D.png" />
+<figcaption>
+<p><span class="caption-text">变量提示词条目设置</span><a class="headerlink" href="#id23" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>然后, 我们前往<span class="menuselection">酒馆右上角积木按钮 ‣ 正则</span>, 选择以下某个版本的三个正则导入到局部正则中:</p>
+<ul class="simple">
+<li><p>美化版 (<a class="extlink-stagedog_view reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/美化版.mp4">点此查看演示</a>): <a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[不发送]去除变量更新.json?inline=false">[不发送]去除变量更新</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[美化]变量更新中.json?inline=false">[美化]变量更新中</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[美化]完整变量更新.json?inline=false">[美化]完整变量更新</a></p></li>
+<li><p>折叠版 (<a class="extlink-stagedog_view reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/折叠版.mp4">点此查看演示</a>): <a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[不发送]去除变量更新.json?inline=false">[不发送]去除变量更新</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[折叠]变量更新中.json?inline=false">[折叠]变量更新中</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[折叠]完整变量更新.json?inline=false">[折叠]完整变量更新</a></p></li>
+<li><p>仅提示版 (不能展开查看更新内容): <a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[不发送]去除变量更新.json?inline=false">[不发送]去除变量更新</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[仅提示]变量更新中.json?inline=false">[仅提示]变量更新中</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[仅提示]完整变量更新.json?inline=false">[仅提示]完整变量更新</a></p></li>
+</ul>
+<p>这样一来, 你就写好变量提示词, 可以进入下一章了! 但我建议你了解一下各个提示词到底做了啥, 又是怎么做到的:</p>
+</section>
+<section id="id3">
+<h2>变量列表<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>变量列表告诉 AI 变量当前的值是多少以及变量有什么含义.</p>
+<p>但门之主写卡助手中的变量列表提示词写得非常简单:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+&lt;status_current_variable&gt;
+{{format_message_variable::stat_data}}
+&lt;/status_current_variable&gt;
+</pre></div>
+</div>
+<p>这为什么就能让 AI 知道变量当前的值是多少以及变量有什么含义呢?</p>
+<p>因为当实际发送时, <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::stat_data}}</span></code> 并不会原封不动地发送出去, 而是被替换成变量内容:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">提示词</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">发送给 AI 的结果</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">提示词查看器</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+&lt;status_current_variable&gt;
+{{format_message_variable::stat_data}}
+&lt;/status_current_variable&gt;
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+&lt;status_current_variable&gt;
+世界:
+  当前时间: 2024-04-08 10:45
+  当前地点: 私立风祭学院 高中部 2年A班教室
+  近期事务:
+    转学生安置: 白娅刚刚转入，需要领取教材、熟悉校园环境
+    座位调整: 班长正在确认最终的座位表，可能会有微调
+    午休临近: 还有一节课就是午休，是接触白娅的机会
+白娅:
+  依存度: 35
+  着装:
+    上装: 整洁的深蓝色校服外套，一丝不苟地扣好每一颗纽扣
+    下装: 规整的深蓝色百褶裙，长度恰好及膝
+    内衣: 素白色内衣套装
+    袜子: 黑色过膝袜，没有一丝皱褶
+    鞋子: 黑色皮质学生鞋，擦得锃亮
+    饰品: 无
+  称号:
+    行尸:
+      效果: 日常行动带有明显的倦怠感与机械感
+      自我评价: 活着本身就是惩罚
+    逃避者:
+      效果: 对来自青空黎的任何接触都会本能回避
+      自我评价: 我不配出现在他的生活里
+主角:
+  物品栏:
+    陈旧的创可贴:
+      描述: 钱包夹层里放了两年的卡通创可贴，粘性大概已经失效了
+      数量: 1
+    薄荷糖:
+      描述: 提神用的强力薄荷糖，以前她很讨厌这个味道
+      数量: 1
+&lt;/status_current_variable&gt;
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><figure class="align-default">
+<img alt="../../../../_images/%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%9F%A5%E7%9C%8B%E5%99%A8.png" src="../../../../_images/%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%9F%A5%E7%9C%8B%E5%99%A8.png" />
+</figure>
+</div><div class="docutils">
+</div>
+</div>
+<p>这不是我们第一次遇到这种提示词和实际发送内容不同的情况了. 请你打开一张角色卡, 看看它的开局消息: 明明开局消息里写的是 <code class="docutils literal notranslate"><span class="pre">&lt;user&gt;</span></code>, 但当显示和发给 AI 时却变成了具体的人名.</p>
+<figure class="align-default">
+<img alt="../../../../_images/user%E5%AE%8F.png" src="../../../../_images/user%E5%AE%8F.png" />
+</figure>
+<p>也就是说, <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::stat_data}}</span></code>、<code class="docutils literal notranslate"><span class="pre">&lt;user&gt;</span></code> 这些文本只是作为占位符, 而在实际显示或发送时会被替换成具体的内容.</p>
+<!-- markdownlint-disable MD032 MD007 -->
+<dl class="simple myst">
+<dt>像这样的占位文本称为 &quot;宏&quot;.</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;user&gt;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">{{user}}</span></code> 是酒馆宏, 你可以在酒馆输入框输入 <code class="docutils literal notranslate"><span class="pre">/help</span> <span class="pre">macros</span></code> 并<kbd class="kbd docutils literal notranslate">回车</kbd>来了解酒馆提供了哪些酒馆宏;</p></li>
+<li><p>而 <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::变量路径}}</span></code> 是酒馆助手新注册的宏.</p></li>
+</ul>
+</dd>
+</dl>
+<!-- markdownlint-enable MD032 MD007 -->
+<section id="format-message-variable">
+<h3>酒馆助手宏 <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::变量路径}}</span></code><a class="headerlink" href="#format-message-variable" title="Link to this heading">#</a></h3>
+<p>为了扩展酒馆的功能、更好地支持变量, 酒馆助手允许你自己<a class="reference external" href="https://n0vi028.github.io/JS-Slash-Runner-Doc/guide/%E5%8A%9F%E8%83%BD%E8%AF%A6%E6%83%85/%E9%85%92%E9%A6%86%E5%8A%A9%E6%89%8B%E5%AE%8F.html">注册酒馆助手宏</a>, 并预先提供了 <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::变量}}</span></code> 宏, 它的作用就是展示最新消息楼层的变量值.</p>
+<p>其中, <code class="docutils literal notranslate"><span class="pre">变量路径</span></code>是要展示的变量路径. 也就是说 <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::stat_data}}</span></code> 会展示 <code class="docutils literal notranslate"><span class="pre">stat_data</span></code> 路径下的变量内容……为什么是 <code class="docutils literal notranslate"><span class="pre">stat_data</span></code>? 让我们打开<span class="menuselection">酒馆输入框左边魔棒 ‣ 变量管理器 ‣ 消息楼层</span>看看:</p>
+<figure class="align-default">
+<img alt="../../../../_images/stat_data%E7%BB%93%E6%9E%9C.png" src="../../../../_images/stat_data%E7%BB%93%E6%9E%9C.png" />
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">stat_data</span></code> 变量下正是我们设置的所有变量! 因此, <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::stat_data}}</span></code> 将会按格式展示我们设定的所有变量! 变量列表正是利用了这一点:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+&lt;status_current_variable&gt;
+{{format_message_variable::stat_data}}
+&lt;/status_current_variable&gt;
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">{{format_message_variable::变量路径}}</span></code> 也可以使用别的路径, 我们去变量管理器复制一个路径试试: 点击 &quot;当前时间&quot;, 然后编辑变量管理器上面的导航条, 将路径复制下来.</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%A4%8D%E5%88%B6%E5%8F%98%E9%87%8F%E8%B7%AF%E5%BE%84.png" src="../../../../_images/%E5%A4%8D%E5%88%B6%E5%8F%98%E9%87%8F%E8%B7%AF%E5%BE%84.png" />
+</figure>
+<p>我们得到的路径是 <code class="docutils literal notranslate"><span class="pre">stat_data.世界.当前时间</span></code>, 所以我们在酒馆输入框里填 <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::stat_data.世界.当前时间}}</span></code> 发送出去试试:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%8F%91%E9%80%81%E9%85%92%E9%A6%86%E5%8A%A9%E6%89%8B%E5%AE%8F.png" src="../../../../_images/%E5%8F%91%E9%80%81%E9%85%92%E9%A6%86%E5%8A%A9%E6%89%8B%E5%AE%8F.png" />
+</figure>
+<p>AI 回复中果然出现了 <code class="docutils literal notranslate"><span class="pre">2024-04-08</span> <span class="pre">10:45</span></code> 这个时间!</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>更多酒馆助手宏的用法, 请参考<a class="reference external" href="https://n0vi028.github.io/JS-Slash-Runner-Doc/guide/%E5%8A%9F%E8%83%BD%E8%AF%A6%E6%83%85/%E9%85%92%E9%A6%86%E5%8A%A9%E6%89%8B%E5%AE%8F.html">酒馆助手宏</a>文档.</p>
+</div>
+</section>
+<section id="mvu-ai">
+<span id="id4"></span><h3>选择性地发给 AI 变量列表<a class="headerlink" href="#mvu-ai" title="Link to this heading">#</a></h3>
+<p>既然 <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::变量路径}}</span></code> 是展示你所填变量路径下的变量, 如果我们知道自己的变量结构是怎么样的, 完全可以自己更细致地展示变量内容:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">泛用的变量列表</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">我们知道变量结构, 可以单独展示某个路径</button><button aria-controls="panel-1-1-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-2" name="1-2" role="tab" tabindex="-1">发送给 AI 的结果</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+&lt;status_current_variable&gt;
+{{format_message_variable::stat_data}}
+&lt;/status_current_variable&gt;
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+&lt;status_current_variable&gt;
+世界:
+  {{format_message_variable::stat_data.世界}}
+白娅:
+  依存度: {{format_message_variable::stat_data.白娅.依存度}}
+  着装:
+    {{format_message_variable::stat_data.白娅.着装}}
+  称号:
+    {{format_message_variable::stat_data.白娅.称号}}
+主角:
+  {{format_message_variable::stat_data.主角}}
+&lt;/status_current_variable&gt;
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-2" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-2" name="1-2" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+&lt;status_current_variable&gt;
+世界:
+  当前时间: 2024-04-08 10:45
+  当前地点: 私立风祭学院 高中部 2年A班教室
+  近期事务:
+    转学生安置: 白娅刚刚转入，需要领取教材、熟悉校园环境
+    座位调整: 班长正在确认最终的座位表，可能会有微调
+    午休临近: 还有一节课就是午休，是接触白娅的机会
+白娅:
+  依存度: 35
+  着装:
+    上装: 整洁的深蓝色校服外套，一丝不苟地扣好每一颗纽扣
+    下装: 规整的深蓝色百褶裙，长度恰好及膝
+    内衣: 素白色内衣套装
+    袜子: 黑色过膝袜，没有一丝皱褶
+    鞋子: 黑色皮质学生鞋，擦得锃亮
+    饰品: 无
+  称号:
+    行尸:
+      效果: 日常行动带有明显的倦怠感与机械感
+      自我评价: 活着本身就是惩罚
+    逃避者:
+      效果: 对来自青空黎的任何接触都会本能回避
+      自我评价: 我不配出现在他的生活里
+主角:
+  物品栏:
+    陈旧的创可贴:
+      描述: 钱包夹层里放了两年的卡通创可贴，粘性大概已经失效了
+      数量: 1
+    薄荷糖:
+      描述: 提神用的强力薄荷糖，以前她很讨厌这个味道
+      数量: 1
+&lt;/status_current_variable&gt;
+</pre></div>
+</div>
+</div></div>
+<p>也就是说, 你完全可以把变量列表拆成几个条目, 一些设置为蓝灯, 一些设置为绿灯, 来更细致地控制变量! 总之, 变量提示词只是提示词. 正常的世界书条目能怎么写, 变量提示词就也可以.</p>
+</section>
+<section id="id5">
+<h3>让 AI 知道变量列表中的值是最新的<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>变量列表列出了变量的当前值, 但 AI 仍可能认为变量列表中的值不是对应于最新剧情, 而是之前某个剧情的. 这是我们世界书条目插入位置导致的.</p>
+<p>一般而言, 预设将提示词按照以下顺序发送给 AI:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>角色定义之前
+角色定义之后
+第 0 楼
+第 1 楼
+...
+倒数第 4 楼 (上上次 AI 回复)
+D3
+倒数第 3 楼 (上一次用户输入)
+D2
+倒数第 2 楼 (上一次 AI 回复)
+D1
+倒数第 1 楼 (本次用户输入)
+D0
+</pre></div>
+</div>
+<p>从上往下读, 倒数第 4 楼是上上次 AI 回复, 而倒数第 2 楼是上一次 AI 回复. 如果我们将变量列表设置成 D3 或 D2, 它就被夹在了两次回复中间:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>上上次 AI 回复
+<span class="hll">变量列表😱
+</span>上一次 AI 回复
+</pre></div>
+</div>
+<p>让我们像人类一样来想想 (?), 如果我们看到这样的文本会是什么感觉: 上上次 AI 回复, 有个变量列表, 上一次 AI 回复……我们会觉得变量列表记录的是上一次 AI 回复之前的数据, 而不是最新的数据.</p>
+<p>所以, 要让 AI 能直接理解变量列表对应于最新剧情 (上一次 AI 回复之后), 我们应该把变量列表设置在 D1 或者 D0 位置:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%8F%98%E9%87%8F%E6%8F%90%E7%A4%BA%E8%AF%8D.png" src="../../../../_images/%E5%8F%98%E9%87%8F%E6%8F%90%E7%A4%BA%E8%AF%8D.png" />
+</figure>
+</section>
+<section id="id6">
+<h3>具体解释变量含义<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>变量列表除了告诉 AI 变量当前值是多少外, 还有告诉 AI 变量是什么含义的作用.</p>
+<p>一些变量的含义从名字就能看出来, 比如<code class="docutils literal notranslate"><span class="pre">世界.当前时间</span></code>、<code class="docutils literal notranslate"><span class="pre">世界.当前地点</span></code>、<code class="docutils literal notranslate"><span class="pre">主角.物品栏</span></code>等; 一些变量则有着特殊含义, 需要我们进一步解释.</p>
+<p>例如, 对于<code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>, AI 虽然能从名字看出来是白娅对主角的依恋程度, 但在具体数值比如 23 下, 白娅应该是什么样的心理状态? 倾向于采取怎样的行为? 这些都需要我们进一步解释. <br />
+这其实就是很多卡里所说的 &quot;分段好感度&quot; 机制: 针对不同的依存度, 白娅应该有不同的行为和心理状态.</p>
+<p>目前而言, 我们可以新建一个<code class="docutils literal notranslate"><span class="pre">角色阶段</span></code>条目, 在其中简单列出不同依存度时白娅的表现:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">白娅当前行为</span><span class="p">:</span><span class="w"> </span><span class="c1"># 白娅当前依存度为{{format_message_variable::stat_data.白娅.依存度}}，因此将倾向于进行与以下示例类似的行为</span>
+<span class="w">  </span><span class="c1"># 0~19 时</span>
+<span class="w">  </span><span class="nt">消极自毁</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="c1"># 20~39 时</span>
+<span class="w">  </span><span class="nt">渴求注视</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="c1"># 40~59 时</span>
+<span class="w">  </span><span class="nt">暗中靠近</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="c1"># 60~79 时</span>
+<span class="w">  </span><span class="nt">忐忑相依</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># 80~100 时</span>
+<span class="w">  </span><span class="nt">柔软依存</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>但这样做有很明显的问题: 虽然目前白娅的依存度是在 23, 但我们仍旧发送了 0~19、40~59 等阶段的提示词. 这不仅浪费了输入 token, 还可能占用 AI 注意力, 让 AI 困惑不知道该让白娅采取哪个阶段的行为表现.</p>
+<p>在下一章中, 我会教你如何用提示词模板来解决这个问题. 现在请回过头来, 学习三大变量提示词中的第二个——变量更新规则.</p>
+</section>
+</section>
+<section id="id7">
+<h2>变量更新规则<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>变量更新规则告诉 AI 变量在什么情况下应该被更新、更新成什么值.</p>
+<div class="dropdown note admonition">
+<p class="admonition-title">生成的变量更新规则</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量更新规则</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">世界</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">当前时间</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YYYY年MM月DD日 星期X HH:MM</span>
+<span class="w">    </span><span class="nt">近期事务</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">        </span><span class="no">{</span>
+<span class="w">          </span><span class="no">[事务名: string]: string; // 事务描述</span>
+<span class="w">        </span><span class="no">}</span>
+<span class="w">      </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">记录需要完成的任务、约定、重要事件等</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">完成后从列表中移除，新增事务时及时添加</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">最多保持5-8项活跃事务，避免过度复杂</span>
+<span class="w">  </span><span class="nt">白娅</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">依存度</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">      </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0~100</span>
+<span class="w">      </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">根据白娅对&lt;user&gt;行为的感知和反应调整 ±(3~6)</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅在白娅当前察觉到&lt;user&gt;的行为时才更新</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">着装.${上装|下装|内衣|袜子|鞋子|饰品}</span><span class="p p-Indicator">:</span>
+<span class="w">      </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">换装、衣物损坏、特殊场合时更新</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">描述需包含颜色、材质、款式等细节</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">体现白娅的心理状态和对&lt;user&gt;的在意程度</span>
+<span class="w">    </span><span class="nt">称号</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">        </span><span class="no">{</span>
+<span class="w">          </span><span class="no">[称号名: string]: {</span>
+<span class="w">            </span><span class="no">效果: string;</span>
+<span class="w">            </span><span class="no">自我评价?: string;  // 默认为 &#39;待评价&#39;</span>
+<span class="w">          </span><span class="no">}</span>
+<span class="w">        </span><span class="no">}</span>
+<span class="w">      </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">基于白娅的重要行为、心理变化或与&lt;user&gt;的互动获得</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">如果自我评价为&#39;待评价&#39;，则应立即更新自我评价</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">称号应反映白娅当前的依存状态和心理发展</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">最多保持Math.ceil(依存度/10)个称号，超出时移除最早获得的</span>
+<span class="w">  </span><span class="nt">主角</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">物品栏</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">        </span><span class="no">{</span>
+<span class="w">          </span><span class="no">[物品名: string]: {</span>
+<span class="w">            </span><span class="no">描述: string;</span>
+<span class="w">            </span><span class="no">数量?: number;  // 默认为 1</span>
+<span class="w">          </span><span class="no">}</span>
+<span class="w">        </span><span class="no">}</span>
+<span class="w">      </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">获取、消耗、丢弃物品时更新数量</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">数量归零后该条目不再显示</span>
+</pre></div>
+</div>
+</div>
+<p>门之主写卡助手的变量更新规则写法是和变量结构、变量初始值、变量列表类似的. 例如 <code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code> 和 <code class="docutils literal notranslate"><span class="pre">白娅.称号</span></code> 被列为:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">变量列表</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">变量更新规则</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">白娅</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">依存度</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">  </span><span class="nt">称号</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">转学生</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">效果</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">初来乍到，对环境陌生，容易引起他人注意但本人倾向于保持低调</span>
+<span class="w">      </span><span class="nt">自我评价</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">又是一个新的开始，但我注定会再次搞砸一切</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量更新规则</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">白娅</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">依存度</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">      </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0~100</span>
+<span class="w">      </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">根据白娅对&lt;user&gt;行为的感知和反应调整 ±(3~6)</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅在白娅当前察觉到&lt;user&gt;的行为时才更新</span>
+<span class="w">    </span><span class="nt">称号</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">        </span><span class="no">{</span>
+<span class="w">          </span><span class="no">[称号名: string]: {</span>
+<span class="w">            </span><span class="no">效果: string;</span>
+<span class="w">            </span><span class="no">自我评价?: string;  // 默认为 &#39;待评价&#39;</span>
+<span class="w">        </span><span class="no">}</span>
+<span class="w">      </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">基于白娅的重要行为、心理变化或与&lt;user&gt;的互动获得</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">如果自我评价为&#39;待评价&#39;，则应立即更新自我评价</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">称号应反映白娅当前的依存状态和心理发展</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">最多保持Math.ceil(依存度/10)个称号，超出时移除最早获得的</span>
+</pre></div>
+</div>
+</div></div>
+<p>在变量更新规则中沿用变量结构的好处是显而易见的: AI 能轻易知道每个更新规则对应于哪个变量, 而同样的结构又进一步强化了 AI 对变量结构的理解.</p>
+<section id="id8">
+<h3>各个字段的意义<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<p>在门之主写卡助手的变量更新规则中, AI 可能使用以下字段: <br />
+(我建议你直接让门之主写卡助手生成它, 删去一些不需要的更新规则, 只对 <code class="docutils literal notranslate"><span class="pre">check</span></code> 部分进行一些改动.)</p>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code>: 变量支持的类型</dt><dd><p>比如<code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>是数值 (<code class="docutils literal notranslate"><span class="pre">number</span></code>), 而<code class="docutils literal notranslate"><span class="pre">任务进度</span></code>可能是<code class="docutils literal notranslate"><span class="pre">'未领取'|'进行中'|'已完成'</span></code>. <br />
+虽然我们生成的变量结构已经规定了变量只支持哪些类型, 但 AI 还不知道, 为此我们在这里告诉它, 让它总是将变量更新为可接受的值.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">range</span></code>: 数值变量必须处于的某个范围</dt><dd><p>比如<code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>必须在 0~100 之间. <br />
+这其实也在变量结构中有规定, 但我们告诉 AI 让它知道会更好: 比起 AI 把依存度更新成 128 而被修复成 100, 我们当然更希望 AI 直接知道依存度必须在 0~100 之间.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">format</span></code>: 变量必须满足的特定格式</dt><dd><p>比如<code class="docutils literal notranslate"><span class="pre">世界.当前时间</span></code>必须是 <code class="docutils literal notranslate"><span class="pre">YYYY年MM月DD日</span> <span class="pre">星期X</span> <span class="pre">HH:MM</span></code>. <br />
+这也可以在变量结构中规定, 但在示例卡中没有这样做, 而只是在变量更新规则中写了一句 <code class="docutils literal notranslate"><span class="pre">format:</span> <span class="pre">YYYY年MM月DD日</span> <span class="pre">星期X</span> <span class="pre">HH:MM</span></code> 让 AI 知道有这么回事. 为什么呢? 因为在<a class="reference external" href="https://github.com/StageDog/tavern_helper_template/tree/main/%E7%A4%BA%E4%BE%8B/%E8%A7%92%E8%89%B2%E5%8D%A1%E7%A4%BA%E4%BE%8B">示例卡</a>中, <code class="docutils literal notranslate"><span class="pre">世界.当前时间</span></code>只是为了让 AI 知道当前时间是多少, 没满足格式也没关系, 哪怕是 <code class="docutils literal notranslate"><span class="pre">HH:MM</span> <span class="pre">YYYY/MM/DD</span></code> 等依旧能满足我的需要. <br />
+换句话说, <strong>变量结构是对变量的硬性要求, 而变量更新规则中的 <code class="docutils literal notranslate"><span class="pre">type</span></code>、<code class="docutils literal notranslate"><span class="pre">range</span></code>、<code class="docutils literal notranslate"><span class="pre">format</span></code> 是对 AI 应该把变量更新成什么值的希望建议.</strong></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">check</span></code>: AI 在更新变量时应该考虑的因素</dt><dd><p>比如<code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>应该<code class="docutils literal notranslate"><span class="pre">根据白娅对&lt;user&gt;行为的感知和反应调整</span> <span class="pre">±(3~6)</span></code>, 而<code class="docutils literal notranslate"><span class="pre">白娅.称号</span></code>应该<code class="docutils literal notranslate"><span class="pre">基于白娅的重要行为、心理变化或与&lt;user&gt;的互动获得</span></code>. <br />
+这其实就是我们在具体书写变量在什么情况下应该被更新、更新成什么值了, 用自然语言平铺直叙你的要求即可.</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h3>避免重复书写变量更新规则<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<p>我们当然可以按照变量列表, 对每个变量一一列举变量更新规则, 但这无疑带来大量的重复工作和一些困难:</p>
+<ul class="simple">
+<li><p>像<code class="docutils literal notranslate"><span class="pre">世界.当前地点</span></code>这样的变量, 变量名字本身就告诉了 AI 该怎么更新, 没必要再特意写变量更新规则.</p></li>
+<li><p>像<code class="docutils literal notranslate"><span class="pre">白娅.着装.上装</span></code>、<code class="docutils literal notranslate"><span class="pre">白娅.着装.下装</span></code>这样的变量, 它们的更新规则几乎是一样的, 没必要重复书写.</p></li>
+<li><p>像<code class="docutils literal notranslate"><span class="pre">称号</span></code>这样的变量, 其内有什么物品是未知的, 我们不可能在变量更新规则中一一列举.</p></li>
+</ul>
+<p>如果你查看示例卡中的变量更新规则, 你会发现门之主写卡助手已经考虑了以上问题:</p>
+<ul class="simple">
+<li><p>它会尝试省略<code class="docutils literal notranslate"><span class="pre">世界书.当前地点</span></code>这种名字已经告诉 AI 该怎么更新的变量——你在手写时也应该这么做;</p></li>
+<li><p>它会尝试合并<code class="docutils literal notranslate"><span class="pre">白娅.着装.上装</span></code>、<code class="docutils literal notranslate"><span class="pre">白娅.着装.下装</span></code>这样的变量, 直接为<code class="docutils literal notranslate"><span class="pre">白娅.着装.${上装|下装|内衣|袜子|鞋子|饰品}</span></code>编写更新规则——你在手写时也应该这么做;</p></li>
+<li><p>它能理解<code class="docutils literal notranslate"><span class="pre">称号</span></code>下面的<code class="docutils literal notranslate"><span class="pre">称号名</span></code>是任意的, 将<code class="docutils literal notranslate"><span class="pre">称号名</span></code>放在<code class="docutils literal notranslate"><span class="pre">type</span></code>部分进行解释; 你在手写时……没关系, 还不会写 <code class="docutils literal notranslate"><span class="pre">type</span></code> 是正常的, 附录里会教你哦!</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>将变量结构直接用于变量更新规则<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<p>除了让门之主写卡助手为你编写变量更新规则外, 另一种取巧的方法是直接将生成出的变量结构用于变量更新规则.</p>
+<p>这从前面我解释变量更新规则中的字段时就能看出来: <code class="docutils literal notranslate"><span class="pre">type</span></code>、<code class="docutils literal notranslate"><span class="pre">range</span></code>、<code class="docutils literal notranslate"><span class="pre">format</span></code> 这些字段都是变量结构有规定的内容, 我们唯一需要填写的是 <code class="docutils literal notranslate"><span class="pre">check</span></code> 部分.</p>
+<p>例如, 对于<code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>, 它的变量结构是这样的:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">registerMvuSchema</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;https://testingcf.jsdelivr.net/gh/StageDog/tavern_resource/dist/util/mvu_zod.js&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">Schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">白娅</span><span class="o">:</span><span class="w"> </span><span class="nx">z</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+<span class="hll"><span class="w">      </span><span class="nx">依存度</span><span class="o">:</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">coerce</span><span class="p">.</span><span class="nx">number</span><span class="p">().</span><span class="nx">transform</span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">clamp</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">100</span><span class="p">)),</span>
+</span><span class="w">    </span><span class="p">})</span>
+<span class="p">});</span>
+
+<span class="nx">$</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">registerMvuSchema</span><span class="p">(</span><span class="nx">Schema</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>我们可以直接将它用于变量更新规则的 <code class="docutils literal notranslate"><span class="pre">type</span></code> 部分:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量更新规则</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">白娅</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">依存度</span><span class="p">:</span>
+<span class="hll"><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">z.coerce.number().transform(v =&gt; _.clamp(v, 0, 100))</span>
+</span><span class="w">      </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">根据白娅对&lt;user&gt;行为的感知和反应调整 ±(3~6)</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅在白娅当前察觉到&lt;user&gt;的行为时才更新</span>
+</pre></div>
+</div>
+<p>或者, 我们可以把整个变量结构复制成变量更新规则, 用 <code class="docutils literal notranslate"><span class="pre">/**</span> <span class="pre">更新说明</span> <span class="pre">*/</span></code> 来解释每个变量应该如何更新:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量更新规则</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">  </span><span class="no">z.object({</span>
+<span class="w">    </span><span class="no">白娅: z</span>
+<span class="w">      </span><span class="no">.object({</span>
+<span class="hll"><span class="w">        </span><span class="no">/**</span>
+</span><span class="hll"><span class="w">         </span><span class="no">* check:</span>
+</span><span class="hll"><span class="w">         </span><span class="no">*   - 根据白娅对&lt;user&gt;行为的感知和反应调整 ±(3~6)</span>
+</span><span class="hll"><span class="w">         </span><span class="no">*   - 仅在白娅当前察觉到&lt;user&gt;的行为时才更新</span>
+</span><span class="hll"><span class="w">         </span><span class="no">*/</span>
+</span><span class="w">        </span><span class="no">依存度: z.coerce.number().transform(v =&gt; _.clamp(v, 0, 100)),</span>
+<span class="w">      </span><span class="no">})</span>
+<span class="w">  </span><span class="no">});</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h3>变量更新规则的插入位置<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<p>和变量列表必须与最新剧情相绑定不同, 变量更新规则不会影响 AI 对以前剧情的理解, 因此没必要非要插入到 D1 或 D0 位置——你完全可以将变量更新规则插入到剧情发展无关的位置, 比如:</p>
+<ul class="simple">
+<li><p>角色定义之后、角色定义之前;</p></li>
+<li><p>或者对于 claude 可以插入到 D3、D4 等位置, 然后利用<a class="reference internal" href="../../../../青空莉/作品集/"><span class="doc">深度条目排斥器</span></a>实现 claude、gemini 的同时适配.</p></li>
+</ul>
+<p>这些位置占用 AI 更少的注意力, 让 AI 能更专注于其他提示词; 当然你也可以图省事放在 D0（</p>
+<p>但是让 AI 更少注意变量更新规则, 不会让 AI 更新变量时更容易出错吗? 会的, 但变量输出格式里的思维链 (Chain of Thought, CoT) 会帮我们弥补这一点.</p>
+</section>
+</section>
+<section id="id12">
+<h2>变量输出格式<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
+<p>变量输出格式告诉 AI 应该输出什么来更新变量.</p>
+<p>门之主写卡助手中的变量输出格式采用了青空莉的<a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/额外输出格式/"><span class="doc">额外输出格式</span></a>写法, <code class="docutils literal notranslate"><span class="pre">rule</span></code> 部分是输出规则, <code class="docutils literal notranslate"><span class="pre">format</span></code> 部分是输出格式. <br />
+AI 于是在回复中按<code class="docutils literal notranslate"><span class="pre">变量输出格式</span></code>所指定的格式更新变量:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">英文提示词</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">中文提示词</button><button aria-controls="panel-3-3-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-2" name="3-2" role="tab" tabindex="-1">AI 输出结果</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量输出格式</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">you must output the update analysis and the actual update commands at once in the end of the next reply</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">the update commands works like the **JSON Patch (RFC 6902)** standard, must be a valid JSON array containing operation objects, but supports the following operations instead</span><span class="p p-Indicator">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">replace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">replace the value of existing paths</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">delta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update the value of existing number paths by a delta value</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">insert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">insert new items into an object or array (using `-` as array index intends appending to the end)</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remove</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">move</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">don&#39;t update field names starts with `_` as they are readonly, such as `_变量`</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">&lt;UpdateVariable&gt;</span>
+<span class="w">    </span><span class="no">&lt;Analysis&gt;$(IN ENGLISH, no more than 80 words)</span>
+<span class="w">    </span><span class="no">- ${calculate time passed: ...}</span>
+<span class="w">    </span><span class="no">- ${decide whether dramatic updates are allowed as it&#39;s in a special case or the time passed is more than usual: yes/no}</span>
+<span class="w">    </span><span class="no">- ${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots: ...}</span>
+<span class="w">    </span><span class="no">&lt;/Analysis&gt;</span>
+<span class="w">    </span><span class="no">&lt;JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">[</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: &quot;${/path/to/variable}&quot;, &quot;value&quot;: &quot;${new_value}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;delta&quot;, &quot;path&quot;: &quot;${/path/to/number/variable}&quot;, &quot;value&quot;: &quot;${positive_or_negative_delta}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;insert&quot;, &quot;path&quot;: &quot;${/path/to/object/new_key}&quot;, &quot;value&quot;: &quot;${new_value}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;insert&quot;, &quot;path&quot;: &quot;${/path/to/array/-}&quot;, &quot;value&quot;: &quot;${new_value}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;${/path/to/object/key}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;${/path/to/array/0}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;move&quot;, &quot;from&quot;: &quot;${/path/to/variable}&quot;, &quot;to&quot;: &quot;${/path/to/another/path}&quot; },</span>
+<span class="w">      </span><span class="no">...</span>
+<span class="w">    </span><span class="no">]</span>
+<span class="w">    </span><span class="no">&lt;/JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">&lt;/UpdateVariable&gt;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量输出格式</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">你必须在回复末尾输出更新分析和实际的更新命令</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">更新命令效果与**JSON Patch (RFC 6902)**标准类似，有效的 JSON 数组，其中每个元素都是表示单个操作的对象，但支持的是以下操作而不是标准操作：</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">- replace</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">替换已存在变量的值</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">delta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">用一个变动值更新已存在的数值变量</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">insert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">插入新元素到对象或数组中 (使用`-`作为数组索引则表示追加到末尾)</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remove</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">不要更新以`_`开头的变量，因为它们是只读的，例如`_变量`</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">&lt;UpdateVariable&gt;</span>
+<span class="w">    </span><span class="no">&lt;Analysis&gt;$(按英文输出，不超过80词)</span>
+<span class="w">    </span><span class="no">- ${计算经过的时间: ...}</span>
+<span class="w">    </span><span class="no">- ${根据当前情节是否足够特殊、时间跨度是否远超正常情况，判断是否允许变量值发生戏剧性变化: 是/否}</span>
+<span class="w">    </span><span class="no">- ${基于变量对应的`check`，仅根据当前回复而不是之前的剧情来分析每个变量是否需要更新: ...}</span>
+<span class="w">    </span><span class="no">&lt;/Analysis&gt;</span>
+<span class="w">    </span><span class="no">&lt;JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">[</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: &quot;${/到/变量/的路径}&quot;, &quot;value&quot;: &quot;${新值}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;delta&quot;, &quot;path&quot;: &quot;${/到/数值/变量/的路径}&quot;, &quot;value&quot;: &quot;${正或负的变动值}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;insert&quot;, &quot;path&quot;: &quot;${/到/对象/新键/的路径}&quot;, &quot;value&quot;: &quot;${新值}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;insert&quot;, &quot;path&quot;: &quot;${/到/数组/-}&quot;, &quot;value&quot;: &quot;${新值}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;${/到/对象/键/的路径}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;${/到/数组/的路径/0}&quot; },</span>
+<span class="w">      </span><span class="no">...</span>
+<span class="w">    </span><span class="no">]</span>
+<span class="w">    </span><span class="no">&lt;/JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">&lt;/UpdateVariable&gt;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-2" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-2" name="3-2" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>剧情部分...
+
+&lt;UpdateVariable&gt;
+&lt;Analysis&gt;
+- Time advanced by 10 minutes (from 10:47 to 10:57) for the class break and the subsequent interaction.
+- Special Case? No, routine plot progression, no dramatic time skips.
+- 白娅.依存度: Baiya showed a strong reaction to Qingkong Li (trembling, calling him &quot;brother&quot;, self-denial but accepting the candy secretly). She definitely noticed his attention and action. This indicates a significant emotional impact, warranting an increase.
+- 白娅.称号: The &quot;哥哥&quot; slip-up and the immediate self-punishment reinforce her internal conflict, but doesn&#39;t necessarily grant a new title yet. Her current titles are still very relevant.
+- 主角.物品栏: The mints were placed on Baiya&#39;s desk. The item should be removed from inventory.
+- 世界.近期事务: &quot;转学生安置&quot; is ongoing but the specific interaction happened. &quot;午休临近&quot; is becoming more relevant as break continues.
+&lt;/Analysis&gt;
+&lt;JSONPatch&gt;
+[
+  { &quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: &quot;/世界/当前时间&quot;, &quot;value&quot;: &quot;2024-04-08 10:57&quot; },
+  { &quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: &quot;/白娅/依存度&quot;, &quot;value&quot;: 40 },
+  { &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;/主角/物品栏/薄荷糖&quot; }
+]
+&lt;/JSONPatch&gt;
+&lt;/UpdateVariable&gt;
+</pre></div>
+</div>
+</div></div>
+<p>注意到了吗, AI 输出结果与提示词的 <code class="docutils literal notranslate"><span class="pre">format</span></code> 部分几乎是一一对应的! 所以青空莉这套<a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/额外输出格式/"><span class="doc">额外输出格式</span></a>真的很好用捏.</p>
+<section id="id13">
+<h3>解释<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<p>让我们依次看看变量输出格式提示词是怎么写的吧!</p>
+<p>它分成了 <code class="docutils literal notranslate"><span class="pre">rule</span></code> 和 <code class="docutils literal notranslate"><span class="pre">format</span></code> 两部分:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rule</span></code> 是输出规则. AI 只会读取这些要求, 而不会输出它们. 在这里, 青空莉为 AI:</p>
+<ul>
+<li><p>规定了变量输出格式应该输出到哪个位置 (<code class="docutils literal notranslate"><span class="pre">在回复末尾</span></code>);</p></li>
+<li><p>强调了输出的更新命令应该遵循 JSON Patch 规范; 而 MVU 能够解析 AI 回复中的 JSON Patch 命令来实际更新变量.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">format</span></code> 是输出格式. 其内青空莉采用了 AI 能听懂的几种特殊格式来描述该如何输出:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">${描述}</span></code>: AI 需要根据 &quot;描述&quot; 将它替换为对应的内容. 例如 <code class="docutils literal notranslate"><span class="pre">衣着:</span> <span class="pre">${具体描述角色当前衣着}</span></code> 可能输出 <code class="docutils literal notranslate"><span class="pre">衣着:</span> <span class="pre">粉金色宽松T恤睡裙</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$(要求)</span></code>: AI 只会听从 &quot;要求&quot; 而不对它进行输出. 例如 <code class="docutils literal notranslate"><span class="pre">$(以下内容应该按英文输出)</span></code> 会让 AI 更倾向于用英文输出之后的内容;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">...</span></code>: AI 需要仿照之前给定的规则和内容补充输出. 例如 <code class="docutils literal notranslate"><span class="pre">其他角色:</span> <span class="pre">...</span></code> 会让 AI 根据前面给定的 <code class="docutils literal notranslate"><span class="pre">白娅</span></code> 的输出格式, 补充其他角色的输出;</p></li>
+<li><p>其他内容原封不动地进行输出, 所以 AI 原封不动地输出了 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code>、<code class="docutils literal notranslate"><span class="pre">&lt;Analysis&gt;</span></code>、<code class="docutils literal notranslate"><span class="pre">&lt;JSONPatch&gt;</span></code> 等标签.</p></li>
+</ul>
+</li>
+</ul>
+<p>现在再回过头来看刚刚的提示词和 AI 输出结果, 是不是能够理解它们之间的关系了呢?</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-4-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-4-4-0" name="4-0" role="tab" tabindex="0">英文提示词</button><button aria-controls="panel-4-4-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-1" name="4-1" role="tab" tabindex="-1">中文提示词</button><button aria-controls="panel-4-4-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-4-4-2" name="4-2" role="tab" tabindex="-1">AI 输出结果</button></div><div aria-labelledby="tab-4-4-0" class="sphinx-tabs-panel" id="panel-4-4-0" name="4-0" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量输出格式</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">you must output the update analysis and the actual update commands at once in the end of the next reply</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">the update commands works like the **JSON Patch (RFC 6902)** standard, must be a valid JSON array containing operation objects, but supports the following operations instead</span><span class="p p-Indicator">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">replace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">replace the value of existing paths</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">delta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update the value of existing number paths by a delta value</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">insert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">insert new items into an object or array (using `-` as array index intends appending to the end)</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remove</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">move</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">don&#39;t update field names starts with `_` as they are readonly, such as `_变量`</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">&lt;UpdateVariable&gt;</span>
+<span class="w">    </span><span class="no">&lt;Analysis&gt;$(IN ENGLISH, no more than 80 words)</span>
+<span class="w">    </span><span class="no">- ${calculate time passed: ...}</span>
+<span class="w">    </span><span class="no">- ${decide whether dramatic updates are allowed as it&#39;s in a special case or the time passed is more than usual: yes/no}</span>
+<span class="w">    </span><span class="no">- ${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots: ...}</span>
+<span class="w">    </span><span class="no">&lt;/Analysis&gt;</span>
+<span class="w">    </span><span class="no">&lt;JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">[</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: &quot;${/path/to/variable}&quot;, &quot;value&quot;: &quot;${new_value}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;delta&quot;, &quot;path&quot;: &quot;${/path/to/number/variable}&quot;, &quot;value&quot;: &quot;${positive_or_negative_delta}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;insert&quot;, &quot;path&quot;: &quot;${/path/to/object/new_key}&quot;, &quot;value&quot;: &quot;${new_value}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;insert&quot;, &quot;path&quot;: &quot;${/path/to/array/-}&quot;, &quot;value&quot;: &quot;${new_value}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;${/path/to/object/key}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;${/path/to/array/0}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;move&quot;, &quot;from&quot;: &quot;${/path/to/variable}&quot;, &quot;to&quot;: &quot;${/path/to/another/path}&quot; },</span>
+<span class="w">      </span><span class="no">...</span>
+<span class="w">    </span><span class="no">]</span>
+<span class="w">    </span><span class="no">&lt;/JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">&lt;/UpdateVariable&gt;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-4-1" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-1" name="4-1" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量输出格式</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">你必须在回复末尾输出更新分析和实际的更新命令</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">更新命令效果与**JSON Patch (RFC 6902)**标准类似，有效的 JSON 数组，其中每个元素都是表示单个操作的对象，但支持的是以下操作而不是标准操作：</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">- replace</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">替换已存在变量的值</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">delta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">用一个变动值更新已存在的数值变量</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">insert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">插入新元素到对象或数组中 (使用`-`作为数组索引则表示追加到末尾)</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remove</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">不要更新以`_`开头的变量，因为它们是只读的，例如`_变量`</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">&lt;UpdateVariable&gt;</span>
+<span class="w">    </span><span class="no">&lt;Analysis&gt;$(按英文输出，不超过80词)</span>
+<span class="w">    </span><span class="no">- ${计算经过的时间: ...}</span>
+<span class="w">    </span><span class="no">- ${根据当前情节是否足够特殊、时间跨度是否远超正常情况，判断是否允许变量值发生戏剧性变化: 是/否}</span>
+<span class="w">    </span><span class="no">- ${基于变量对应的`check`，仅根据当前回复而不是之前的剧情来分析每个变量是否需要更新: ...}</span>
+<span class="w">    </span><span class="no">&lt;/Analysis&gt;</span>
+<span class="w">    </span><span class="no">&lt;JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">[</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: &quot;${/到/变量/的路径}&quot;, &quot;value&quot;: &quot;${新值}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;delta&quot;, &quot;path&quot;: &quot;${/到/数值/变量/的路径}&quot;, &quot;value&quot;: &quot;${正或负的变动值}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;insert&quot;, &quot;path&quot;: &quot;${/到/对象/新键/的路径}&quot;, &quot;value&quot;: &quot;${新值}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;insert&quot;, &quot;path&quot;: &quot;${/到/数组/-}&quot;, &quot;value&quot;: &quot;${新值}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;${/到/对象/键/的路径}&quot; },</span>
+<span class="w">      </span><span class="no">{ &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;${/到/数组/的路径/0}&quot; },</span>
+<span class="w">      </span><span class="no">...</span>
+<span class="w">    </span><span class="no">]</span>
+<span class="w">    </span><span class="no">&lt;/JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">&lt;/UpdateVariable&gt;</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-4-2" class="sphinx-tabs-panel" hidden="true" id="panel-4-4-2" name="4-2" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>剧情部分...
+
+&lt;UpdateVariable&gt;
+&lt;Analysis&gt;
+- Time advanced by 10 minutes (from 10:47 to 10:57) for the class break and the subsequent interaction.
+- Special Case? No, routine plot progression, no dramatic time skips.
+- 白娅.依存度: Baiya showed a strong reaction to Qingkong Li (trembling, calling him &quot;brother&quot;, self-denial but accepting the candy secretly). She definitely noticed his attention and action. This indicates a significant emotional impact, warranting an increase.
+- 白娅.称号: The &quot;哥哥&quot; slip-up and the immediate self-punishment reinforce her internal conflict, but doesn&#39;t necessarily grant a new title yet. Her current titles are still very relevant.
+- 主角.物品栏: The mints were placed on Baiya&#39;s desk. The item should be removed from inventory.
+- 世界.近期事务: &quot;转学生安置&quot; is ongoing but the specific interaction happened. &quot;午休临近&quot; is becoming more relevant as break continues.
+&lt;/Analysis&gt;
+&lt;JSONPatch&gt;
+[
+  { &quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: &quot;/世界/当前时间&quot;, &quot;value&quot;: &quot;2024-04-08 10:57&quot; },
+  { &quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: &quot;/白娅/依存度&quot;, &quot;value&quot;: 40 },
+  { &quot;op&quot;: &quot;remove&quot;, &quot;path&quot;: &quot;/主角/物品栏/薄荷糖&quot; }
+]
+&lt;/JSONPatch&gt;
+&lt;/UpdateVariable&gt;
+</pre></div>
+</div>
+</div></div>
+<p>接下来我们再来看看 <code class="docutils literal notranslate"><span class="pre">format</span></code> 部分是怎么设计的吧!</p>
+<p><code class="docutils literal notranslate"><span class="pre">format</span></code> 的所有输出内容被包裹在了 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 标签中, 这会方便我们马上要提及的 &quot;酒馆正则&quot; 处理. <br />
+而在它里面有 <code class="docutils literal notranslate"><span class="pre">&lt;Analysis&gt;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&lt;JSONPatch&gt;</span></code> 两个部分, 分别对应了对变量更新进行分析和实际输出变量命令.</p>
+<p>我们让 AI 先输出对变量更新的分析, 再实际输出变量更新命令. 这种先让 AI &quot;打草稿&quot; 再输出正式内容的方式, 就是思维链 (Chain of Thought, CoT) 的典型应用. <br />
+注意哦, <code class="docutils literal notranslate"><span class="pre">&lt;Analysis&gt;</span></code> 就是思维链了, 而且是专门用于变量更新的思维链! 不要被人误导, 以为变量更新还需要额外加思维链啦.</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">&lt;Analysis&gt;</span></code> 部分有三个思考内容, 是青空莉常用的三个, 我也觉得挺好用x:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-5-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-5-5-0" name="5-0" role="tab" tabindex="0">英文提示词</button><button aria-controls="panel-5-5-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-5-5-1" name="5-1" role="tab" tabindex="-1">中文提示词</button></div><div aria-labelledby="tab-5-5-0" class="sphinx-tabs-panel" id="panel-5-5-0" name="5-0" role="tabpanel" tabindex="0"><div class="literal-block-wrapper docutils container" id="id24">
+<div class="code-block-caption"><span class="caption-text">计算剧情时间变化</span><a class="headerlink" href="#id24" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${calculate time passed</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id25">
+<div class="code-block-caption"><span class="caption-text">允许变量因剧情而发生剧烈变动</span><a class="headerlink" href="#id25" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${decide whether dramatic updates are allowed as it&#39;s in a special case or the time passed is more than usual</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes/no}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id26">
+<div class="code-block-caption"><span class="caption-text">回忆变量更新所需的 <code class="docutils literal notranslate"><span class="pre">check</span></code>, 据此分析该如何更新</span><a class="headerlink" href="#id26" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...}</span>
+</pre></div>
+</div>
+</div>
+</div><div aria-labelledby="tab-5-5-1" class="sphinx-tabs-panel" hidden="true" id="panel-5-5-1" name="5-1" role="tabpanel" tabindex="0"><div class="literal-block-wrapper docutils container" id="id27">
+<div class="code-block-caption"><span class="caption-text">计算剧情时间变化</span><a class="headerlink" href="#id27" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${计算经过的时间</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id28">
+<div class="code-block-caption"><span class="caption-text">允许变量因剧情而发生剧烈变动 (好感度从 100 直接掉到 0)</span><a class="headerlink" href="#id28" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${根据当前情节是否足够特殊、时间跨度是否远超正常情况，判断是否允许变量值发生戏剧性变化</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes/no}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id29">
+<div class="code-block-caption"><span class="caption-text">回忆变量更新所需的 <code class="docutils literal notranslate"><span class="pre">check</span></code>, 据此分析该如何更新</span><a class="headerlink" href="#id29" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${基于变量对应的`check`，仅根据当前回复而不是之前的剧情来分析每个变量是否需要更新</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...}</span>
+</pre></div>
+</div>
+</div>
+</div></div>
+<dl class="simple myst">
+<dt>其中最值得学习的是<code class="docutils literal notranslate"><span class="pre">回忆变量更新所需的`check`,</span> <span class="pre">据此分析该如何更新</span></code>.</dt><dd><p>还记得我们在 &quot;变量更新规则&quot; 部分遗留的问题吗? 变量更新规则可以放在角色定义之前、D4 之类更不占用注意力的位置, 从而让 AI 更注意其他提示词和剧情. 但是由于 AI 更少去注意变量更新规则, 它在更新变量时更容易出错了.</p>
+</dd>
+<dd><p>变量更新规则的核心是 <code class="docutils literal notranslate"><span class="pre">check</span></code>, 它告诉 AI 应该根据什么来更新变量、更新成什么值. 而我们在变量输出格式的 <code class="docutils literal notranslate"><span class="pre">&lt;Analysis&gt;</span></code> 部分要求 AI 输出思维链来回忆 <code class="docutils literal notranslate"><span class="pre">check</span></code>, 也就是在 &quot;召回&quot; 它对变量更新规则的注意力, 从而稳定变量更新.</p>
+</dd>
+</dl>
+</section>
+<section id="id14">
+<span id="id15"></span><h3>酒馆正则<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<p>有了变量输出格式, AI 将会在回复时输出 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 来更新变量. 但这个输出会放在楼层里, 如果我们不加以处理, 玩家后续游玩时, 酒馆会将每楼的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 也发给 AI.</p>
+<p>但显然, AI 输出的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 没必要再发给 AI: <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 中的更新命令已经被 MVU 脚本解析使用了, 而 AI 在后续回复中很少需要参考它来稳定变量更新格式——我们已经在世界书里给了变量输出格式了.</p>
+<p>如果我们保留所有楼层的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 发给 AI:</p>
+<ul class="simple">
+<li><p>首先, 这浪费了 token;</p></li>
+<li><p>其次, AI 可能不必要地花费注意力去学习之前的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 而更少地将注意力放在剧情上;</p></li>
+<li><p>最后, AI 可能偷懒直接照抄之前的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 而不真的分析思考该如何更新变量!</p></li>
+</ul>
+<p>因此, 我们需要在后续生成时不发送 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 部分给 AI——这就用到了酒馆正则.</p>
+<p>酒馆正则能够捕获 AI 回复和用户输入中的特定文本, 让它在某些用途下被替换为指定内容:</p>
+<ul class="simple">
+<li><p><span class="menuselection">仅格式提示词</span>: 在发送给 AI 时被替换为指定内容</p></li>
+<li><p><span class="menuselection">仅格式显示</span>: 在酒馆中显示时被替换为指定内容</p></li>
+<li><p>两个都不勾选: 在 AI 输出接收到时或用户输入发送出去时就被<strong>永久</strong>替换掉</p></li>
+</ul>
+<figure class="align-default">
+<img alt="../../../../_images/%E9%85%92%E9%A6%86%E6%AD%A3%E5%88%99.png" src="../../../../_images/%E9%85%92%E9%A6%86%E6%AD%A3%E5%88%99.png" />
+</figure>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>如果你还不够理解以上说明, 也许可以看看自己酒馆中的预设配套正则或者角色卡里的美化正则.</p>
+</div>
+<p>为了便于大家操作, 青空莉已经提前制作了处理 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 变量更新的酒馆正则, 你只需下载导入其中一个版本的三个正则即可:</p>
+<ul class="simple">
+<li><p>美化版 (<a class="extlink-stagedog_view reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/美化版.mp4">点此查看演示</a>): <a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[不发送]去除变量更新.json?inline=false">[不发送]去除变量更新</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[美化]变量更新中.json?inline=false">[美化]变量更新中</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[美化]完整变量更新.json?inline=false">[美化]完整变量更新</a></p></li>
+<li><p>折叠版 (<a class="extlink-stagedog_view reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/折叠版.mp4">点此查看演示</a>): <a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[不发送]去除变量更新.json?inline=false">[不发送]去除变量更新</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[折叠]变量更新中.json?inline=false">[折叠]变量更新中</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[折叠]完整变量更新.json?inline=false">[折叠]完整变量更新</a></p></li>
+<li><p>仅提示版 (不能展开查看更新内容): <a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[不发送]去除变量更新.json?inline=false">[不发送]去除变量更新</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[仅提示]变量更新中.json?inline=false">[仅提示]变量更新中</a>、<a class="extlink-stagedog_download reference external" href="https://gitgud.io/StageDog/tavern_resource/-/raw/main/src/正则/变量更新/regex-[仅提示]完整变量更新.json?inline=false">[仅提示]完整变量更新</a></p></li>
+</ul>
+<p>其中,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">去除变量更新</span></code>是利用了正则的<span class="menuselection">仅格式提示词</span>功能, 在发送给 AI 时将整个 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 部分替换成空.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">变量更新中</span></code>和<code class="docutils literal notranslate"><span class="pre">完整变量更新</span></code>是利用了正则的<span class="menuselection">仅格式显示</span>功能, 美化 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 的显示, 方便玩家查看是否发生了更新但隐藏更新了什么.</p></li>
+</ul>
+<p>不过, <code class="docutils literal notranslate"><span class="pre">去除变量更新</span></code>默认是使得所有楼层的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 都不发送给 AI, 但有时候保留最后一两层发给 AI 也是一种选择: 如果所有楼层的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 都不发送给 AI, AI 可能误以为是要根据所有剧情来更新变量, 从而重复之前本应做过的更新.</p>
+<p>例如, 在上一次回复中, AI 已经根据 &quot;白娅和主角去约会&quot; 这一剧情更新过了白娅的依存度, 但它在这次回复时看不到以前的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code>, 于是它可能会再次根据 &quot;白娅和主角去约会&quot; 这一剧情更新白娅的依存度.</p>
+<p>如果你遇到这种重复依据剧情更新变量的情况, 那么你可以选择保留最后一两层变量发给 AI.</p>
+<p>要做到这一点, 你可以使用酒馆正则的<code class="docutils literal notranslate"><span class="pre">最小深度</span></code>功能, 它限制酒馆正则只对深度至少是特定数值的楼层有效:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...
+深度 3: 倒数第 4 楼, 一般是 AI 回复
+深度 2: 倒数第 3 楼, 一般是用户输入
+深度 1: 倒数第 2 楼, 一般是最后一条 AI 回复 
+深度 0: 倒数第 1 楼, 一般是最后一条用户输入
+</pre></div>
+</div>
+<p>也就是说, 如果我们将<code class="docutils literal notranslate"><span class="pre">去除变量更新</span></code>的最小深度设置成<code class="docutils literal notranslate"><span class="pre">4</span></code>, 那么它只对倒数第 5 楼及以上的楼层有效……这样一来, 我们就保留了最后一两层的变量更新情况发给 AI 了呢! <br />
+(当然代价是前面所说的浪费 token、浪费注意力以及 AI 可能偷懒学习以前的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 而不真的分析思考该如何更新变量😭)</p>
+</section>
+<section id="id16">
+<h3>变量更新强调<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
+<p>即便我们在 D0 设置了变量输出格式, 一些模型、预设可能依旧不会按要求输出 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;...&lt;/UpdateVariable&gt;</span></code> 来更新变量.</p>
+<p>如果你遇到了这种情况, 可以像青空莉在<a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/额外输出格式/"><span class="doc">额外输出格式</span></a>中提的那样, 在 D0 给变量输出格式添加一个输出格式强调:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量输出格式强调</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The following must be inserted to the end of reply, and cannot be omitted</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">&lt;UpdateVariable&gt;</span>
+<span class="w">    </span><span class="no">...</span>
+<span class="w">    </span><span class="no">&lt;/UpdateVariable&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="id17">
+<span id="id18"></span><h3>为不同开局设置不同变量初始值 (增量方案)<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
+<p>在<a class="reference internal" href="../设置和初始化变量/#id6"><span class="std std-ref">为不同开局设置不同变量初始值 (全量方案)</span></a> 中, 我介绍了如何用 <code class="docutils literal notranslate"><span class="pre">&lt;initvar&gt;...&lt;/initvar&gt;</span></code> 块为不同开局设置不同的变量初始值.</p>
+<p>但这种方法要求我们在每个开局都完整写一遍变量初始值. 例如, 明明 <code class="docutils literal notranslate"><span class="pre">[initvar]</span></code> 条目和开局 2 只有<code class="docutils literal notranslate"><span class="pre">挫折模式开关</span></code>不同, 但我们不得不在开局 2 中填写完整的变量结构:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-6-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-6-6-0" name="6-0" role="tab" tabindex="0">[initvar] 条目</button><button aria-controls="panel-6-6-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-6-6-1" name="6-1" role="tab" tabindex="-1">开局 2</button></div><div aria-labelledby="tab-6-6-0" class="sphinx-tabs-panel" id="panel-6-6-0" name="6-0" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">白川璃</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">好感度</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
+<span class="w">  </span><span class="nt">孤独感</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">  </span><span class="nt">恋人关系</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">死亡</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="hll"><span class="w">  </span><span class="nt">挫折剧情开关</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span></pre></div>
+</div>
+</div><div aria-labelledby="tab-6-6-1" class="sphinx-tabs-panel" hidden="true" id="panel-6-6-1" name="6-1" role="tabpanel" tabindex="0"><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>开局 2 剧情...
+
+&lt;UpdateVariable&gt;
+&lt;initvar&gt;
+```yaml
+白川璃:
+  好感度: 25
+  孤独感: 60
+  恋人关系: false
+  死亡: false
+<span class="hll">  挫折剧情开关: true
+</span>```
+&lt;/initvar&gt;
+&lt;/UpdateVariable&gt;
+</pre></div>
+</div>
+</div></div>
+<p>好麻烦啊! 有的时候我们只是想改一两个变量而已qwq <br />
+……除了使用 <code class="docutils literal notranslate"><span class="pre">&lt;initvar&gt;...&lt;/initvar&gt;</span></code> 块来在开局完全重新设置变量初始值, 我们也可以只对 <code class="docutils literal notranslate"><span class="pre">[initvar]</span></code> 条目所设定的变量初始值进行部分修改.</p>
+<p>这需要我们再重新理解一下变量输出格式是怎么生效的:</p>
+<ul class="simple">
+<li><p>AI 根据变量输出格式, 首先输出对变量更新的分析, 再实际输出变量更新命令;</p></li>
+<li><p>MVU 读取消息中的变量更新命令, 更新对应的变量.</p></li>
+<li><p>这个更新过程在每个楼层都会进行: <code class="docutils literal notranslate"><span class="pre">initvar</span> <span class="pre">设定的变量值</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">第</span> <span class="pre">0</span> <span class="pre">楼更新后的变量值</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">第</span> <span class="pre">1</span> <span class="pre">楼更新后的变量值</span></code> -&gt; …</p></li>
+<li><p>每个楼层都会保存自己楼层的变量值, 所以你能在<span class="menuselection">酒馆输入框左边魔棒 ‣ 变量管理器 ‣ 消息楼层</span>中看到每个楼层的变量值, 而且删除楼层时变量也能够正常回退.</p></li>
+</ul>
+<p>再重复一遍, &quot;这个更新过程在每个楼层都会进行&quot;. <br />
+是的! 在开局消息 (第 0 楼) 中、在用户输入中, 你也可以用变量更新命令来更新变量!</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>开局 2 剧情...
+
+&lt;UpdateVariable&gt;
+&lt;JSONPatch&gt;
+[
+<span class="hll">  { &quot;op&quot;: &quot;replace&quot;, &quot;path&quot;: &quot;/白川璃/挫折剧情开关&quot;, &quot;value&quot;: true }
+</span>]
+&lt;/JSONPatch&gt;
+&lt;/UpdateVariable&gt;
+</pre></div>
+</div>
+<p>可是 <code class="docutils literal notranslate"><span class="pre">&lt;JSONPatch&gt;</span></code> 部分看起来好复杂啊——没关系! 我们已经有了变量输出格式. 你可以把开局剧情发给 AI, 让 AI 给你生成对应的变量更新命令.</p>
+</section>
+</section>
+<section id="id19">
+<h2>适配两种变量更新方式<a class="headerlink" href="#id19" title="Link to this heading">#</a></h2>
+<p>为了让 AI 能专注于剧情, MVU 支持两种变量更新方式, 可供玩家自由选择:</p>
+<ul class="simple">
+<li><p>随 AI 输出: AI 先输出剧情再输出变量更新命令;</p></li>
+<li><p>额外模型解析: 先由一个 AI 专门输出剧情, 再由一个 AI 专门解析剧情输出变量更新命令.</p></li>
+</ul>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%8F%98%E9%87%8F%E6%9B%B4%E6%96%B0%E6%96%B9%E5%BC%8F.png" src="../../../../_images/%E5%8F%98%E9%87%8F%E6%9B%B4%E6%96%B0%E6%96%B9%E5%BC%8F.png" />
+</figure>
+<p>你如果是通过门之主写卡助手生成的三大变量提示词, 就会注意到生成的条目名字是<code class="docutils literal notranslate"><span class="pre">变量列表</span></code>、<code class="docutils literal notranslate"><span class="pre">[mvu_update]变量更新规则</span></code>、<code class="docutils literal notranslate"><span class="pre">[mvu_update]变量输出格式</span></code>. <code class="docutils literal notranslate"><span class="pre">[mvu_update]</span></code> 这个前缀其实就是为了适配两种变量更新方式:</p>
+<ul class="simple">
+<li><p>随 AI 输出: 所有条目正常发给 AI.</p></li>
+<li><p>额外模型解析:</p>
+<ul>
+<li><p>名字中有 <code class="docutils literal notranslate"><span class="pre">[mvu_plot]</span></code> 的条目只会发给负责输出剧情的 AI</p></li>
+<li><p>名字中有 <code class="docutils literal notranslate"><span class="pre">[mvu_update]</span></code> 的条目只会发给负责更新变量的 AI, 因此<code class="docutils literal notranslate"><span class="pre">变量更新规则</span></code>和<code class="docutils literal notranslate"><span class="pre">变量输出格式</span></code>前面添加了 <code class="docutils literal notranslate"><span class="pre">[mvu_update]</span></code></p></li>
+<li><p>名字中既没有 <code class="docutils literal notranslate"><span class="pre">[mvu_plot]</span></code> 也没有 <code class="docutils literal notranslate"><span class="pre">[mvu_update]</span></code> 的条目将会发送给两个 AI</p></li>
+</ul>
+</li>
+</ul>
+<p>也就是说, 如果你按照本教程, 用<code class="docutils literal notranslate"><span class="pre">变量列表</span></code>、<code class="docutils literal notranslate"><span class="pre">[mvu_update]变量更新规则</span></code>、<code class="docutils literal notranslate"><span class="pre">[mvu_update]变量输出格式</span></code>来填写变量提示词, 那么你的这张角色卡已经适配两种变量更新方式了!</p>
+<p>当然, 你可以再对其他条目名字中添加 <code class="docutils literal notranslate"><span class="pre">[mvu_plot]</span></code> 或 <code class="docutils literal notranslate"><span class="pre">[mvu_update]</span></code> , 来进一步控制 &quot;额外模型解析&quot; 更新方式下要发送哪些提示词. <br />
+比如如果你有其他输出格式，为了不对变量更新 AI 产生干扰，你可以用 <code class="docutils literal notranslate"><span class="pre">[mvu_plot]</span></code> 指定它只发给负责输出剧情的 AI: <code class="docutils literal notranslate"><span class="pre">[mvu_plot]剧情思维链</span></code>.</p>
+<p>这样修改名字只是区分条目会发给哪个 AI, 世界书条目的绿灯等功能依旧会生效.</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>只要名字中包含 <code class="docutils literal notranslate"><span class="pre">[mvu_plot]</span></code> 或 <code class="docutils literal notranslate"><span class="pre">[mvu_update]</span></code> 就可以! <code class="docutils literal notranslate"><span class="pre">[mvu_update]变量更新规则</span></code> 和 <code class="docutils literal notranslate"><span class="pre">变量更新规则[mvu_update]</span></code> 效果是一样的.</p>
+</div>
+</section>
+<section id="id20">
+<h2>变量提示词只是提示词<a class="headerlink" href="#id20" title="Link to this heading">#</a></h2>
+<p>变量提示词, 无论是变量列表、变量更新规则还是变量输出格式, <strong>只是我们写在世界书里的提示词</strong>而已. 上面的教程中我给出了门之主写卡助手使用的版本, 但你完全可以自己调整或者重新设计一套!</p>
+<p>比如, 一些变量可能只在某些情况下被需要: 如果任务系统只和某个角色绑定, 那么明显我们只需要角色出场时才发送任务系统的提示词.</p>
+<p>按照<a class="reference internal" href="#mvu-ai"><span class="std std-ref">选择性地发给 AI 变量列表</span></a>的思路, 我们当然可以做到:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">&lt;status_current_variable&gt;</span>
+<span class="l l-Scalar l-Scalar-Plain">角色</span><span class="p p-Indicator">:</span>
+<span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">format_message_variable</span><span class="p p-Indicator">::</span><span class="nv">stat_data.角色</span><span class="p p-Indicator">}}</span>
+<span class="hll"><span class="c1"># ⬇️⬇️⬇️⬇️⬇️利用绿灯或之后介绍的功能, 我们可以只在特定情况发送下面这段提示词</span>
+</span><span class="hll"><span class="nt">任务系统</span><span class="p">:</span>
+</span><span class="hll"><span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">format_message_variable</span><span class="p p-Indicator">::</span><span class="nv">stat_data.任务系统</span><span class="p p-Indicator">}}</span>
+</span><span class="hll"><span class="c1"># ⬆️⬆️⬆️⬆️⬆️</span>
+</span><span class="l l-Scalar l-Scalar-Plain">&lt;/status_current_variable&gt;</span>
+</pre></div>
+</div>
+<p>而任务系统的变量更新规则也可以同样处理.</p>
+<p>又比如, 我们的变量很少而且很简单, 那么完全没必要单独列一个 <code class="docutils literal notranslate"><span class="pre">[mvu_update]变量更新规则</span></code>, 而是可以直接把它塞到 <code class="docutils literal notranslate"><span class="pre">[mvu_update]变量输出格式</span></code> 中:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">变量输出格式</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">you must output &lt;UpdateVariable&gt; at the end of each reply</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">&lt;UpdateVariable&gt;</span>
+<span class="w">    </span><span class="no">&lt;JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">[</span>
+<span class="hll"><span class="w">      </span><span class="no">{ op: &quot;delta&quot;, path: &quot;/白娅/依存度&quot;, value: ${根据白娅对&lt;user&gt;当前行为的态度变化} }</span>
+</span><span class="w">    </span><span class="no">]</span>
+<span class="w">    </span><span class="no">&lt;/JSONPatch&gt;</span>
+<span class="w">    </span><span class="no">&lt;/UpdateVariable&gt;</span>
+</pre></div>
+</div>
+<p>这样简化了的变量列表、变量输出格式, 显然比让 AI 输出文字状态栏:</p>
+<ul class="simple">
+<li><p>更省 token: 文字状态栏需要 AI 知道完整的状态栏格式, 包括那些其实不会变化的部分; 而变量输出格式只需要 AI 知道应该变化的部分.</p></li>
+<li><p>更不容易掉格式: AI 不需要自己输出特定的状态栏格式, 而是输出它很熟悉的 JSON 格式</p></li>
+</ul>
+<p>归根结底, 变量提示词, 无论是变量列表、变量更新规则还是变量输出格式, 只是我们写在世界书里的提示词而已. 正常的世界书条目能怎么写, 变量提示词就也可以: 自己重新组织写法, 使用绿灯、黏性或下一章的提示词模板实现动态提示词…….</p>
+</section>
+<section id="id21">
+<h2>测试变量提示词<a class="headerlink" href="#id21" title="Link to this heading">#</a></h2>
+<p>现在有了变量提示词, 你可以打开日志查看器在一旁, 随便要求 AI 推进剧情 (如, 发送一句<code class="docutils literal notranslate"><span class="pre">推进剧情</span></code>) 来查看变量提示词有没有生效:</p>
+<dl class="simple myst">
+<dt>如果 AI 回复中没有 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code></dt><dd><p>可能是你其他提示词占用了过多注意力, 或者你的变量提示词没有正确生效. <br />
+请关闭全局世界书, 调整其他提示词的注意力, 并验证变量提示词有没有按本章正确设置好.</p>
+</dd>
+</dl>
+<p>如果 AI 回复了 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 说明你的变量提示词设置正常, 可以实际游玩来测试变量更新的稳定性了!</p>
+<ul>
+<li><p>让我们打开变量管理器挂在旁边, 方便我们确认变量更新情况;</p></li>
+<li><p>让我们启用 MVU 变量框架中的<span class="menuselection">变量更新出错时通知</span>, 方便我们知道游玩过程中变量更新出错了:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%8F%98%E9%87%8F%E6%9B%B4%E6%96%B0%E5%87%BA%E9%94%99%E6%97%B6%E9%80%9A%E7%9F%A5.png" src="../../../../_images/%E5%8F%98%E9%87%8F%E6%9B%B4%E6%96%B0%E5%87%BA%E9%94%99%E6%97%B6%E9%80%9A%E7%9F%A5.png" />
+</figure>
+</li>
+</ul>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>如果你的角色卡支持中途新增角色, 又给每个角色设计了几十个变量, 那么 AI 在为新角色设置变量时很可能遗漏某些变量, 从而无法成功新增角色.</p>
+<p>为此, 你可以要求 AI 在变量结构脚本中为角色的变量设置默认值 <code class="docutils literal notranslate"><span class="pre">待初始化</span></code> (或你想要的其他默认值), 这样一来, AI 哪怕遗漏角色的某些变量, 整个角色依旧能够新增到角色列表中, 而 AI 可以在后续回复中初始化这些 <code class="docutils literal notranslate"><span class="pre">待初始化</span></code> 变量.</p>
+</div>
+</section>
+<section id="id22">
+<h2>回顾<a class="headerlink" href="#id22" title="Link to this heading">#</a></h2>
+<p>至此, 我们的变量环境已经搭建完毕:</p>
+<ul class="simple">
+<li><p>我们生成并新建了<code class="docutils literal notranslate"><span class="pre">变量结构</span></code>脚本, 它定义了我们的角色卡有哪些变量;</p></li>
+<li><p>我们用 <code class="docutils literal notranslate"><span class="pre">[initvar]变量初始化勿开</span></code> 条目和开局里的 <code class="docutils literal notranslate"><span class="pre">&lt;initvar&gt;</span></code> 块为每个开局设置了初始值;</p></li>
+<li><p>我们设计了变量提示词, 让 AI 了解了变量:</p>
+<ul>
+<li><p>通过变量列表, 了解了当前的变量情况;</p></li>
+<li><p>通过变量更新规则, 了解了变量在什么情况下应该被更新, 以及该被更新成什么值;</p></li>
+<li><p>通过变量输出格式, 了解了应该输出什么来更新变量.</p></li>
+</ul>
+</li>
+<li><p>我们导入了一套酒馆正则, 使得之前的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 块不会再发送给 AI, 防止 AI 过拟合.</p></li>
+</ul>
+<p>这套环境已经能有效替代传统的、需要每层都完整输出所有文本的状态栏, 能够精准地提醒 AI 当前的剧情状态啦!</p>
+<p>——但变量能做到的不仅仅是这些.</p>
+<p>前面提到, 对于<code class="docutils literal notranslate"><span class="pre">白娅.依存度</span></code>, AI 虽然能从名字看出来是白娅对主角的依恋程度, 但在具体数值比如 23 下, 白娅应该是什么样的心理状态? 倾向于采取怎样的行为? 这些都需要我们进一步解释.</p>
+<p>当时我们的选择是新建一个<code class="docutils literal notranslate"><span class="pre">角色阶段</span></code>条目, 在其中列举出每个依存度阶段下白娅的行为:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">白娅当前行为</span><span class="p">:</span><span class="w"> </span><span class="c1"># 白娅当前依存度为{{format_message_variable::stat_data.白娅.依存度}}，因此将倾向于进行与以下示例类似的行为</span>
+<span class="w">  </span><span class="c1"># 0~19 时</span>
+<span class="w">  </span><span class="nt">消极自毁</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="c1"># 20~39 时</span>
+<span class="w">  </span><span class="nt">渴求注视</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="c1"># 40~59 时</span>
+<span class="w">  </span><span class="nt">暗中靠近</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="c1"># 60~79 时</span>
+<span class="w">  </span><span class="nt">忐忑相依</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># 80~100 时</span>
+<span class="w">  </span><span class="nt">柔软依存</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>但这样做有很明显的问题: 虽然目前白娅的依存度是在 23, 但我们仍旧发送了 0~19、40~59 等阶段的提示词. 这不仅浪费了输入 token, 还可能占用 AI 注意力, 让 AI 困惑不知道该让白娅采取哪个阶段的行为表现.</p>
+<p>如果我们能根据当前的依存度, 只发送与当前依存度对应的提示词, 那该多好啊! <br />
+如果我们能在依存度达到 100 时触发一个预先写好的表白剧情, 那该多好啊! <br />
+……我们当然能😈.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../设置和初始化变量/"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">设置和初始化变量</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../动态发送提示词/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">提示词模板: 动态发送提示词</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">制作角色卡时的特殊设置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">简单制作三大变量提示词</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">变量列表</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#format-message-variable">酒馆助手宏 <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::变量路径}}</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mvu-ai">选择性地发给 AI 变量列表</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">让 AI 知道变量列表中的值是最新的</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">具体解释变量含义</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">变量更新规则</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">各个字段的意义</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">避免重复书写变量更新规则</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">将变量结构直接用于变量更新规则</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">变量更新规则的插入位置</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">变量输出格式</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">解释</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">酒馆正则</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">变量更新强调</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">为不同开局设置不同变量初始值 (增量方案)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">适配两种变量更新方式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">变量提示词只是提示词</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">测试变量提示词</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">回顾</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-02-23 12:46:01.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

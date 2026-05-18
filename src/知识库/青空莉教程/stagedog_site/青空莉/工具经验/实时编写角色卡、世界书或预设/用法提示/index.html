@@ -1,0 +1,696 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2025-11-06T17:34:59+08:00" />
+    <title>阅读报错及 Cursor 实用功能 &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/" />
+    <link rel="icon" href="../../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../../search/" />
+    <link rel="next" title="特殊功能" href="../特殊功能/" />
+    <link rel="prev" title="使用说明" href="../使用说明/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2025-11-06 17:34:59"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../络络/作品集/">作品集</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../络络/教程/">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/">手写 MVU zod 变量卡</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/变量提示词/">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/脚本控制变量/">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/状态栏/">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../络络/教程/生成立绘、表情差分和cg/">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../提示词个人写法/">提示词个人写法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/额外输出格式/">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/多角色/">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">实时编写角色卡、世界书或预设</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../使用说明/">使用说明</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../实时编写前端界面或脚本/">实时编写前端界面或脚本</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/环境准备/">环境准备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/阅读示例/">阅读示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/实际编写/">实际编写</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/进阶技巧/">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>阅读报错及 Cursor 实用功能</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">导航条: 快速查找报错位置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">时间线: 回退删改操作</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#git">用 git 记录项目时间线</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">一键折叠: 概览配置文件条目</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#yaml">批量缩进: 快速编写 YAML</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">搜索替换</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">格式化文件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">比较文件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">上下移动几行文本</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">多行光标</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vim">Vim</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="cursor">
+<h1>阅读报错及 Cursor 实用功能<a class="headerlink" href="#cursor" title="Link to this heading">#</a></h1>
+<section id="id1">
+<h2>导航条: 快速查找报错位置<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>修改后的并不是必定成功. 例如, 你可能忘记为某个世界书条目设置是否<code class="docutils literal notranslate"><span class="pre">启用</span></code>, 忘记设置<code class="docutils literal notranslate"><span class="pre">文件</span></code>字段……</p>
+<p>大多数错误会有我定义好的 YAML schema 给你及时报错:</p>
+<figure class="align-default">
+<img alt="../../../../_images/schema%E6%8A%A5%E9%94%99.png" src="../../../../_images/schema%E6%8A%A5%E9%94%99.png" />
+</figure>
+<p>但也存在一些 schema 不能检查的情况, 可能需要你自己查看报错信息来定位错误. 例如, 下图中脚本报错提示我们 &quot;绿灯&quot; 条目必须设置关键字 (<a class="reference internal" href="../../酒馆如何处理世界书/"><span class="doc">世界书条目的激活</span></a>):</p>
+<figure class="align-default">
+<img alt="../../../../_images/parse%E6%8A%A5%E9%94%99.png" src="../../../../_images/parse%E6%8A%A5%E9%94%99.png" />
+</figure>
+<p>报错中的 <code class="docutils literal notranslate"><span class="pre">path</span></code>, 其实就告诉了我们错误出在<span class="menuselection">条目 ‣ 9 ‣ 激活策略 ‣ 关键字</span>. 我们可以通过 Cursor 上方的导航条对此进行跳转:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E8%B7%B3%E8%BD%AC%E9%94%99%E8%AF%AF.png" src="../../../../_images/%E8%B7%B3%E8%BD%AC%E9%94%99%E8%AF%AF.png" />
+</figure>
+<p>你也可以使用<span class="menuselection">资源管理器 ‣ 大纲</span>来概览和索引内容:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%A4%A7%E7%BA%B2.png" src="../../../../_images/%E5%A4%A7%E7%BA%B2.png" />
+</figure>
+</section>
+<section id="id2">
+<h2>时间线: 回退删改操作<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>在<span class="menuselection">大纲</span>旁边, 有 Cursor 为我们提供的<span class="menuselection">时间线</span> 功能, 它会记录我们对文件的更改历史, 允许我们回退不想要的更改:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%97%B6%E9%97%B4%E7%BA%BF1.png" src="../../../../_images/%E6%97%B6%E9%97%B4%E7%BA%BF1.png" />
+</figure>
+<p>这一定程度上省去了你备份文件的麻烦.</p>
+<p>但是, 我们必须在 Cursor 中选中一个文件才能查看它的时间线. 那么如果我们将文件删除还清空回收站了, 岂不是没有办法查看到了?</p>
+<p>如果你还能记住文件名的话, 恭喜你, 你仍然能找回它. 具体地, 我们用同样的文件名在同样的位置新建一个文件 (注意一定要是新建, 不要复制别的同名文件过来), 然后就会发现时间线中又出现它所有的历史记录了.</p>
+</section>
+<section id="git">
+<h2>用 git 记录项目时间线<a class="headerlink" href="#git" title="Link to this heading">#</a></h2>
+<p>Cursor 提供的<span class="menuselection">时间线</span>只是针对单个文件的, 但假如我们需要记录整个项目的修改情况呢? 为此我们可以通过<span class="menuselection">左侧侧边栏</span>创建 git 仓库, 则可以对项目进行存档:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BB%93%E5%BA%931.png" src="../../../../_images/%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BB%93%E5%BA%931.png" />
+</figure>
+<p>在初始化后, 我们就能对项目内文件进行提交等操作. 我推荐你在 AI 修改了项目且修改内容可以接受时, 记录对应的注释并提交内容:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%8F%90%E4%BA%A4commit1.png" src="../../../../_images/%E6%8F%90%E4%BA%A4commit1.png" />
+</figure>
+<p>在提交后, 我们将能在 Git Graph 插件所提供的界面中看到结果:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E7%BB%93%E6%9E%9C1.png" src="../../../../_images/%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E7%BB%93%E6%9E%9C1.png" />
+</figure>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>你自然可以通过 <a class="reference external" href="https://learngitbranching.js.org/?locale=zh_CN">Learn Git Branching</a> 进一步学习 git 来更好地管理项目.</p>
+</div>
+</section>
+<section id="id3">
+<h2>一键折叠: 概览配置文件条目<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>脚本提取出的世界书或预设配置文件以 YAML 格式存储, 因此我们可以方便地折叠每个层级结构——只需要<kbd class="kbd docutils literal notranslate">左键</kbd>行号右边的下箭头即可:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%8A%98%E5%8F%A0%E6%8C%89%E9%92%AE.png" src="../../../../_images/%E6%8A%98%E5%8F%A0%E6%8C%89%E9%92%AE.png" />
+</figure>
+<p>我们可以<kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Shift</kbd>-<kbd class="kbd docutils literal notranslate">左键</kbd></kbd>下箭头来折叠/展开所有内容:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%8A%98%E5%8F%A0%E6%89%80%E6%9C%89.png" src="../../../../_images/%E6%8A%98%E5%8F%A0%E6%89%80%E6%9C%89.png" />
+</figure>
+</section>
+<section id="yaml">
+<h2>批量缩进: 快速编写 YAML<a class="headerlink" href="#yaml" title="Link to this heading">#</a></h2>
+<p>YAML 对缩进的要求颇为严格. 如果你想在配置文件里做大型更改, 可以选择要缩进的多行内容, 然后 <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">]</kbd></kbd> 来增加一级缩进、<kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">[</kbd></kbd> 来减少一级缩进.</p>
+</section>
+<section id="id4">
+<h2>搜索替换<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>在 Cursor 中, 你可以搜索当前文件 (<kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>+<kbd class="kbd docutils literal notranslate">F</kbd></kbd>)、搜索当前文件夹 (<kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>+<kbd class="kbd docutils literal notranslate">Shift</kbd>+<kbd class="kbd docutils literal notranslate">F</kbd></kbd>)、搜索文件名称 (<kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>+<kbd class="kbd docutils literal notranslate">Alt</kbd>+<kbd class="kbd docutils literal notranslate">F</kbd></kbd>), 并支持替换搜索结果.</p>
+<p>对于同步脚本而言, 你的搜索替换通常作用应该是在配置文件中批量修改一部分条目的设置, 例如批量禁止条目激活其他条目:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%89%B9%E9%87%8F%E7%A6%81%E6%AD%A2%E6%9D%A1%E7%9B%AE%E6%BF%80%E6%B4%BB%E5%85%B6%E4%BB%96%E6%9D%A1%E7%9B%AE.png" src="../../../../_images/%E6%89%B9%E9%87%8F%E7%A6%81%E6%AD%A2%E6%9D%A1%E7%9B%AE%E6%BF%80%E6%B4%BB%E5%85%B6%E4%BB%96%E6%9D%A1%E7%9B%AE.png" />
+</figure>
+<p>上图中的可选设置分别为:</p>
+<ol class="arabic simple">
+<li><p>区分大小写</p></li>
+<li><p>全字匹配: 如搜索 <code class="docutils literal notranslate"><span class="pre">word</span></code>, 不会匹配文件里的 <code class="docutils literal notranslate"><span class="pre">words</span></code></p></li>
+<li><p>使用正则表达式</p></li>
+<li><p>在选定内容中查找: 你在文件中先框选你要搜索的文本部分, 点击这个按钮, 然后搜索替换将只在你选择的地方进行——你于是可以仅对排在一起的角色条目进行批量!</p></li>
+</ol>
+<p>例如, 我们使用 <code class="docutils literal notranslate"><span class="pre">概率:</span> <span class="pre">.*</span></code> 在选定内容中查找, 将其替换为 <code class="docutils literal notranslate"><span class="pre">概率:</span> <span class="pre">50</span></code>, 则选定部分所有条目都会被设置为 50% 概率. 其中, <code class="docutils literal notranslate"><span class="pre">.*</span></code> 表示匹配任意字符、越多越好, 因此无论原本概率是多少都会被匹配.</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%89%B9%E9%87%8F%E8%AE%BE%E7%BD%AE%E9%83%A8%E5%88%86%E6%9D%A1%E7%9B%AE%E6%A6%82%E7%8E%87%E4%B8%BA50.png" src="../../../../_images/%E6%89%B9%E9%87%8F%E8%AE%BE%E7%BD%AE%E9%83%A8%E5%88%86%E6%9D%A1%E7%9B%AE%E6%A6%82%E7%8E%87%E4%B8%BA50.png" />
+</figure>
+</section>
+<section id="id5">
+<h2>格式化文件<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>对于一些不大不小的格式问题, YAML、JSON、Markdown 等都支持格式化. <a class="reference internal" href="../../实时编写前端界面或脚本/环境准备/"><span class="doc">我所提供的 Cursor 配置文件</span></a>已经配置了 &quot;保存时格式化&quot; 功能, 因此你只需要在文件中按 <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">S</kbd></kbd> 即可格式化文件.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">格式化前</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">格式化后</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><figure class="align-default">
+<img alt="../../../../_images/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%89%8D1.png" src="../../../../_images/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%89%8D1.png" />
+</figure>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><figure class="align-default">
+<img alt="../../../../_images/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%90%8E1.png" src="../../../../_images/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%90%8E1.png" />
+</figure>
+</div></div>
+</section>
+<section id="id6">
+<h2>比较文件<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>Cursor 支持我们比较两个文件的内容. 例如, 你可能想要比较条目的中文版本和 ai 翻译版本</p>
+<p>我们打开文件, 通过 :KBD:<code class="docutils literal notranslate"><span class="pre">Ctrl-Shift-P</span></code> 打开命令菜单, 输入 <code class="docutils literal notranslate"><span class="pre">compare</span></code> 以找到 :menuselection:<code class="docutils literal notranslate"><span class="pre">文件：比较活动文件与...(File:</span> <span class="pre">Compare</span> <span class="pre">Active</span> <span class="pre">File</span> <span class="pre">With...)</span></code>, :KBD:<code class="docutils literal notranslate"><span class="pre">回车</span></code>, 然后选择我们要比较的文件, 则可以得到:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%AF%94%E8%BE%83%E6%96%87%E4%BB%B6.png" src="../../../../_images/%E6%AF%94%E8%BE%83%E6%96%87%E4%BB%B6.png" />
+</figure>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>为了方便你比较原文和翻译文件, 建议让 ai 以 ``中文#英文#英文无视原文译回中文` 的格式输出翻译结果, 这样 Cursor 能更好地对应两个文件具体哪一行对应哪一行.</p>
+</div>
+</section>
+<section id="id7">
+<h2>上下移动几行文本<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>通过 <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Alt</kbd>-<kbd class="kbd docutils literal notranslate">方向键上</kbd></kbd> 和 <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Alt</kbd>-<kbd class="kbd docutils literal notranslate">方向键下</kbd></kbd> 可以移动几行文本, 因此你可以很方便地调整条目的顺序.</p>
+</section>
+<section id="id8">
+<h2>多行光标<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p>Cursor 支持多行光标同时删除、编辑文本, 自己查👿</p>
+</section>
+<section id="vim">
+<h2>Vim<a class="headerlink" href="#vim" title="Link to this heading">#</a></h2>
+<p>如果你还觉得不够, 可以自行学习 Vim、安装 Vim 扩展, 从此打字再也不碰鼠标(</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../使用说明/"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">使用说明</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../特殊功能/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">特殊功能</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">导航条: 快速查找报错位置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">时间线: 回退删改操作</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#git">用 git 记录项目时间线</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">一键折叠: 概览配置文件条目</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#yaml">批量缩进: 快速编写 YAML</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">搜索替换</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">格式化文件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">比较文件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">上下移动几行文本</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">多行光标</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vim">Vim</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2025-11-06 17:34:59.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

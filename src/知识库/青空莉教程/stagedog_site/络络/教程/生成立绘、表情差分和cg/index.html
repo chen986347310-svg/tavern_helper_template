@@ -1,0 +1,988 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2026-03-01T19:10:44+08:00" />
+    <title>生成立绘、表情差分和 CG &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '络络/教程/生成立绘、表情差分和cg/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/络络/教程/生成立绘、表情差分和cg/" />
+    <link rel="icon" href="../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../search/" />
+    <link rel="next" title="作品集" href="../../../青空莉/作品集/" />
+    <link rel="prev" title="附.自查问题和如何提问" href="../手写mvu变量卡/如何提问/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-03-01 19:10:44"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../作品集/">作品集</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../手写mvu变量卡/">手写 MVU zod 变量卡</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/变量提示词/">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/脚本控制变量/">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/状态栏/">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写mvu变量卡/如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../青空莉/作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../青空莉/写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../青空莉/工具经验/">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../青空莉/工具经验/正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../青空莉/工具经验/酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../青空莉/工具经验/提示词个人写法/">提示词个人写法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/提示词个人写法/额外输出格式/">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/提示词个人写法/组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/提示词个人写法/多角色/">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/提示词个人写法/变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../青空莉/工具经验/实时编写角色卡、世界书或预设/">实时编写角色卡、世界书或预设</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写角色卡、世界书或预设/安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写角色卡、世界书或预设/使用说明/">使用说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写角色卡、世界书或预设/特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../青空莉/工具经验/实时编写前端界面或脚本/">实时编写前端界面或脚本</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写前端界面或脚本/环境准备/">环境准备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写前端界面或脚本/阅读示例/">阅读示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写前端界面或脚本/实际编写/">实际编写</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写前端界面或脚本/cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../青空莉/工具经验/实时编写前端界面或脚本/如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/络络/教程/生成立绘、表情差分和cg/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/络络/教程/生成立绘、表情差分和cg/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F络络/教程/生成立绘、表情差分和cg/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/络络/教程/生成立绘、表情差分和cg/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>生成立绘、表情差分和 CG</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">下载软件喵</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forgeui">ForgeUI 怎么用──</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lora">模型与 LORA: 让我们确定画风?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forge">安装 Forge 扩展: 好物安利时间</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">调整Forge设置: 预备运动──</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">上方模型配置</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">下方生成选项卡</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">添加 LORA</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">填入立绘提示词: 画画</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">正面提示词</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">负面提示词</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">示例: 我来画一个</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">重绘设置解释</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">示例</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">简单动作差分</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">增添衣柜</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#photoshop-x">超简单 Photoshop 教程x</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">换脸</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">抠图</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">结语</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="cg">
+<h1>生成立绘、表情差分和 CG<a class="headerlink" href="#cg" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>帖子: <a class="reference external" href="https://discord.com/channels/1134557553011998840/1357406336828047488/1357406336828047488">帖子</a></p>
+</div></blockquote>
+<p>这篇教程会通过一个例子来教你使用 AI 画图来制作人物立绘、表情动作差分和 CG 插图. <br />
+这些插图可以作为游戏的插图/状态栏, 或者用于完整的 Galgame 界面.</p>
+<section id="id1">
+<h2>下载软件喵<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>我在制作这些立绘的时候只用到了</p>
+<ul class="simple">
+<li><p>ForgeUI</p></li>
+<li><p>Photoshop</p></li>
+</ul>
+<p>其中, ForgeUI 可以在某视频平台上找到简单的一键安装包, 非常容易部署 (请注意不要下载成 sd-webui) <br />
+而 Photoshop 也是非常容易获取的, 这里就不赘述了.</p>
+</section>
+<section id="forgeui">
+<h2>ForgeUI 怎么用──<a class="headerlink" href="#forgeui" title="Link to this heading">#</a></h2>
+<p>虽然 ComfyUI 其实并不难并且很强大, 而 ForgeUI 的后端就是 ComfyUI, 但是我个人感觉 ForgeUI 更容易让不熟悉工作流的小白们 (比如我w) 更加容易上手, 而且用起来和 Nai 也差不多.</p>
+<p>首先说明的是, 这个教程只保证你使用和我一样的画风 (模型、LORA 与画风提示词) 时, 能够跑出相对完美的效果:</p>
+<figure class="align-default">
+<img alt="../../../_images/%E7%A4%BA%E4%BE%8B%E5%9B%BE.png" src="../../../_images/%E7%A4%BA%E4%BE%8B%E5%9B%BE.png" />
+</figure>
+<p>事实上, 你仔细看可以看出我的立绘是非常偏向 Flat Color 这种风格的, 人物整体很少有反光.</p>
+<p>如果你的模型或 LORA 很注重人物皮肤、服饰的反光效果, 使用这个方法跑的立绘大概会在人物身上有很多背景的反光 (比如使用绿幕会出现绿色的反光). 我个人也不知道有什么比较好的方法解决这个问题, 也没有尝试过寻找. 如果你确实需要可以自行尝试看更换提示词、增加负面提示词或者更换其他 LORA 来规避这个现象.</p>
+<section id="lora">
+<h3>模型与 LORA: 让我们确定画风?<a class="headerlink" href="#lora" title="Link to this heading">#</a></h3>
+<p>首先我们需要准备模型与 LORA.</p>
+<ul>
+<li><p>模型: <a class="reference external" href="https://civitai.com/models/827184?modelVersionId=1612720">waiNSFWIllustrious_v130.safetensors</a></p></li>
+<span class="sidenote"><sup>1</sup>实际上……这是一个视频 LORA. 作者是有针对 illustrious 的 LORA 的, 但是经过个人测试后, 使用 illustrious 的 LORA 跑出的立绘效果过于 flat 了, 所以……我仍然以错误的方法使用这个 1.3b 的针对视频生成的 LORA.</span><li><p>LORA: <a class="reference external" href="https://civitai.com/models/1132089?modelVersionId=1525407">v2.0 [wan-t2v-1.3b]</a> <label for='sidenote-role-1' class='margin-toggle'><span id="id2">
+<sup>1</sup></span>
+
+</label><input type='checkbox' id='sidenote-role-1' name='sidenote-role-1' class='margin-toggle'><span class="sidenote d-n"><sup>1</sup>实际上……这是一个视频 LORA. 作者是有针对 illustrious 的 LORA 的, 但是经过个人测试后, 使用 illustrious 的 LORA 跑出的立绘效果过于 flat 了, 所以……我仍然以错误的方法使用这个 1.3b 的针对视频生成的 LORA.</span></p></li>
+</ul>
+<p>将下载下来的两个 .safetensors 文件分别放在 <code class="docutils literal notranslate"><span class="pre">models/Stable-diffusion</span></code> 文件夹下和 <code class="docutils literal notranslate"><span class="pre">models/LORA</span></code> 文件夹下.</p>
+</section>
+<section id="forge">
+<h3>安装 Forge 扩展: 好物安利时间<a class="headerlink" href="#forge" title="Link to this heading">#</a></h3>
+<p>这里顺便推荐一些 Fogre 用的扩展:</p>
+<ul class="simple">
+<li><p>汉化界面: <code class="docutils literal notranslate"><span class="pre">https://github.com/hanamizuki-ai/stable-diffusion-webui-localization-zh_Hans</span></code></p></li>
+<li><p>管理与翻译提示词: <code class="docutils literal notranslate"><span class="pre">https://github.com/Physton/sd-webui-prompt-all-in-one</span></code></p></li>
+<li><p>历史图库: <code class="docutils literal notranslate"><span class="pre">https://github.com/zanllp/sd-webui-infinite-image-browsing</span></code></p></li>
+<li><p>分区提示词couple: <code class="docutils literal notranslate"><span class="pre">https://github.com/Haoming02/sd-forge-couple</span></code></p></li>
+</ul>
+<p>点击 ForgeUI 上方的<span class="menuselection">扩展</span>选项卡, 选择<span class="menuselection">从网址安装</span>, 输入上面列出的链接就可以安装了.</p>
+<figure class="align-default">
+<img alt="../../../_images/%E5%AE%89%E8%A3%85%E6%89%A9%E5%B1%95.png" src="../../../_images/%E5%AE%89%E8%A3%85%E6%89%A9%E5%B1%95.png" />
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>安装后可能需要重载 UI/重启.</p>
+</div>
+</section>
+<section id="id4">
+<h3>调整Forge设置: 预备运动──<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>现在让我们来调整设置!</p>
+<figure class="align-default">
+<img alt="../../../_images/%E4%B8%BB%E7%95%8C%E9%9D%A2%E8%AE%BE%E7%BD%AE.png" src="../../../_images/%E4%B8%BB%E7%95%8C%E9%9D%A2%E8%AE%BE%E7%BD%AE.png" />
+</figure>
+<section id="id5">
+<h4>上方模型配置<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>左上角选择<span class="menuselection">全部</span></p></li>
+<li><p><span class="menuselection">模型</span>部分点击<span class="menuselection">刷新图标</span>, 然后选择我们刚安装的<code class="docutils literal notranslate"><span class="pre">waiNSFWillustrious13</span></code></p></li>
+<li><p>将 <span class="menuselection">CLIP终止层数</span>设置为<code class="docutils literal notranslate"><span class="pre">2</span></code></p></li>
+</ul>
+</section>
+<section id="id6">
+<h4>下方生成选项卡<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>采样方法: Euler a</p></li>
+<li><p>调度类型: Karras</p></li>
+<li><p>迭代步数: 我个人偏好28</p></li>
+<li><p>分辨率: 1024x1536</p></li>
+<li><p>Distilled CFG Scale: 3.5</p></li>
+<li><p>提示词引导系数（CFG Scale）: 4.5</p></li>
+<li><p>随机数种子: -1</p></li>
+</ul>
+<p>在这个和<span class="menuselection">生成</span>相同级别的选项卡中有一个 <span class="menuselection">LORA</span> 选项卡 (我真的很想问 SD 为什么把 LORA 放在这里)</p>
+</section>
+<section id="id7">
+<h4>添加 LORA<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
+<p>点击右侧的<span class="menuselection">刷新按钮</span>, 就能在其中找到我们刚刚安装的 LORA, 点击 LORA 后提示词上会多出 <code class="docutils literal notranslate"><span class="pre">&lt;LORA:wan_flat_color_1.3b_v2.1:1&gt;</span></code>. 这代表你的 LORA 也成功使用上啦</p>
+</section>
+</section>
+<section id="id8">
+<h3>填入立绘提示词: 画画<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<p>调整好了重点设置 (或者按照你的喜好也许也行?), 直接开始输入生成立绘的提示词!</p>
+<section id="id9">
+<h4>正面提示词<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;LORA:wan_flat_color_1.3b_v2:1&gt;,flat color,no lineart,very awa,masterpiece,best quality,year 2024,newest,highres,absurdres,
+<span class="hll">在这里填入你的人物与服装提示词
+</span>solo,(upper body),cowboy shot,standing,((green background)),((green screen)),simple background,(((tachi-e))),((((facing viewer)))),light smile,eye contact,looking at viewer,
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>如果你使用的模型或画风有着身体反射绿幕的绿光问题, 可以尝试将 green 换成 grey.</p>
+</div>
+<p>上方一行 <code class="docutils literal notranslate"><span class="pre">flat</span> <span class="pre">color...</span></code> 是我的画风串, 最下方一行 <code class="docutils literal notranslate"><span class="pre">solo...</span></code> 是生成立绘所使用的姿势、镜头提示词.</p>
+</section>
+<section id="id10">
+<h4>负面提示词<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>nsfw,bad feet,missing toes,extra toes,lowres,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,4-koma,sketch,(bad:1.05),error,fewer,extra,missing,worst quality,jpeg artifacts,bad quality,watermark,unfinished,displeasing,chromatic aberration,signature,extra digits,artistic error,username,scan,abstract,(blurry, lowres, low quality:1.1),ugly,(big head, bad anatomy:1.05),artist name,(watermark:1.1),bar censor,
+</pre></div>
+</div>
+<p>负面应该都差不多……? 如果你需要生成色色的内容, 就把 nsfw 去掉并放到正面提示词第一个喔.</p>
+</section>
+</section>
+<section id="id11">
+<h3>示例: 我来画一个<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<p>人物与服装呢可以使用你自己已经有的, 没有的话……可以去找 tag 仓库里自己搭配, 或者如果你有很喜欢的一些元素但不知道是什么 tag, 可以使用 ForgeUI 上方的 <span class="menuselection">WD1.4 标签器</span>, 上传你的图片来进行反推, 看看其中的TAG都是什么. <br />
+如果你随机跑图跑出了喜欢的角色或服装, 但不知道对应的TAG, 也可以使用 <span class="menuselection">WD1.4 标签器</span>来反推!</p>
+<p>我这次案例中的人物串是这个: <label for='sidenote-role-2' class='margin-toggle'><span id="id12">
+<sup>2</sup></span>
+
+</label><input type='checkbox' id='sidenote-role-2' name='sidenote-role-2' class='margin-toggle'><span class="sidenote"><sup>2</sup>是的其实这是一个 vtuber（）</span></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1girl,loli,aged up,animal ears,brown hair,streaked hair,multicolored hair,pink hair,long hair,animal ear fluff,cat ears,red eyes,bangs,pink eyes,
+ribbon-trimmed clothes,pink bandaid,brown hooded cape,hood,hair ornament,hoodie,sleeves past wrists,hood up,long sleeves,hairclip,sleeves past fingers,bare legs,
+</pre></div>
+</div>
+<p>所以我的正面提示词是:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;LORA:wan_flat_color_1.3b_v2:1&gt;,flat color,no lineart,very awa,masterpiece,best quality,year 2024,newest,highres,absurdres,
+1girl,loli,aged up,animal ears,brown hair,streaked hair,multicolored hair,pink hair,long hair,animal ear fluff,cat ears,red eyes,bangs,pink eyes,
+ribbon-trimmed clothes,pink bandaid,brown hooded cape,hood,hair ornament,hoodie,sleeves past wrists,hood up,long sleeves,hairclip,sleeves past fingers,bare legs,
+solo,(upper body),cowboy shot,standing,((green background)),((green screen)),simple background,(((tachi-e))),((((facing viewer)))),light smile,eye contact,looking at viewer,
+</pre></div>
+</div>
+<p>万事俱备, 点击生成吧!</p>
+<p><big>生成! </big></p>
+<figure class="align-default">
+<img alt="../../../_images/%E7%AB%8B%E7%BB%98.png" src="../../../_images/%E7%AB%8B%E7%BB%98.png" />
+</figure>
+<p>像这样就还不错呢! 如果是这张图的话, 似乎完全没必要使用 Photoshop, 直接使用 ForgeUI 内置的大模型抠图, 或者使用在线大模型, 应该就可以扣完整, 让我试试看:</p>
+<p>点击 ForgeUI 上方的 <span class="menuselection">SPACE</span> 按钮, 选择 <span class="menuselection">IMAGE Processing</span>, <span class="menuselection">安装</span>, <span class="menuselection">Launch</span>, 上传图片, <span class="menuselection">Remove Background</span>……</p>
+<p>超级完美——</p>
+<figure class="align-default">
+<img alt="../../../_images/%E9%80%8F%E6%98%8E%E7%AB%8B%E7%BB%98.png" src="../../../_images/%E9%80%8F%E6%98%8E%E7%AB%8B%E7%BB%98.png" />
+</figure>
+<p>这样我们获得了我们的第一张立绘!</p>
+<p>请注意, 你的立绘应该避免以下问题:</p>
+<ul class="simple">
+<li><p>四周被截断, 如左右两侧显示不全, 顶部没有显示完整等. 这样放进背景里真的很难看, 答应我不要这样做</p></li>
+<li><p>身体错误的反射了来自背景的光, 比如, 大腿上有绿色的反光……后果会怎么样想必你也知道</p></li>
+<li><p>身体动作幅度很大, 没有站立姿势, 或者头很歪 (适当倾斜是正常的). 就算看起来不错, 但是做出立绘这样真的很难看……</p></li>
+</ul>
+<p>有了完美的立绘已经是最好的开始了, 但是一个游戏肯定要有不同的表情动作, 甚至这个角色还需要穿其他衣服. <br />
+现在, 让我们来开始图生图重绘!</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>你也可以试试让 gemini-3-pro-image-preview 帮你生成差分, 很容易做, 而且分辨率可以高达 4K!</p>
+<figure class="align-default">
+<img alt="../../../_images/gemini%E7%94%9F%E6%88%90%E5%B7%AE%E5%88%86.png" src="../../../_images/gemini%E7%94%9F%E6%88%90%E5%B7%AE%E5%88%86.png" />
+</figure>
+</div>
+<div class="docutils">
+<p class="rubric" id="id14">表情差分</p>
+<p>在你刚刚的带着绿幕立绘下方, 有一个画板按钮: 发送到局部重绘, 请点击!</p>
+<figure class="align-default">
+<img alt="../../../_images/%E9%87%8D%E7%BB%98.png" src="../../../_images/%E9%87%8D%E7%BB%98.png" />
+</figure>
+</div>
+<p>来到这边后, 可以发现我们的提示词和设置都被发送了过来, 如果你的没有被发送过来……请手动调整一下吧!</p>
+</section>
+<section id="id15">
+<h3>重绘设置解释<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<p>我来简单介绍一下重绘中你需要知道的按钮意义 (没提到的可以不用管).</p>
+<p><strong>你可能需要大致理解大模型画画的原理:</strong> <br />
+它并不是和人类一样一笔一笔画, 而是先将图片整个铺上许多噪点, 然后根据你的提示词, 将这些噪点逐渐降噪选择确定的颜色, 保留出符合提示词的那些颜色像素, 慢慢的变成了最终的图片.</p>
+<dl class="simple myst">
+<dt><span class="menuselection">蒙版边缘模糊度</span></dt><dd><p>想象一下PS的画笔, 有的画笔非常锐利, 写上去多少就是多少, 而有的画笔呢是朦胧的带着一些模糊边缘, 实际上的笔迹并不会完全填满整个画笔光标指示器, 这里也同理!
+如果这个值太高, 你在绘制重绘部分时可能需要往外扩展地画一些; 如果太太低, 可能重绘的边缘会和原图的边缘分离并不连贯, 所以需要根据你的需求调整.</p>
+</dd>
+<dt><span class="menuselection">重绘蒙版内容/重绘非蒙版内容</span></dt><dd><p>选择是重绘你画笔画到的区域, 还是重绘的画笔没画到的区域.</p>
+</dd>
+</dl>
+<!-- markdownlint-disable MD007 MD032 -->
+<dl class="simple myst">
+<dt><span class="menuselection">重绘区域</span></dt><dd><p>整张图片: 直接将整张图片铺上噪点重新绘制, 但然后最终只保留你画笔画到的区域, 重绘出来的图片更加连贯丝滑. <br />
+仅蒙版区域: 只在你画笔周围的区域 (是个矩形) 铺上和整张图片相同数量的噪点, 然后最终只保留你画笔画到的区域, 重绘的区域会更加具有细节.</p>
+</dd>
+</dl>
+<!-- markdownlint-enable MD007 MD032 -->
+<dl class="simple myst">
+<dt><span class="menuselection">重绘幅度</span></dt><dd><p>最重要! 影响了铺噪点数量的多少. 如果调高铺的高, 大模型可能更少看清原来的画面是什么样; 如果铺得少, 大模型能改动的就很少. 一会我会告诉你我是怎样选择的, 通常来说这个没有什么固定的设置.</p>
+</dd>
+</dl>
+</section>
+<section id="id16">
+<h3>示例<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
+<p>首先呢, 对于这个立绘, 她现在笑眯眯的, 其实就很适合作为默认或者通常之类的立绘. <br />
+但是我们可能还会需要类似于: 愤怒、悲伤、哭泣、害羞等. 并且我也建议你分为不同的如: 愠怒、生气到极点、难过、悲伤、哭泣、大哭、微微脸红、害羞、害羞到捂脸等, 画出相同情绪但不同程度的立绘, 这也许会增加你的工作量? 总之请以你个人需求为准啦.</p>
+<p>我们先来画一个愤怒的立绘!</p>
+<p>直接这样用画笔将脸部盖住, 不需要画的过于精细, 但是你可以看到我的角色有一个发卡, 我不希望换表情这个发卡也会变掉, 所以我把他让了出来:</p>
+<figure class="align-default">
+<img alt="../../../_images/%E8%A1%A8%E6%83%85%E5%B7%AE%E5%88%86.png" src="../../../_images/%E8%A1%A8%E6%83%85%E5%B7%AE%E5%88%86.png" />
+</figure>
+<p>然后再正向提示词找个位置 (我习惯于再末尾) 增加表情的提示词: <code class="docutils literal notranslate"><span class="pre">anger</span></code>. <br />
+我原本角色串中有个 <code class="docutils literal notranslate"><span class="pre">light</span> <span class="pre">simle</span></code>, 让我把它删掉……然后添加 <code class="docutils literal notranslate"><span class="pre">anger</span></code> 并为它增加权重: <code class="docutils literal notranslate"><span class="pre">(anger:1.2)</span></code>.</p>
+<p>我的设置是: <br />
+（重绘出现少量的错误是允许的, 之后我告诉你怎样修理! ）</p>
+<ul class="simple">
+<li><p>模糊度: 17</p></li>
+<li><p>蒙版模式: 重绘蒙版内容</p></li>
+<li><p>蒙版区域内容处理: 原版</p></li>
+<li><p>整张图片</p></li>
+<li><p><strong>重绘幅度: 65</strong> (如果你的表情没能重绘出来变化不大, 请拉高; 如果变化太大导致画面崩坏, 稍微降低一点)</p></li>
+<li><p><strong>勾选柔和重绘</strong></p></li>
+</ul>
+<p><big>生成!</big></p>
+<figure class="align-default">
+<img alt="../../../_images/%E6%84%A4%E6%80%92%E5%B7%AE%E5%88%86.png" src="../../../_images/%E6%84%A4%E6%80%92%E5%B7%AE%E5%88%86.png" />
+</figure>
+<p>生气的小猫也可爱捏~ <br />
+但是……你有注意到吗? 我们仔细看的话脸部尤其是发卡附近, 能看到有一些些绘画错误. 如果你的要求不太高, 或者说觉得这些无伤大雅, 已经可以切换 tag 来画下一张了, 但是我的要求比较高……所以让我教你如何修复这些问题.</p>
+<p>答案是, 再发送到重绘, 扩大画笔, 降低重绘幅度:</p>
+<figure class="align-default" id="id22">
+<img alt="../../../_images/%E4%BF%AE%E5%A4%8D.png" src="../../../_images/%E4%BF%AE%E5%A4%8D.png" />
+<figcaption>
+<p><span class="caption-text">直接就是一个大圆盖住脸（）</span><a class="headerlink" href="#id22" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>然后, 我将重绘幅度调整成了 <code class="docutils literal notranslate"><span class="pre">0.35</span></code>.</p>
+<p><big>生成!</big></p>
+<figure class="align-default">
+<img alt="../../../_images/%E4%BF%AE%E5%A4%8D%E5%90%8E.png" src="../../../_images/%E4%BF%AE%E5%A4%8D%E5%90%8E.png" />
+</figure>
+<p>呃、可以看到, 修复后的图和原图相比, 几乎没有区别, 但是错误的地方更少了, 并且看不出来有不连贯的地方 <br />
+(我的例图在第一次重绘后就有些完美, 导致修复看似效果不大; 如果你的立绘重绘出现了一些错误, 可以尝试这样修复, 也许会震撼于它的效果w.)</p>
+<p>这就是表情差分的全部啦, 是不是还挺简单的? <br />
+是的, 我尝试了很多方法, 包括 ControlNet 等, 但是说实话, 都不如这个方法简单好用. 根据你的电脑, 只需要最多几次按钮就可以获得一张很完美可用的表情差分立绘 <br />
+(喂! 可不要想着用这个方法来做 Galgame 圈钱哦——)</p>
+<p>但是只是表情变化, 情绪显得不是很足够呢……可以做到动作上也有变化吗? <br />
+可以的兄弟!</p>
+</section>
+</section>
+<section id="id17">
+<h2>简单动作差分<a class="headerlink" href="#id17" title="Link to this heading">#</a></h2>
+<p>事实上对于立绘来说, 动作最好不需要太大, 我个人的选择是只有比猫爪来表现生气, 以及抬手擦眼泪. <br />
+比猫爪生气说实话还蛮简单的, 但是抬手擦眼泪……稍微难一点对吧? <br />
+我尝试了包括线稿、软边缘、姿势的 ControlNet, 发现还是重新生成图片最简单好用 (目移). <br />
+所以为了避免增加额外的麻烦, 我不会提供 ControlNet 的姿势图以及教你怎么用, 你真的需要学的话可以自己查看文档, 并不难哦.</p>
+<p>那么, 我是怎么画出类似这样的动作呢?</p>
+<figure class="align-default">
+<img alt="../../../_images/%E6%93%A6%E7%9C%BC%E6%B3%AA.png" src="../../../_images/%E6%93%A6%E7%9C%BC%E6%B3%AA.png" />
+</figure>
+<p>其、其实和重绘表情一样简单直接（目移）</p>
+<p>先、先修改提示词吧,</p>
+<p>我把 <code class="docutils literal notranslate"><span class="pre">anger</span></code> 换成了这些 <code class="docutils literal notranslate"><span class="pre">(crying:1.2),(wiping</span> <span class="pre">tears:1.2),(covering</span> <span class="pre">own</span> <span class="pre">eyes:1.2),(hand</span> <span class="pre">up:1.1),(wiping</span> <span class="pre">face:1.1),</span></code>. 是的, 可以看到权重给的蛮夸张的
+并且又没人规定表情必须用一个词, 你也可以做用 <code class="docutils literal notranslate"><span class="pre">light</span> <span class="pre">smile</span></code> 和 <code class="docutils literal notranslate"><span class="pre">anger</span></code> 一起用, 弄出一个又生气又笑的表情啦.</p>
+<p>但是, 重绘只画脸肯定是不行了, 怎么办呢……? 把、把手也一起画上!</p>
+<figure class="align-default">
+<img alt="../../../_images/%E9%87%8D%E7%BB%98%E6%93%A6%E7%9C%BC%E6%B3%AA%E7%AC%94%E5%88%B7.png" src="../../../_images/%E9%87%8D%E7%BB%98%E6%93%A6%E7%9C%BC%E6%B3%AA%E7%AC%94%E5%88%B7.png" />
+</figure>
+<p>可以看到, 由于有蒙版边缘模糊度与柔和重绘, 你需要和我一样画的范围尽量大点. <br />
+而且你也不知道最终这个手会什么姿势……所以画大点更不容易再蒙版边缘之外啦.</p>
+<p>我也不确定重绘幅度多少比较好, 我们试试看 <code class="docutils literal notranslate"><span class="pre">0.65</span></code>.</p>
+<figure class="align-default">
+<img alt="../../../_images/%E9%94%99%E8%AF%AF%E7%94%9F%E5%9B%BE.png" src="../../../_images/%E9%94%99%E8%AF%AF%E7%94%9F%E5%9B%BE.png" />
+</figure>
+<p>呜哇……看起来, 我们重绘幅度稍微小了一点呢?</p>
+<p>而且, 我在提示词上写了 <code class="docutils literal notranslate"><span class="pre">cape</span></code>, 但是实际上人物并没有用到…… <br />
+<small>偷偷把 <code class="docutils literal notranslate"><span class="pre">cape</span></code> 删了（）</small></p>
+<p>而且我忘记了腿上的创可贴, 导致他消失了一点!</p>
+<p>现在让我们把画笔让出关键的部分, 然后稍微拉高重绘幅度到 <code class="docutils literal notranslate"><span class="pre">0.7</span></code> 试试看:</p>
+<figure class="align-default">
+<img alt="../../../_images/%E9%87%8D%E6%96%B0%E8%B0%83%E6%95%B4.png" src="../../../_images/%E9%87%8D%E6%96%B0%E8%B0%83%E6%95%B4.png" />
+</figure>
+<p><big>生成……没画对, 懒得放图</big></p>
+<p>呃、这一张图片她选择举起了右手, 这和我们重绘区域不太符合, 导致一只手悬浮的飘着, 也算正常现象, 所以……重ROLL. \</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>你也可以选择告诉模型抬起哪只手, 但是我发现大模型搞不清对于人物的左右和对于镜头的左右, 所以我选择不告诉他然后重ROLL到合适的……</p>
+</div>
+<p>你可以在<span class="menuselection">总批次数</span>那里选择如 <code class="docutils literal notranslate"><span class="pre">4</span></code> 之类的数字来一次出 4 张图.</p>
+<p>跑了大概 12 张 (也就是 3 轮 4 张图) <br />
+我最终的重绘幅度增加到了 <code class="docutils literal notranslate"><span class="pre">0.85</span></code>, 你们也可以拿这个数值做参考呢.</p>
+<p>我最终的选图是这张:</p>
+<figure class="align-default">
+<img alt="../../../_images/%E6%9C%80%E7%BB%88%E9%80%89%E5%9B%BE.png" src="../../../_images/%E6%9C%80%E7%BB%88%E9%80%89%E5%9B%BE.png" />
+</figure>
+<p>呃、错误还挺多的是不啦w, 记得应该怎么办吗（）</p>
+<p><strong>发送到重绘, 低重绘幅度, 启动.</strong> <br />
+(记得调回生成一张图而不是四张x)</p>
+<figure class="align-default">
+<img alt="../../../_images/%E6%9C%80%E7%BB%88%E4%BF%AE%E5%A4%8D.png" src="../../../_images/%E6%9C%80%E7%BB%88%E4%BF%AE%E5%A4%8D.png" />
+</figure>
+<p>完美! <br />
+什么? 你说头发穿模了? <br />
+呃……也、也许后边的衣服是开口的头发可以穿出来 (胡言乱语).</p>
+<p>是的这是因为长发 tag 干扰到了, 我们应该删掉长发 tag, 但是我是 PS 高手我会把这段 PS 掉（）</p>
+<p>教程到这里就已经教了 90% 了, 我还没有讲的是如何为她换衣服和用 PS 抠图.</p>
+</section>
+<section id="id18">
+<h2>增添衣柜<a class="headerlink" href="#id18" title="Link to this heading">#</a></h2>
+<p>换衣服……若想简单点, 则不得不用 Photoshop 了呢.</p>
+<p>大概原理是: (看不懂没关系, 之后有演示喵)</p>
+<ol class="arabic simple">
+<li><p><span class="menuselection">重绘</span>覆盖住脸部后, 选择<span class="menuselection">重绘非蒙版区域</span>, 更换服装 tag, 生成</p></li>
+<li><p>这样你会得到一张面部和面前头发相同, 但服装变换了的立绘</p></li>
+<li><p>我们把换衣前和换衣后两张图片扔到PS里, 将新服装的图层放到旧服装的上边, 然后用<span class="menuselection">橡皮擦</span>擦掉脸部露出下方原来的脸部表情（）</p></li>
+<li><p>仔细用鼠标擦掉表情后, 最后得到一张看起来完美的换衣后立绘</p></li>
+<li><p>之后将之前所有表情的图片都丢进来, 用<span class="menuselection">图层显示按钮 (小眼睛)</span>切换图层来更换不同表情并导出为PNG (也可以录制动作批量导出)</p></li>
+</ol>
+<p>让我们来实操吧……(好想偷懒! )</p>
+<figure class="align-default">
+<img alt="../../../_images/%E9%87%8D%E7%BB%98%E6%8D%A2%E8%A1%A3%E6%9C%8D.png" src="../../../_images/%E9%87%8D%E7%BB%98%E6%8D%A2%E8%A1%A3%E6%9C%8D.png" />
+</figure>
+<p>我们用画笔尽可能地覆盖脸部和脸部周围的头发 (但是不要覆盖到可能换衣的部分, 比如帽子、围巾等). <br />
+选择<span class="menuselection">重绘非蒙版区域</span>, 重绘幅度为 <code class="docutils literal notranslate"><span class="pre">0.8</span></code>. <br />
+更换服装提示词为 <code class="docutils literal notranslate"><span class="pre">school</span> <span class="pre">uniform</span></code>.</p>
+<p><big>生成!</big></p>
+<figure class="align-default">
+<img alt="../../../_images/%E6%8D%A2%E8%A1%A3%E6%9C%8D%E6%88%90%E5%8A%9F.png" src="../../../_images/%E6%8D%A2%E8%A1%A3%E6%9C%8D%E6%88%90%E5%8A%9F.png" />
+</figure>
+<p>啊哇, 原来图片有兜帽, 导致换衣后头发那里光影不对啦!</p>
+<p>发送到重绘, 勾画出错的地方, 重绘区域选择整张图片, 重绘幅度为 <code class="docutils literal notranslate"><span class="pre">0.5</span></code>:</p>
+<p><big>修复!</big></p>
+<figure class="align-default">
+<img alt="../../../_images/%E6%8D%A2%E8%A1%A3%E6%9C%8D%E4%BF%AE%E5%A4%8D.png" src="../../../_images/%E6%8D%A2%E8%A1%A3%E6%9C%8D%E4%BF%AE%E5%A4%8D.png" />
+</figure>
+<p>完美捏!</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>千万要检查你修复好还有没有其他区域有错误, 常见错误的区域可能有头发边缘、脖子下巴之类的地方.</p>
+<p>你可以分多次修复, 也就是修复之后发现还有问题, 发送到重绘, 然后继续勾画修复的地方.</p>
+</div>
+<p>如果……你实在用不了 Photoshop 的话, 其实可以费力一点就和之前一样, 继续用 AI 画表情差分.</p>
+<p>但是如果你安装了 Photoshop 就可以继续看! 接下来我先说如何换脸, 最后会说如何抠图. <br />
+(事实上这张图大模型抠图的效果就不好了……大模型会保留一些绿色的背景)</p>
+</section>
+<section id="photoshop-x">
+<h2>超简单 Photoshop 教程x<a class="headerlink" href="#photoshop-x" title="Link to this heading">#</a></h2>
+<section id="id19">
+<h3>换脸<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
+<p>首先是换脸.</p>
+<p>我们先将图片导入 Photoshop, 然后选择图层, 将我们的新衣服放在上边, 之前的表情放在下边.</p>
+<p>接着, 我们使用<span class="menuselection">橡皮擦工具</span>, 将脸部擦除露出下方不一样的表情.</p>
+<p>这个步骤请擦除地细致一些, 它只需要进行一次, 之后就只需要点击眼睛切换图层来更换表情并导出了.</p>
+<p>具体请看换脸视频:</p>
+<div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../_images/%E6%8D%A2%E8%84%B8%E8%A7%86%E9%A2%91.mp4" type="video/mp4"></video></div><p>抱歉, 视频中没能将上方区域擦除干净, 还能看出一条分界线, 使用橡皮擦再擦擦就好了x.</p>
+<p>最终成品:</p>
+<figure class="align-default">
+<img alt="../../../_images/PS%E5%90%8E%E6%84%A4%E6%80%92.png" src="../../../_images/PS%E5%90%8E%E6%84%A4%E6%80%92.png" />
+</figure>
+<p>你可以将这个脸部被擦除的图层保留（）<br />
+虽然有些恐怖, 但是可以很方便的更换表情!</p>
+<p>我、我就不放图片了哦w.</p>
+<p>[面部被扣掉的水手服立绘😱]</p>
+</section>
+<section id="id20">
+<h3>抠图<a class="headerlink" href="#id20" title="Link to this heading">#</a></h3>
+<p>接下来, 我教你如何抠图, 这真的很简单只需要不到 30s!</p>
+<div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../_images/%E6%8A%A0%E5%9B%BE%E8%A7%86%E9%A2%91.mp4" type="video/mp4"></video></div><figure class="align-default">
+<img alt="../../../_images/%E6%8A%A0%E5%9B%BE%E5%90%8E%E6%84%A4%E6%80%92.png" src="../../../_images/%E6%8A%A0%E5%9B%BE%E5%90%8E%E6%84%A4%E6%80%92.png" />
+</figure>
+<p>差不多只需要 30s 左右就能抠完呢, 真的很简单——</p>
+<p>可能时看到头发啊边缘之类的效果不太好, 嗯……实际上如果你追求比较高, 可以用<strong>反向橡皮擦来勾线将其擦回来</strong>. <br />
+<small>反向橡皮擦就是点击橡皮擦后, 上方勾选<span class="menuselection">抹到历史记录</span></small> <br />
+工作量也不算大, 大概两分钟就能做完? 鼠标画也可以呢, 毕竟 PS 现在的平滑绘画还挺强大的!</p>
+<p>但是我认为只是用爱发电而已（）没必要做这么完美吧ww这个效果已经足够啦! 你也可以试试这个<a class="reference external" href="https://www.koukoutu.com/removebgtool/all">抠图网站</a>!</p>
+<p>请看, 带有背景的效果:</p>
+<figure class="align-default" id="id23">
+<img alt="../../../_images/%E5%B8%A6%E8%83%8C%E6%99%AF.png" src="../../../_images/%E5%B8%A6%E8%83%8C%E6%99%AF.png" />
+<figcaption>
+<p><span class="caption-text">背景来自<a class="reference external" href="https://min-chi.material.jp/category/fm/bg_c/">一个免费可商用的网站</a></span><a class="headerlink" href="#id23" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="id21">
+<h2>结语<a class="headerlink" href="#id21" title="Link to this heading">#</a></h2>
+<p>好啦, 你已经看完全部教程了, 希望有帮到你!
+如果你真的制作了带有立绘的卡, 请务必 at 我让我也观摩一下qwq</p>
+<p>对了, 如果嫌生成那么多表情麻烦, 可以安装 <a class="github reference external" href="https://github.com/adieyal/sd-dynamic-prompts">adieyal/sd-dynamic-prompts</a> 然后配置一个动态提示词一键重绘几十种表情哦?</p>
+<p>完结撒花w</p>
+</section>
+</section>
+<hr class="footnotes docutils" />
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../手写mvu变量卡/如何提问/"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">附.自查问题和如何提问</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../../青空莉/作品集/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">作品集</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">下载软件喵</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forgeui">ForgeUI 怎么用──</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lora">模型与 LORA: 让我们确定画风?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#forge">安装 Forge 扩展: 好物安利时间</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">调整Forge设置: 预备运动──</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">上方模型配置</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">下方生成选项卡</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">添加 LORA</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">填入立绘提示词: 画画</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">正面提示词</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">负面提示词</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">示例: 我来画一个</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">重绘设置解释</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">示例</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">简单动作差分</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">增添衣柜</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#photoshop-x">超简单 Photoshop 教程x</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">换脸</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">抠图</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">结语</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-03-01 19:10:44.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

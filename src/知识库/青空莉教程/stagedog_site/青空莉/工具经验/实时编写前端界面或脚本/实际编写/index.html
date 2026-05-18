@@ -1,0 +1,875 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2026-02-08T13:28:02+08:00" />
+    <title>实际编写 &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '青空莉/工具经验/实时编写前端界面或脚本/实际编写/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/青空莉/工具经验/实时编写前端界面或脚本/实际编写/" />
+    <link rel="icon" href="../../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../../search/" />
+    <link rel="next" title="进阶技巧" href="../进阶技巧/" />
+    <link rel="prev" title="阅读示例" href="../阅读示例/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-02-08 13:28:02"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../络络/作品集/">作品集</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../络络/教程/">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/">手写 MVU zod 变量卡</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/变量提示词/">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/脚本控制变量/">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/状态栏/">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../络络/教程/生成立绘、表情差分和cg/">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../提示词个人写法/">提示词个人写法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/额外输出格式/">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/多角色/">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/">实时编写角色卡、世界书或预设</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/使用说明/">使用说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/用法提示/">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">实时编写前端界面或脚本</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../环境准备/">环境准备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../阅读示例/">阅读示例</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">实际编写</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../进阶技巧/">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/青空莉/工具经验/实时编写前端界面或脚本/实际编写/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/青空莉/工具经验/实时编写前端界面或脚本/实际编写/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F青空莉/工具经验/实时编写前端界面或脚本/实际编写/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/青空莉/工具经验/实时编写前端界面或脚本/实际编写/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>实际编写</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">完整流程</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">将修改实时更新到酒馆</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">项目被修改后自动打包</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">将打包结果实时更新到酒馆</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">将酒馆与打包监听器连接</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">将最新打包结果以链接形式导入</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai">让 AI 能看到、操控酒馆页面</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chrome-devtools-mcp">(推荐) 选项1: Chrome DevTools MCP</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#chrome">安装 Chrome 浏览器</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">启用远程调试选项</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mcp">添加 MCP</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#browser-mcp">选项2: Browser MCP</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">添加 MCP</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">安装浏览器扩展</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">断点调试错误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">最终编写流程</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">创建项目</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">进行编写</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">发布打包结果</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">下一步</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>实际编写<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>区分了脚本和前端界面, 我们现在可以实际编写它; 如果你不知道酒馆助手提供了哪些功能, 可以查阅<a class="reference external" href="https://n0vi028.github.io/JS-Slash-Runner-Doc/">酒馆助手文档</a>.</p>
+<p><strong>以下内容你都可以先用<a class="reference download internal" download="" href="../../../../_downloads/22bdcd440d42e24c30d19f09859f256c/%E7%A4%BA%E4%BE%8B.png"><code class="xref download docutils literal notranslate"><span class="pre">示例角色卡</span></code></a>、<code class="docutils literal notranslate"><span class="pre">示例/脚本示例</span></code> 和 <code class="docutils literal notranslate"><span class="pre">示例/前端界面示例</span></code> 先跟着做一遍, 别急着搓自己的东西.</strong> <br />
+<strong>以下内容你都可以先用<a class="reference download internal" download="" href="../../../../_downloads/22bdcd440d42e24c30d19f09859f256c/%E7%A4%BA%E4%BE%8B.png"><code class="xref download docutils literal notranslate"><span class="pre">示例角色卡</span></code></a>、<code class="docutils literal notranslate"><span class="pre">示例/脚本示例</span></code> 和 <code class="docutils literal notranslate"><span class="pre">示例/前端界面示例</span></code> 先跟着做一遍, 别急着搓自己的东西.</strong> <br />
+<strong>以下内容你都可以先用<a class="reference download internal" download="" href="../../../../_downloads/22bdcd440d42e24c30d19f09859f256c/%E7%A4%BA%E4%BE%8B.png"><code class="xref download docutils literal notranslate"><span class="pre">示例角色卡</span></code></a>、<code class="docutils literal notranslate"><span class="pre">示例/脚本示例</span></code> 和 <code class="docutils literal notranslate"><span class="pre">示例/前端界面示例</span></code> 先跟着做一遍, 别急着搓自己的东西.</strong></p>
+<section id="id2">
+<h2>完整流程<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>在<code class="docutils literal notranslate"><span class="pre">初始模板</span></code>文件夹中, 我分别给出了<code class="docutils literal notranslate"><span class="pre">脚本</span></code>和<code class="docutils literal notranslate"><span class="pre">前端界面</span></code>项目所需的初始文件. 此处以编写<code class="docutils literal notranslate"><span class="pre">前端界面</span></code>为例, 而<code class="docutils literal notranslate"><span class="pre">脚本</span></code>的编写流程与之类似.</p>
+<p>为了创建前端界面项目, 你需要将<code class="docutils literal notranslate"><span class="pre">初始模板/前端界面/新建为src文件夹中的文件夹</span></code>复制到 <code class="docutils literal notranslate"><span class="pre">src</span></code> 文件夹中, 将它重命名为你想要的名称:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%88%9B%E5%BB%BA%E6%96%B0%E9%A1%B9%E7%9B%AE.png" src="../../../../_images/%E5%88%9B%E5%BB%BA%E6%96%B0%E9%A1%B9%E7%9B%AE.png" />
+</figure>
+<p>然后我们发送下面一段提示词给 AI 编程助手, 让它为我们编写代码:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>阅读现有规则, 为我新建一个独立的前端界面`手机角色状态栏`
+它应该是一个手机风格的角色状态栏, 该手机页面应当包含边框、刘海、聊天界面等, 并显示有角色当前的状态
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>需要注意的是, 我这里只是演示因此直接提出了一个完整要求, 但你在实际编写时应该尽量先和 AI 沟通好, 让 AI 一点点做, 做出来一部分就测试一部分, 而不是指望它能一次性生成完整可用的界面.</p>
+<p>另外, 虽然我给 AI 编程助手添加了全局编写规则, <strong>但它依然可能不阅读</strong>. 你可以把 <code class="docutils literal notranslate"><span class="pre">.cursor/rules</span></code> 中的文档全拖给 AI 来强调它必须阅读.</p>
+</div>
+<p>编写完毕后, 我们在终端执行 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code> 来打包代码.</p>
+<p>如果该操作执行失败, 你可以让 AI 检查错误原因并修复它. 一般直接问 AI 即可, 也可以自己在终端中复制错误信息然后发给 AI:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%89%93%E5%8C%85%E5%A4%B1%E8%B4%A5.png" src="../../../../_images/%E6%89%93%E5%8C%85%E5%A4%B1%E8%B4%A5.png" />
+</figure>
+<p>如果该操作执行成功, 则会在 <code class="docutils literal notranslate"><span class="pre">dist</span></code> 文件夹中找到 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code> 对新项目的打包结果:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%89%93%E5%8C%85%E6%88%90%E5%8A%9F.png" src="../../../../_images/%E6%89%93%E5%8C%85%E6%88%90%E5%8A%9F.png" />
+</figure>
+<p>你只需要考虑打包结果中的那个 .html 文件, 不必考虑另外的 .map 文件.</p>
+<p>.html 文件包含了项目中所有文件的代码, 因此你可以<strong>将它的内容用代码块包裹 (上下加一行 <code class="docutils literal notranslate"><span class="pre">```</span></code>)</strong>, 然后复制到示例角色卡的<code class="docutils literal notranslate"><span class="pre">界面-发布给玩家</span></code>正则中的<span class="menuselection">替换为</span>部分.</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>如果是脚本 (流式楼层界面也是脚本), 则应该使用打包结果中的那个 .js 文件, 将它的内容复制到酒馆助手脚本库脚本中的<span class="menuselection">脚本内容</span>部分.</p>
+</div>
+<p>这样一来,</p>
+<ul class="simple">
+<li><p>如果酒馆楼层中存在能被这个酒馆正则匹配的文本, 酒馆正则就会在楼层中替换出代码块; (示例角色卡中的酒馆正则是匹配任意文本, 所以必然能替换出来)</p></li>
+<li><p>而酒馆助手会将代码块渲染成前端界面:</p></li>
+</ul>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%B8%B2%E6%9F%93%E7%BB%93%E6%9E%9C.png" src="../../../../_images/%E6%B8%B2%E6%9F%93%E7%BB%93%E6%9E%9C.png" />
+</figure>
+<p>这就是我们项目的整个流程:</p>
+<ol class="arabic simple">
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">src</span></code> 文件夹中新建项目</p></li>
+<li><p>让 AI 在这个项目中编写代码</p></li>
+<li><p>用 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code> 将项目打包成一个文件</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">dist</span></code> 文件夹中的打包结果用代码块包裹后复制到酒馆正则中 (如果是脚本 (流式楼层界面也是脚本) 则复制到酒馆助手脚本库脚本中的<span class="menuselection">脚本内容</span>部分)</p></li>
+</ol>
+<p>但 AI 会听不懂我们的要求或犯错, 一次编写很可能无法写出我们想要的脚本或前端界面. 这又该如何是好呢? 难道我们每次让 AI 修改了代码, 都要重新 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code> 打包代码, 再手动复制粘贴到酒馆中来验证?</p>
+<p>不, 我们更希望:</p>
+<ul class="simple">
+<li><p>对脚本和前端界面的修改能实时更新到酒馆中</p></li>
+<li><p>AI 能自己查看酒馆网页来理解你说的要求或问题</p></li>
+<li><p>(有代码基础的人) 能够自行查看代码执行情况来定位错误</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>将修改实时更新到酒馆<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>假设我们已经从<code class="docutils literal notranslate"><span class="pre">初始模板</span></code>中创建了前端界面项目<code class="docutils literal notranslate"><span class="pre">前端界面示例</span></code>, 我们希望将它的最新内容实时更新到酒馆中.</p>
+<p>回顾一下如果没有实时修改, 我们是如何修改项目并更新到酒馆中的:</p>
+<ul class="simple">
+<li><p>让 AI 修改代码</p></li>
+<li><p>重新 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code> 打包代码</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">dist</span></code> 文件夹中的打包结果用代码块包裹后复制到酒馆正则中 (如果是脚本 (流式楼层界面也是脚本) 则复制到酒馆助手脚本库脚本中的<span class="menuselection">脚本内容</span>部分)</p></li>
+</ul>
+<p>因此, 我们需要实现 &quot;重新 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code> 打包代码&quot; 和 &quot;将打包结果用代码块包裹后复制到酒馆正则中&quot; 的自动化.</p>
+<section id="id4">
+<h3>项目被修改后自动打包<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>要做到项目被修改后自动打包, 我们将 <code class="docutils literal notranslate"><span class="pre">.vscode/launch.json</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">url</span></code> 为自己的酒馆地址 (例如 <code class="docutils literal notranslate"><span class="pre">http://localhost:6622</span></code>).</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%9B%B4%E6%94%B9launch.png" src="../../../../_images/%E6%9B%B4%E6%94%B9launch.png" />
+</figure>
+<p>然后, 我们不再运行 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code>, 而是运行 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">watch</span></code>. watch 意为监听, 也就是说, <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">watch</span></code> 会监听项目中的文件变化, 并在变化时自动重新打包代码.</p>
+</section>
+<section id="id5">
+<h3>将打包结果实时更新到酒馆<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>为了让酒馆页面实时加载最新的打包结果, 我们不能是再自己手动复制打包结果到酒馆正则中, 而要让酒馆页面自动加载它. 这需要:</p>
+<ul class="simple">
+<li><p>让酒馆知道打包结果发生了变化并在变化时重新加载脚本和前端界面: 我们需要将酒馆与打包监听器 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">watch</span></code> 连接</p></li>
+<li><p>让酒馆在重新加载时能获取到最新打包结果: 我们可以将打包结果文件映射为网络链接, 在酒馆里填写这个网络链接而不是自己每次复制粘贴, 则酒馆重新加载脚本和前端界面时会重新访问这个链接, 从而得到最新的打包结果</p></li>
+</ul>
+<section id="id6">
+<h4>将酒馆与打包监听器连接<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<p>酒馆助手已经为我们实现了酒馆与打包监听器 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">watch</span></code> 的连接, 我们从<span class="menuselection">酒馆助手 ‣ 开发 ‣ 实时监听</span>中启用<span class="menuselection">允许监听</span>即可.</p>
+<p>如果我们已经运行 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">watch</span></code>, 则实时监听右边的 WiFi 图标会变成绿色, 这意味着酒馆已经能知道打包结果是否发生变化.</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%90%AF%E7%94%A8%E5%AE%9E%E6%97%B6%E7%9B%91%E5%90%AC.png" src="../../../../_images/%E5%90%AF%E7%94%A8%E5%AE%9E%E6%97%B6%E7%9B%91%E5%90%AC.png" />
+</figure>
+</section>
+<section id="id7">
+<h4>将最新打包结果以链接形式导入<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
+<p>我们点击 Cursor 右下角的 <span class="menuselection">Go Live</span> 来将文件夹中所有文件映射成一个网络链接: <br />
+(如果没有这个按钮, 请重新<a class="reference internal" href="../环境准备/"><span class="doc">导入配置文件</span></a>; 实在不行可以自己去<span class="menuselection">侧边栏 ‣ 扩展</span>搜索 <code class="docutils literal notranslate"><span class="pre">Live</span> <span class="pre">Server</span></code> 并安装.)</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%90%AF%E5%8A%A8live_server.png" src="../../../../_images/%E5%90%AF%E5%8A%A8live_server.png" />
+</figure>
+<p>在点击后, <span class="menuselection">Go Live</span> 将会变成 <span class="menuselection">port: xxxx</span>. 以 <code class="docutils literal notranslate"><span class="pre">port:</span> <span class="pre">5500</span></code> 为例, 这意味着你将能在 <code class="docutils literal notranslate"><span class="pre">http://localhost:5500</span></code> 访问文件夹下的文件:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E8%AE%BF%E9%97%AE%E6%96%87%E4%BB%B6.png" src="../../../../_images/%E8%AE%BF%E9%97%AE%E6%96%87%E4%BB%B6.png" />
+</figure>
+<p>而打包结果 <code class="docutils literal notranslate"><span class="pre">dist/前端界面示例/index.html</span></code> 将能以 <code class="docutils literal notranslate"><span class="pre">http://localhost:5500/dist/前端界面示例/index.html</span></code> 访问:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%89%93%E5%8C%85%E7%BB%93%E6%9E%9C%E8%B7%AF%E5%BE%84.png" src="../../../../_images/%E6%89%93%E5%8C%85%E7%BB%93%E6%9E%9C%E8%B7%AF%E5%BE%84.png" />
+</figure>
+<p>有了这个链接, 我们接下来更换酒馆正则<span class="menuselection">替换为</span>部分的 html 代码块, 让它从 <code class="docutils literal notranslate"><span class="pre">http://localhost:5500/dist/前端界面示例/index.html</span></code> 加载 html:</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span>```
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="hll"><span class="w">    </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">load</span><span class="p">(</span><span class="s1">&#39;http://localhost:5500/dist/前端界面示例/index.html&#39;</span><span class="p">)</span>
+</span><span class="w">  </span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+```
+</pre></div>
+</div>
+<p>这正是<code class="docutils literal notranslate"><span class="pre">初始模板/前端界面/导入到酒馆</span></code>中的实时修改正则所做的事情, 而<code class="docutils literal notranslate"><span class="pre">初始模板/脚本/导入到酒馆</span></code>中的实时修改脚本填法有所不同, 但你不必记忆. 你可以直接从文件夹找到并导入它们, 然后将其中的链接替换为你的打包结果链接.</p>
+</section>
+</section>
+</section>
+<section id="ai">
+<h2>让 AI 能看到、操控酒馆页面<a class="headerlink" href="#ai" title="Link to this heading">#</a></h2>
+<p>经过 &quot;将修改实时更新到酒馆&quot;, AI 对我们代码的更改就会实时在酒馆上显示了.</p>
+<p>但这还不够! 接下来, 让我们配置 MCP, 从而让 AI 能自己查看前端界面、脚本在酒馆网页上是否正常, 能操控酒馆网页, 甚至能够像真人一样玩酒馆 (?!).</p>
+<section id="chrome-devtools-mcp">
+<h3>(推荐) 选项1: Chrome DevTools MCP<a class="headerlink" href="#chrome-devtools-mcp" title="Link to this heading">#</a></h3>
+<section id="chrome">
+<h4>安装 Chrome 浏览器<a class="headerlink" href="#chrome" title="Link to this heading">#</a></h4>
+<p>顾名思义, 我们需要安装 Chrome, 而且最好是最新版.</p>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>网上也有让 Edge 浏览器接上这个功能的方法, 如果需要可以在<strong>学完教程后</strong>去试.</p>
+</div>
+</section>
+<section id="id8">
+<h4>启用远程调试选项<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
+<p>安装好 Chrome 后, 我们在 Chrome 浏览器中输入 <code class="docutils literal notranslate"><span class="pre">chrome://inspect/#remote-debugging</span></code> 并<kbd class="kbd docutils literal notranslate">回车</kbd>跳转, 然后勾选 <span class="menuselection">Allow remote debugging for this browser instance</span> 即可.</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95%E9%80%89%E9%A1%B9.png" src="../../../../_images/%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95%E9%80%89%E9%A1%B9.png" />
+</figure>
+<p>如果没有这个选项, 请更新 Chrome 到 144 版本及以上.</p>
+<p>在勾选这个选项后, <strong>请通过任务管理器完全关闭浏览器, 或直接重启电脑</strong>, 保证浏览器确实启用了远程调试选项.</p>
+</section>
+<section id="mcp">
+<h4>添加 MCP<a class="headerlink" href="#mcp" title="Link to this heading">#</a></h4>
+<p>然后, 我们在 AI 编程助手的 MCP 配置文件里添加 Chrome DevTools MCP 即可…… <br />
+模板文件夹已经为很多编程助手配置好了它, 但部分编程助手如 Codex 需要自己配置一下. 具体请参考<a class="reference internal" href="../环境准备/"><span class="doc">环境准备</span></a>最后所列出的编程助手配置情况.</p>
+<p>配置好后, AI 编程助手就能在编写时自行查看操控酒馆网页了.</p>
+<p>你的 AI 编程助手现在可以: (AI 不一定主动使用, 你可以在提示词中告诉它 <code class="docutils literal notranslate"><span class="pre">用</span> <span class="pre">chrome-devtools-mcp</span> <span class="pre">来访问酒馆网页</span></code>)</p>
+<ul class="simple">
+<li><p>读取酒馆网页显示情况、控制台 (Console) 日志情况、网络情况</p></li>
+<li><p>读取你通过 <span class="menuselection">开发者工具 ‣ 左上角的选择元素</span> 选择到的网页元素</p></li>
+<li><p>让它像素级复刻网页样式</p></li>
+<li><p>自己点击网页、填写表单……甚至如果你说明清楚, 它可以像你一样玩酒馆</p></li>
+<li><p>……</p></li>
+</ul>
+</section>
+</section>
+<section id="browser-mcp">
+<h3>选项2: Browser MCP<a class="headerlink" href="#browser-mcp" title="Link to this heading">#</a></h3>
+<p>或者你可以使用 Browser MCP, 但它比 Chrome DevTools MCP 在使用体验上差了很多.</p>
+<section id="id9">
+<h4>添加 MCP<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
+<p>首先, 我们来为 AI 编程助手添加 MCP. 我们将 <code class="docutils literal notranslate"><span class="pre">.cursor/mcp.json</span></code> 清空, 粘贴以下内容:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;browsermcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pnpx&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;@browsermcp/mcp&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这会为很多编程助手配置好它, 但部分编程助手如 Codex 需要自己配置一下. 具体请参考<a class="reference internal" href="../环境准备/"><span class="doc">环境准备</span></a>最后所列出的编程助手配置情况.</p>
+</section>
+<section id="id10">
+<h4>安装浏览器扩展<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
+<p>然后, 我们去安装它所需要的浏览器扩展.</p>
+<p>我们打开浏览器, 从 <a class="reference external" href="https://chromewebstore.google.com/detail/browser-mcp-automate-your/bjfgambnhccakkhmkepdoekmckoijdlc">chrome 应用商店</a>或你浏览器的应用商店安装最新的浏览器扩展.</p>
+<p>如此, 我们回到酒馆网页, 点击扩展图标然后点击 <span class="menuselection">连接</span> 即可.</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E8%BF%9E%E6%8E%A5browser_mcp.png" src="../../../../_images/%E8%BF%9E%E6%8E%A5browser_mcp.png" />
+</figure>
+<p>你的 AI 编程助手现在可以: (AI 不一定主动使用, 你可以在提示词中告诉它 <code class="docutils literal notranslate"><span class="pre">用</span> <span class="pre">browsermcp</span> <span class="pre">来访问酒馆网页</span></code>)</p>
+<ul class="simple">
+<li><p>读取酒馆网页显示情况、控制台 (Console) 日志情况、网络情况</p></li>
+<li><p>读取你通过 <span class="menuselection">开发者工具 ‣ 左上角的选择元素</span> 选择到的网页元素</p></li>
+</ul>
+<figure class="align-default" id="id17">
+<img alt="../../../../_images/mcp%E8%BF%9E%E6%8E%A5%E6%88%90%E5%8A%9F.png" src="../../../../_images/mcp%E8%BF%9E%E6%8E%A5%E6%88%90%E5%8A%9F.png" />
+<figcaption>
+<p><span class="caption-text">AI 使用 MCP 时会有很明显的显示</span><a class="headerlink" href="#id17" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
+<section id="id11">
+<h2>断点调试错误<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<p>可能太专业因而不详细解释: 这个项目模板也天然支持断点调试. 你可以在代码中设置断点, 然后 <kbd class="kbd docutils literal notranslate">F5</kbd> 运行调试任务. 当浏览器运行到断点处时, 会自动暂停并显示运行情况.</p>
+</section>
+<section id="id12">
+<h2>最终编写流程<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
+<p>我们现在有了实时修改和 AI 直接看酒馆页面的功能, 则编写流程应该如下:</p>
+<section id="id13">
+<h3>创建项目<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<p>在 <code class="docutils literal notranslate"><span class="pre">src</span></code> 文件夹中用<code class="docutils literal notranslate"><span class="pre">初始模板</span></code>新建项目.</p>
+<p>在<span class="menuselection">酒馆正则</span>中导入<code class="docutils literal notranslate"><span class="pre">初始模板</span></code>中的实时修改正则 (编写脚本则在<span class="menuselection">酒馆助手 ‣ 脚本</span>中导入实时修改脚本), 并将其中的链接替换为打包结果链接.</p>
+</section>
+<section id="id14">
+<h3>进行编写<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>将修改结果实时更新到酒馆</p>
+<ol class="arabic simple">
+<li><p>点击 Cursor 右下角的 <span class="menuselection">Go Live</span> 将文件夹映射为网络链接</p></li>
+<li><p>在终端输入 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">watch</span></code> 并<kbd class="kbd docutils literal notranslate">回车</kbd>来运行监听打包任务</p></li>
+</ol>
+</li>
+<li><p>让 AI 能看到、操控酒馆网页</p>
+<ul>
+<li><p>如果用的是 Chrome DevTools MCP, 什么都不用做直接用</p></li>
+<li><p>如果用的是 Browser MCP, 需要自己去它的浏览器插件启用连接; 但它只能让 AI 看酒馆网页不能操控</p></li>
+</ul>
+</li>
+<li><p>在输入框里加一些强调辅助它别发蠢:</p>
+<ul>
+<li><p><strong>强制它阅读规则:</strong> 虽然规则是按 AI 编程助手文档配置的, 但 AI 还是可能偷懒不读, 最好在提示词中强调<code class="docutils literal notranslate"><span class="pre">阅读现有规则</span></code></p></li>
+<li><p><strong>强制它看酒馆:</strong> 同理, 为了防止 AI 偷懒, 你最好强调<code class="docutils literal notranslate"><span class="pre">通过</span> <span class="pre">MCP</span> <span class="pre">访问酒馆网页</span></code></p></li>
+<li><p><strong>告诉它怎么检查结果:</strong> 如果你的界面内容很多, 你可以针对你的需求说明它该怎么检查结果, 比如<code class="docutils literal notranslate"><span class="pre">随便填写界面里的表单一直到显示提交按钮,</span> <span class="pre">点击提交按钮后将会出现新的楼层</span></code></p></li>
+</ul>
+</li>
+<li><p>确认你是要制作什么: 前端界面? 脚本? 流式楼层界面? <a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/使用编写模板/"><span class="doc">一整张 MVU 变量卡?</span></a></p></li>
+<li><p>开始提需求让 AI 做, 结果有问题就让它重做或者修改</p></li>
+</ul>
+</section>
+<section id="id15">
+<h3>发布打包结果<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<p>在确认项目完成后, 停止 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">watch</span></code> 任务 (<kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>+<kbd class="kbd docutils literal notranslate">C</kbd></kbd> 或直接删除终端窗口), 用 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code> 将项目打包成一个文件, 将打包结果用代码块包裹后复制到酒馆正则中 (如果是脚本 (流式楼层界面也是脚本) 则复制到酒馆助手脚本库脚本中的<span class="menuselection">脚本内容</span>部分).</p>
+<p><strong>注意你应该发布 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code> 的打包结果, 而不是 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">watch</span></code> 的打包结果.</strong> <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">watch</span></code> 是专门用于实时编写的, 它打包出来的文件大小是 <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">build</span></code> 的数十倍.</p>
+</section>
+</section>
+<section id="id16">
+<h2>下一步<a class="headerlink" href="#id16" title="Link to this heading">#</a></h2>
+<p>现在, 你已经可以拷打 AI 编写前端界面或脚本了.</p>
+<p>但如果你想知道:</p>
+<ul class="simple">
+<li><p>酒馆助手让你在前端界面或脚本里能做到什么</p></li>
+<li><p>前端界面正则的推荐写法</p></li>
+<li><p>怎么制作支持流式传输的前端界面</p></li>
+<li><p>怎么制作同层前端界面</p></li>
+<li><p>……</p></li>
+</ul>
+<p>那么请阅读进阶技巧相关部分.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../阅读示例/"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">阅读示例</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../进阶技巧/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">进阶技巧</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">完整流程</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">将修改实时更新到酒馆</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">项目被修改后自动打包</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">将打包结果实时更新到酒馆</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">将酒馆与打包监听器连接</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">将最新打包结果以链接形式导入</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai">让 AI 能看到、操控酒馆页面</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chrome-devtools-mcp">(推荐) 选项1: Chrome DevTools MCP</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#chrome">安装 Chrome 浏览器</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">启用远程调试选项</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mcp">添加 MCP</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#browser-mcp">选项2: Browser MCP</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">添加 MCP</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">安装浏览器扩展</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">断点调试错误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">最终编写流程</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">创建项目</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">进行编写</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">发布打包结果</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">下一步</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-02-08 13:28:02.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

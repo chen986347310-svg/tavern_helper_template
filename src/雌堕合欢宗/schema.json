@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "系统": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "阶段": {
+          "default": "攻略期",
+          "type": "string",
+          "enum": [
+            "攻略期",
+            "牝奴期"
+          ]
+        },
+        "剩余天数": {
+          "default": 30,
+          "type": "number"
+        },
+        "灵石": {
+          "default": 0,
+          "type": "number"
+        },
+        "已使用阵法": {
+          "default": false,
+          "type": "boolean"
+        }
+      }
+    },
+    "牝奴": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "堕落度": {
+          "default": 0,
+          "type": "number"
+        },
+        "牝阴决层数": {
+          "default": 0,
+          "type": "number"
+        },
+        "上次支配者": {
+          "default": "",
+          "type": "string"
+        },
+        "支配次数": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "白芷",
+              "苏芸",
+              "纪兰",
+              "沈月秋",
+              "柳素衣"
+            ]
+          },
+          "additionalProperties": {
+            "type": "number"
+          },
+          "required": [
+            "白芷",
+            "苏芸",
+            "纪兰",
+            "沈月秋",
+            "柳素衣"
+          ]
+        },
+        "改造进度": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "泌乳": {
+              "default": false,
+              "type": "boolean"
+            },
+            "肛门": {
+              "default": false,
+              "type": "boolean"
+            },
+            "憋尿": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "NPC": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "白芷",
+          "苏芸",
+          "纪兰",
+          "沈月秋",
+          "柳素衣"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "好感度": {
+            "default": 0,
+            "type": "number"
+          },
+          "攻略值": {
+            "default": 0,
+            "type": "number"
+          },
+          "粘滞计数": {
+            "default": 0,
+            "type": "number"
+          },
+          "状态": {
+            "default": "未开始",
+            "type": "string",
+            "enum": [
+              "未开始",
+              "进行中",
+              "已完成"
+            ]
+          }
+        }
+      },
+      "required": [
+        "白芷",
+        "苏芸",
+        "纪兰",
+        "沈月秋",
+        "柳素衣"
+      ]
+    },
+    "道具": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "拥有": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "道具名"
+          },
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "装备": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "玩家",
+              "白芷",
+              "苏芸",
+              "纪兰",
+              "沈月秋",
+              "柳素衣"
+            ]
+          },
+          "additionalProperties": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "装备道具名"
+            }
+          },
+          "required": [
+            "玩家",
+            "白芷",
+            "苏芸",
+            "纪兰",
+            "沈月秋",
+            "柳素衣"
+          ]
+        }
+      }
+    },
+    "场景": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "已解锁": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "剧情": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "已解锁": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

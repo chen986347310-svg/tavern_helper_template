@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2026-02-08T13:28:02+08:00" />
+    <title>阅读示例 &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '青空莉/工具经验/实时编写前端界面或脚本/阅读示例/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/青空莉/工具经验/实时编写前端界面或脚本/阅读示例/" />
+    <link rel="icon" href="../../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../../search/" />
+    <link rel="next" title="实际编写" href="../实际编写/" />
+    <link rel="prev" title="环境准备" href="../环境准备/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-02-08 13:28:02"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../络络/作品集/">作品集</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../络络/教程/">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/">手写 MVU zod 变量卡</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/变量提示词/">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/脚本控制变量/">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/状态栏/">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../络络/教程/生成立绘、表情差分和cg/">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../提示词个人写法/">提示词个人写法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/额外输出格式/">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/多角色/">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../提示词个人写法/变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/">实时编写角色卡、世界书或预设</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/使用说明/">使用说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/用法提示/">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">实时编写前端界面或脚本</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../环境准备/">环境准备</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">阅读示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../实际编写/">实际编写</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../进阶技巧/">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/青空莉/工具经验/实时编写前端界面或脚本/阅读示例/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/青空莉/工具经验/实时编写前端界面或脚本/阅读示例/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F青空莉/工具经验/实时编写前端界面或脚本/阅读示例/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/青空莉/工具经验/实时编写前端界面或脚本/阅读示例/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>阅读示例</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">脚本: 在后台运行一段代码</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">前端界面: 在前台消息楼层显示一个界面</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">流式楼层界面</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>阅读示例<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>让我们导入<a class="reference download internal" download="" href="../../../../_downloads/22bdcd440d42e24c30d19f09859f256c/%E7%A4%BA%E4%BE%8B.png"><code class="xref download docutils literal notranslate"><span class="pre">示例角色卡</span></code></a>, 来理解脚本和前端界面的作用和区别.</p>
+<p>导入角色卡后, 我们通过扩展设置, 可以在<span class="menuselection">酒馆助手 ‣ 脚本</span>和<span class="menuselection">正则</span>中分别看到该角色卡有以下角色脚本和局部正则:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%89%93%E5%BC%80%E8%A7%92%E8%89%B2%E5%8D%A1.png" src="../../../../_images/%E6%89%93%E5%BC%80%E8%A7%92%E8%89%B2%E5%8D%A1.png" />
+</figure>
+<p>这分别对应了酒馆助手所支持的两类向酒馆注入代码的方式, 与模板文件夹中的 <code class="docutils literal notranslate"><span class="pre">脚本/脚本示例</span></code> 和 <code class="docutils literal notranslate"><span class="pre">界面/前端界面示例</span></code> 文件夹一一对应.</p>
+<section id="id2">
+<h2>脚本: 在后台运行一段代码<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>我们首先启用 <code class="docutils literal notranslate"><span class="pre">脚本-发布给玩家</span></code>, 将会收到一条弹窗提示:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%90%AF%E7%94%A8%E8%84%9A%E6%9C%AC%E5%BC%B9%E7%AA%97.png" src="../../../../_images/%E5%90%AF%E7%94%A8%E8%84%9A%E6%9C%AC%E5%BC%B9%E7%AA%97.png" />
+</figure>
+<p>这反映了脚本的功能: 在启用时执行一段代码, 可能上图那样的弹窗提示, 也可能是开始监听某些事件从而在事件发生时执行某段代码……</p>
+<p>脚本可以在启用时执行一段代码. 除了上图那样的弹窗外, 你还能看到脚本新增了两个消息楼层:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E8%84%9A%E6%9C%AC%E6%96%B0%E5%A2%9E%E6%B6%88%E6%81%AF%E6%A5%BC%E5%B1%82.png" src="../../../../_images/%E8%84%9A%E6%9C%AC%E6%96%B0%E5%A2%9E%E6%B6%88%E6%81%AF%E6%A5%BC%E5%B1%82.png" />
+</figure>
+<p>脚本能执行的代码功能非常丰富. 例如, 你可以发现开启脚本时, 酒馆的插件页面新增了一项<span class="menuselection">脚本示例</span>. 如果我们勾选其中开关、关闭脚本再重新打开, 会发现开关依旧被勾选: (请继续读下去, 在<a class="reference internal" href="../进阶技巧/"><span class="doc">进阶技巧</span></a>中将会介绍这是如何做到的)</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E8%84%9A%E6%9C%AC%E6%B7%BB%E5%8A%A0%E8%AE%BE%E7%BD%AE%E9%A1%B5.png" src="../../../../_images/%E8%84%9A%E6%9C%AC%E6%B7%BB%E5%8A%A0%E8%AE%BE%E7%BD%AE%E9%A1%B5.png" />
+</figure>
+<p>脚本可以监听酒馆事件和酒馆助手事件. 例如, 让我们启用这个脚本, 然后通过<span class="menuselection">铅笔</span>尝试修改一下第 0 楼的内容. <br />
+当我们点击保存时, 脚本将会监听到 &quot;消息楼层被修改&quot; 事件:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E7%9B%91%E5%90%AC%E6%B6%88%E6%81%AF%E6%A5%BC%E5%B1%82%E8%A2%AB%E4%BF%AE%E6%94%B9%E4%BA%8B%E4%BB%B6.png" src="../../../../_images/%E7%9B%91%E5%90%AC%E6%B6%88%E6%81%AF%E6%A5%BC%E5%B1%82%E8%A2%AB%E4%BF%AE%E6%94%B9%E4%BA%8B%E4%BB%B6.png" />
+</figure>
+<p>脚本也可以监听自己的按钮点击事件. 例如, 我们启用脚本后会在输入框上方看见<span class="menuselection">晚上好</span>按钮, 点击它后, 脚本将会监听到 &quot;玩家点击了晚上好按钮&quot; 事件:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E7%9B%91%E5%90%AC%E7%8E%A9%E5%AE%B6%E7%82%B9%E5%87%BB%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6.png" src="../../../../_images/%E7%9B%91%E5%90%AC%E7%8E%A9%E5%AE%B6%E7%82%B9%E5%87%BB%E6%8C%89%E9%92%AE%E4%BA%8B%E4%BB%B6.png" />
+</figure>
+<p>脚本还能监听自己的开关情况. 例如, 我们关闭脚本, 脚本会监听到 &quot;脚本被关闭&quot; 事件:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E7%9B%91%E5%90%AC%E8%84%9A%E6%9C%AC%E5%85%B3%E9%97%AD%E4%BA%8B%E4%BB%B6.png" src="../../../../_images/%E7%9B%91%E5%90%AC%E8%84%9A%E6%9C%AC%E5%85%B3%E9%97%AD%E4%BA%8B%E4%BB%B6.png" />
+</figure>
+<p>如果你点击<span class="menuselection">酒馆助手 ‣ 脚本 ‣ 内置库</span>并添加<code class="docutils literal notranslate"><span class="pre">预设防误触</span></code>脚本, 就会发现你在开启脚本时不能修改预设设置, 关闭脚本后可以修改. 这其实就是脚本在启用时执行了一段代码, 让你不能修改预设设置; 而又监听 &quot;脚本被关闭&quot; 事件, 在脚本关闭时执行代码重新允许你修改预设设置.</p>
+<p>总的来说, 脚本的作用就是:</p>
+<ul class="simple">
+<li><p>在开启时可以执行一段代码</p></li>
+<li><p>在启用期间可以监听事件 (酒馆或酒馆助手事件、按钮点击事件、脚本被卸载), 从而在事件发生时执行代码.</p></li>
+</ul>
+<p>如此, 你也许能理解 MVU 变量框架脚本做了什么: 启用它后, 它将监听 &quot;接收到了新的消息楼层&quot; 事件, 当事件发生时根据这个新楼层中的 <code class="docutils literal notranslate"><span class="pre">&lt;UpdateVariable&gt;</span></code> 变量更新命令来更新变量.</p>
+</section>
+<section id="id3">
+<h2>前端界面: 在前台消息楼层显示一个界面<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>我们关闭脚本, 启用<span class="menuselection">正则</span>中的<span class="menuselection">界面-发布给玩家</span>正则, 将会收到整整三条弹窗提示:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E5%90%AF%E7%94%A8%E7%95%8C%E9%9D%A2%E5%BC%B9%E7%AA%97.png" src="../../../../_images/%E5%90%AF%E7%94%A8%E7%95%8C%E9%9D%A2%E5%BC%B9%E7%AA%97.png" />
+</figure>
+<p>为什么是三条弹窗提示? 让我们关掉这个正则, 来仔细理解一下它是怎么起作用的.</p>
+<p>实际上, 酒馆助手支持前端界面的方式很简单: 如果消息楼层中某个代码块内存在 html 代码 (尤其是 <code class="docutils literal notranslate"><span class="pre">&lt;body&gt;&lt;/body&gt;</span></code> 标签), 那么酒馆助手会自动将这个 html 代码渲染成前端界面. <br />
+例如, 如果我们在消息楼层中添加以下代码块, 它会被渲染成一个超大的红色 &quot;你好&quot;:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">源文本</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">渲染结果</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>代码块由以下部分组成:</p>
+<ul class="simple">
+<li><p>开头单独一行 <code class="docutils literal notranslate">```</code></p></li>
+<li><p>代码内容</p></li>
+<li><p>结尾单独一行 <code class="docutils literal notranslate">```</code></p></li>
+</ul>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span>```
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;text-9xl text-red-600&quot;</span><span class="p">&gt;</span>你好<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+```
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><figure class="align-default">
+<img alt="../../../../_images/%E6%B8%B2%E6%9F%93%E4%BD%A0%E5%A5%BD.png" src="../../../../_images/%E6%B8%B2%E6%9F%93%E4%BD%A0%E5%A5%BD.png" />
+</figure>
+</div></div>
+<p>但我们显然不想 AI 直接输出整个 html 代码块, 这既浪费 token 又容易出错. 有没有什么办法让 AI 只输出前端界面必要的剧情信息 (如角色当前穿着情况、所在位置等), 却又在酒馆页面上显示出 html 代码块从而渲染出前端界面呢? 酒馆正则的<span class="menuselection">仅格式显示</span>功能正能实现这个功能.</p>
+<p>酒馆正则能够捕获 AI 回复和用户输入中的特定文本, 让它在某些用途下被替换为指定内容:</p>
+<ul class="simple">
+<li><p><span class="menuselection">仅格式提示词</span>: 在发送给 AI 时被替换为指定内容. 例如预设的<code class="docutils literal notranslate"><span class="pre">[不发送]思维链</span></code>正则将 <code class="docutils literal notranslate"><span class="pre">&lt;thinking&gt;</span></code> 块替换为空字符串, 从而不让 AI 收到之前消息中的思维链内容.</p></li>
+<li><p><span class="menuselection">仅格式显示</span>: 在酒馆中显示时被替换为指定内容. 例如预设的<code class="docutils literal notranslate"><span class="pre">[隐藏]思维链</span></code>正则将 <code class="docutils literal notranslate"><span class="pre">&lt;thinking&gt;</span></code> 块替换为空字符串, 从而不让玩家在酒馆页面中看到思维链部分.</p></li>
+<li><p>两个都不勾选: 在 AI 输出接收到时或用户输入发送出去时就被<strong>永久</strong>替换掉</p></li>
+</ul>
+<figure class="align-default">
+<img alt="../../../../_images/%E9%85%92%E9%A6%86%E6%AD%A3%E5%88%991.png" src="../../../../_images/%E9%85%92%E9%A6%86%E6%AD%A3%E5%88%991.png" />
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">界面-发布给玩家</span></code> 正则所做的, 就是捕获 AI 回复中尽可能多的字符, 即捕获全部文本, 并将其替换为 html 代码块.</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E7%95%8C%E9%9D%A2-%E5%8F%91%E5%B8%83%E7%BB%99%E7%8E%A9%E5%AE%B6%E6%AD%A3%E5%88%99.png" src="../../../../_images/%E7%95%8C%E9%9D%A2-%E5%8F%91%E5%B8%83%E7%BB%99%E7%8E%A9%E5%AE%B6%E6%AD%A3%E5%88%99.png" />
+</figure>
+<p>回过头来, 为什么打开<code class="docutils literal notranslate"><span class="pre">界面-发布给玩家</span></code>正则后会收到整整三条弹窗提示呢? 因为我们总共有三个消息楼层, 正则会依次捕获替换, 而酒馆助手由此渲染了三个前端界面:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%B8%B2%E6%9F%93%E4%B8%89%E4%B8%AA%E5%89%8D%E7%AB%AF%E7%95%8C%E9%9D%A2.png" src="../../../../_images/%E6%B8%B2%E6%9F%93%E4%B8%89%E4%B8%AA%E5%89%8D%E7%AB%AF%E7%95%8C%E9%9D%A2.png" />
+</figure>
+<p>为了进一步验证这一点, 我们点击<span class="menuselection">铅笔</span>来编辑其中一个消息楼层. 当我们点击铅笔时, 仅该消息楼层的前端界面被卸载而有了一个 <code class="docutils literal notranslate"><span class="pre">你已经卸载界面!</span></code> 提示; 当我们点击保存时, 酒馆助手又重新渲染这个前端界面而有了 <code class="docutils literal notranslate"><span class="pre">你已经成功加载界面!</span></code> 提示.</p>
+<p>前端界面能做的不仅仅是显示而已, 你还可以和它交互而执行对应的代码. 例如, 我们点击示例中的前端界面, 将会发现这个界面变成了选择框, 而再点击将会发现自己发送了一条消息, 并且输入框右下角显示出正在生成的图标:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E4%B8%8E%E5%89%8D%E7%AB%AF%E7%95%8C%E9%9D%A2%E4%BA%A4%E4%BA%92.png" src="../../../../_images/%E4%B8%8E%E5%89%8D%E7%AB%AF%E7%95%8C%E9%9D%A2%E4%BA%A4%E4%BA%92.png" />
+</figure>
+<p>总的来说, 酒馆助手能将消息楼层中的 html 代码块渲染成前端界面, 并支持:</p>
+<ul class="simple">
+<li><p>在前端界面加载完成时执行一段代码</p></li>
+<li><p>在前端界面有效期间监听事件 (酒馆和酒馆助手事件、前端界面被互动、前端界面卸载), 从而在事件发生时执行代码</p></li>
+</ul>
+<p>相比于脚本在后台运行、只受自己开关影响, 前端界面在页面上显示且与消息楼层高度绑定.</p>
+</section>
+<section id="id4">
+<h2>流式楼层界面<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>如果你经常玩带前端界面的角色卡, 可能已经意识到了一个很不舒服的点: 前端界面只有在 AI 回复完成后才能渲染, 在那之前就是一个代码块. 这使得玩家在 AI 回复完成前不能进行任何操作, 甚至可能无法阅读剧情.</p>
+<p>这是酒馆本身设计和前端界面设计上的限制, 只要使用前端界面就没有任何办法避免. <strong>……那不用前端界面不就好了!</strong></p>
+<p>回顾一下, 脚本的作用是:</p>
+<ul class="simple">
+<li><p>在开启时可以执行一段代码</p></li>
+<li><p>在启用期间可以监听事件 (酒馆或酒馆助手事件、按钮点击事件、脚本被卸载), 从而在事件发生时执行代码.</p></li>
+</ul>
+<p>但脚本 &quot;执行代码&quot; 能做的事情比你想象得要多得多: 你可以直接修改整个酒馆的显示, 调整发送给 AI 的提示词……</p>
+<p>既然脚本的 &quot;执行代码&quot; 能修改整个酒馆的显示, 我们完全可以将酒馆原本的楼层隐藏掉, 把我们自己的界面显示上去——<strong>本编写模板已经直接支持这么制作流式楼层界面!</strong></p>
+<p>说了这么多, 让我们继续使用示例角色卡, 关闭<span class="menuselection">脚本-发布给玩家</span>脚本和<span class="menuselection">界面-发布给玩家</span>正则, 打开<span class="menuselection">流式楼层界面-发布给玩家</span>脚本体验一下:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%B5%81%E5%BC%8F%E6%A5%BC%E5%B1%82%E7%95%8C%E9%9D%A2.png" src="../../../../_images/%E6%B5%81%E5%BC%8F%E6%A5%BC%E5%B1%82%E7%95%8C%E9%9D%A2.png" />
+</figure>
+<p>可以看到, 三个楼层已经发生了变化: 在消息最上方出现一个高亮框, 而每段文本被遮挡了需要 &quot;点击查看&quot;.</p>
+<p>当然, 这毕竟是流式楼层界面, 只是显示过去的 AI 回复怎么行呢! 让我们发送一条消息试试:</p>
+<div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E4%B8%8E%E6%B5%81%E5%BC%8F%E6%A5%BC%E5%B1%82%E7%95%8C%E9%9D%A2%E4%BA%A4%E4%BA%92.mp4" type="video/mp4"></video></div><p>在 AI 还在流式回复的途中, 我们已经能看到界面渲染结果, 还能和它交互了!</p>
+<p>你当然可以更进一步, 如<a class="reference internal" href="../../../../络络/作品集/"><span class="doc">日记络络</span></a>一样制作一个流式的 Galgame 界面:</p>
+<figure  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E6%B5%81%E5%BC%8F%E7%95%8C%E9%9D%A2.mp4" type="video/mp4"></video><figcaption class="align-center"><p style="text-align: left; display:inline-block"><span class="caption-text">日记络络中的流式 Galgame 界面</span></p></figcaption></figure></section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../环境准备/"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">环境准备</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../实际编写/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">实际编写</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">脚本: 在后台运行一段代码</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">前端界面: 在前台消息楼层显示一个界面</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">流式楼层界面</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-02-08 13:28:02.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

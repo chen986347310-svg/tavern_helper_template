@@ -1,0 +1,872 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2026-03-14T14:04:37+08:00" />
+    <title>额外输出格式 &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '青空莉/工具经验/提示词个人写法/额外输出格式/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/青空莉/工具经验/提示词个人写法/额外输出格式/" />
+    <link rel="icon" href="../../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../../search/" />
+    <link rel="next" title="组合和命名提示词" href="../组合和命名提示词/" />
+    <link rel="prev" title="提示词个人写法" href="../" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-03-14 14:04:37"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../络络/作品集/">作品集</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../络络/教程/">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/">手写 MVU zod 变量卡</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/变量提示词/">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/脚本控制变量/">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/状态栏/">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../络络/教程/生成立绘、表情差分和cg/">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">提示词个人写法</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../多角色/">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/">实时编写角色卡、世界书或预设</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/使用说明/">使用说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/用法提示/">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../实时编写前端界面或脚本/">实时编写前端界面或脚本</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/环境准备/">环境准备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/阅读示例/">阅读示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/实际编写/">实际编写</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/进阶技巧/">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/青空莉/工具经验/提示词个人写法/额外输出格式/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/青空莉/工具经验/提示词个人写法/额外输出格式/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F青空莉/工具经验/提示词个人写法/额外输出格式/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/青空莉/工具经验/提示词个人写法/额外输出格式/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>额外输出格式</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">特殊语法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">整体格式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">考虑插入深度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">嵌套输出内容</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">另</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">示例</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">任务系统提示框</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">立绘列表</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">允许自定义选项类型的选择框</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typescript-json">用 Typescript 语法定义 JSON 格式输出</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>额外输出格式<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>帖子: <a class="reference external" href="https://discord.com/channels/1134557553011998840/1417109381601824770/1417109381601824770">帖子1</a>/<a class="reference external" href="https://discord.com/channels/1291925535324110879/1417109510035603496/1417109510035603496">帖子2</a></p>
+</div></blockquote>
+<p>我们会经常遇到不仅需要 AI 理解提示词, 还需要 AI 按要求输出内容的情况, 例如思维链、时间框、摘要总结、文字状态栏、变量更新格式等. 但输出内容中, 有的部分是应该原封不动输出出来的, 有的部分则是需要 AI 根据要求填充的.</p>
+<p>为了让 AI 更好区分这些, 我研究了一套针对额外输出格式的提示词写法. 这种写法下:</p>
+<ul class="simple">
+<li><p>要输出的内容与其他只是发给 AI 看的提示词有明显区分, <strong>AI 能更好理解怎样输出格式</strong></p></li>
+<li><p>可以<strong>引用其他提示词</strong>, 简单表达原本不好描述的输出格式</p></li>
+<li><p>允许<strong>将输出格式模块化</strong>. AI 只该在特定情况下输出某一部分内容? 没问题!</p></li>
+</ul>
+<p>假设我们要为玩家输出行动选项, 为了让选项更多样, 我们可能制作很多选项类型, 但我们显然不想让 AI 固定地输出:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1. 普通选项: 给出一种普通发展
+2. 普通选项: 给出一种普通发展
+3. 邪恶选项: 给出一种邪恶发展
+</pre></div>
+</div>
+<p>我们希望的是, 动态发送十多种选项类型中的几种给 AI, 让 AI 根据类型要求制作 5~6 个选项——<a class="reference internal" href="../../../作品集/"><span class="doc">可点击的选择框</span></a>就凭本文的方法实现了这样的选择框:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E9%80%89%E6%8B%A9%E6%A1%86%E9%80%89%E9%A1%B9.png" src="../../../../_images/%E9%80%89%E6%8B%A9%E6%A1%86%E9%80%89%E9%A1%B9.png" />
+</figure>
+<p>而<a class="reference internal" href="../../../../络络/作品集/"><span class="doc">日记络络</span></a>凭本文实现了流式立绘、流式日记和流式 Galgame 界面:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">流式立绘</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">流式日记</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">流式 Galgame 界面</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E6%B5%81%E5%BC%8F%E7%AB%8B%E7%BB%98.mp4" type="video/mp4"></video></div></div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E6%B5%81%E5%BC%8F%E6%97%A5%E8%AE%B0.mp4" type="video/mp4"></video></div></div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E6%B5%81%E5%BC%8F%E7%95%8C%E9%9D%A2.mp4" type="video/mp4"></video></div></div></div>
+<p>此外, <a class="reference internal" href="../../../作品集/"><span class="doc">妹妹的请求</span></a>凭本文实现了仅显示在场角色、每个角色有专属内容的状态栏:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E7%8A%B6%E6%80%81%E6%A0%8F.png" src="../../../../_images/%E7%8A%B6%E6%80%81%E6%A0%8F.png" />
+</figure>
+<section id="id2">
+<h2>特殊语法<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>为了区分哪些是 AI 应该原封不动输出的格式, 哪些是 AI 需要根据要求填充的格式, 我采用了 AI 能听懂的几种特殊语法:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">${描述}</span></code>: AI 需要根据 &quot;描述&quot; 将它替换为对应的内容. 例如<code class="docutils literal notranslate"><span class="pre">衣着:</span> <span class="pre">${具体描述角色当前衣着}</span></code> 可能输出<code class="docutils literal notranslate"><span class="pre">衣着:</span> <span class="pre">粉金色宽松T恤睡裙</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$(要求)</span></code>: AI 仅会听从 &quot;要求&quot; 而不对它进行输出. 例如 <code class="docutils literal notranslate"><span class="pre">$(以下内容应该按英文输出)</span></code> 会让 AI 更倾向于用英文输出之后的内容;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">...</span></code>: AI 需要仿照之前给定的规则和内容补充输出. 例如<code class="docutils literal notranslate"><span class="pre">其他角色:</span> <span class="pre">...</span></code> 会让 AI 根据前面给定的<code class="docutils literal notranslate"><span class="pre">络络</span></code>输出格式, 补充其他角色的输出;</p></li>
+<li><p>其他内容原封不动地进行输出.</p></li>
+</ul>
+<p>以角色状态栏为例, 我们可以这样写:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>■ ${角色名称，仅显示当前剧情中占比最多的一名角色}:
+   心情: ${用↑↓→来表示角色对&lt;user&gt;的好感度变化}(${变化原因})
+   衣着: ${具体描述角色当前衣着，最多20字}
+   身体: ${具体描述，注重人体每个部位的细节描写，包括声、形、色、味、感的整体表现，赋予真实体验感。用词淫靡，不低于40字，不超过60字}
+   行动: ...
+   计划: ...
+
+■ 周围角色:
+   - ${周围某个没有和&lt;user&gt;互动的角色}: ${简要描述这个角色正在做什么}
+</pre></div>
+</div>
+<p>则 AI 可能输出:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>■ 心语:
+   心情: →(观望姐姐)
+   衣着: 粉金色宽松T恤睡裙
+   身材: 修长美腿随意交叠,浑圆的臀部若隐若现,琥珀色眼眸中闪烁着狡黠的光芒,嘴角挂着意味深长的笑容
+   行动: 思考姐姐的反常
+   计划: 暗中观察姐姐的动向
+
+■ 周围角色:
+   - 千枝子: 准备就寝
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>整体格式<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>而为了让 AI 知道某部分提示词是要用于输出的, 我采用 <code class="docutils literal notranslate"><span class="pre">format:</span> <span class="pre">|-</span></code> 来标记:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">状态栏</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">你必须在回复末尾插入&lt;status_block&gt;块来显示状态栏</span>
+<span class="hll"><span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+</span><span class="w">    </span><span class="no">&lt;status_block&gt;</span>
+<span class="w">    </span><span class="no">■ ${角色名称，仅显示当前剧情中占比最多的一名角色}:</span>
+<span class="w">       </span><span class="no">心情: ${用↑↓→来表示角色对&lt;user&gt;的好感度变化}(${变化原因})</span>
+<span class="w">       </span><span class="no">衣着: ${具体描述角色当前衣着，最多20字}</span>
+<span class="w">       </span><span class="no">身体: ${具体描述，注重人体每个部位的细节描写，包括声、形、色、味、感的整体表现，赋予真实体验感。用词淫靡，不低于40字，不超过60字}</span>
+<span class="w">       </span><span class="no">行动: ...</span>
+<span class="w">       </span><span class="no">计划: ...</span>
+
+<span class="w">    </span><span class="no">■ 周围角色:</span>
+<span class="w">       </span><span class="no">- ${周围某个没有和&lt;user&gt;互动的角色}: ${简要描述这个角色正在做什么}</span>
+<span class="w">    </span><span class="no">&lt;/status_block&gt;</span>
+</pre></div>
+</div>
+<p>这里, 我将状态栏用 <code class="docutils literal notranslate"><span class="pre">&lt;status_block&gt;</span></code> 块包裹, 便于我们可能希望用正则处理状态栏. 例如用 <code class="docutils literal notranslate"><span class="pre">最小深度:</span> <span class="pre">8</span></code> 的 <code class="docutils literal notranslate"><span class="pre">仅格式提示词</span></code> 正则将状态栏替换为空, 从而不发送过早的状态栏, 节省 token 和 AI 注意力.</p>
+</section>
+<section id="id4">
+<h2>考虑插入深度<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>在此我给的状态栏例子比较简单, 但你可能需要输出<a class="reference external" href="https://github.com/lolo-desu/lolocard/tree/master/src/%E6%97%A5%E8%AE%B0%E7%BB%9C%E7%BB%9C/%E4%B8%96%E7%95%8C%E4%B9%A6/%E7%89%B9%E6%AE%8A%E7%95%8C%E9%9D%A2">Galgame 界面</a>等更为复杂的格式.</p>
+<p>我们显然不希望将这些东西一股脑插入到 D1/D0, 这很容易<a class="reference internal" href="../../酒馆如何处理世界书/插入/"><span class="doc">让 AI 失去对末尾剧情的连贯理解</span></a>.</p>
+<p>为此, 通常的做法是, 将完整的输出提示词放在 D4 等位置, 而在 D1/D0 位置仅利用输出格式的 <code class="docutils literal notranslate"><span class="pre">&lt;tag&gt;</span></code> 来提醒 AI 输出:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">状态栏强调</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">你必须在回复末尾插入&lt;status_block&gt;块来显示状态栏</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">&lt;status_block&gt;</span>
+<span class="hll"><span class="w">    </span><span class="no">...</span>
+</span><span class="w">    </span><span class="no">&lt;/status_block&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>嵌套输出内容<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">${描述}</span></code> 不仅可以是文字描述, 还可以是其他提示词.</p>
+<p>假设我们要实现多角色状态栏, 每个角色不仅有共同的 &quot;好感度&quot;、&quot;衣着&quot; 等内容, 还可能在状态栏中有自己独有的信息. 通过我的提示词写法, 你会很容易写出这样的状态栏:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">状态栏</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">你必须在每次回复的最底部，输出&lt;status_block&gt;包裹的状态栏</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">basic</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">      </span><span class="no">&lt;status_block&gt;</span>
+<span class="w">      </span><span class="no">&lt;character&gt;</span>
+<span class="w">      </span><span class="no">名称: ${角色名称}</span>
+<span class="w">      </span><span class="no">心情: ${用↑↓→来表示角色对&lt;user&gt;的好感度变化}(${变化原因})</span>
+<span class="w">      </span><span class="no">衣着: ${具体描述角色当前衣着，最多20字}</span>
+<span class="hll"><span class="w">      </span><span class="no">${special status}</span>
+</span><span class="w">      </span><span class="no">&lt;/character&gt;</span>
+<span class="w">      </span><span class="no">...</span>
+<span class="w">      </span><span class="no">&lt;/status_block&gt;</span>
+<span class="w">    </span><span class="nt">special status</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">心爱</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">        </span><span class="no">路人视角: ${考虑穿着、外在遮掩和角度，来判断非&lt;user&gt;角色能够看到什么样子的心爱}</span>
+<span class="w">      </span><span class="nt">心语</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">        </span><span class="no">约会模拟次数: ${约会模拟次数}</span>
+</pre></div>
+</div>
+<p>上面的提示词中, 我们在 <code class="docutils literal notranslate"><span class="pre">basic</span></code> 部分定义所有角色共同的状态栏内容, 而在 <code class="docutils literal notranslate"><span class="pre">special</span> <span class="pre">status</span></code> 部分定义每个角色独有的状态栏内容.</p>
+<p>然后, <code class="docutils literal notranslate"><span class="pre">basic</span></code> 内我们用 <code class="docutils literal notranslate"><span class="pre">${special</span> <span class="pre">status}</span></code> 来引用 <code class="docutils literal notranslate"><span class="pre">special</span> <span class="pre">status</span></code> 部分内容, 从而指示 AI 输出.</p>
+<p>我在妹妹的请求中就是这么做的.</p>
+</section>
+<section id="id6">
+<h2>另<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>另外在<a class="reference internal" href="../组合和命名提示词/"><span class="doc">组合和命名提示词</span></a>中, 还提示了可以用 YAML 锚点来引用内容, 它可以表达利用嵌套依旧难以表达的某些提示词.</p>
+</section>
+<section id="id7">
+<h2>示例<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<section id="id8">
+<h3>任务系统提示框<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p>实例: <a class="reference internal" href="../../../作品集/"><span class="doc">妹妹的请求</span></a></p>
+</div></blockquote>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">略</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">basic</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">      </span><span class="no">&lt;TaskPrompt&gt;</span>
+<span class="w">      </span><span class="no">[系统提示|${title}|${content}$(禁止在content后输出 |)]</span>
+<span class="w">      </span><span class="no">&lt;/TaskPrompt&gt;</span>
+<span class="w">    </span><span class="nt">specific prompt</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${难度}任务进度</span>
+<span class="w">        </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${任务内容}(${进度})$(任务奖励不应在任务完全完成前减少)</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">已完成${难度}任务-${任务内容}</span>
+<span class="w">        </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">获得${奖励}点数</span>
+<span class="w">        </span><span class="nt">special</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">此外，输出一个`更换${难度}任务`提示</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">更换${难度}任务</span>
+<span class="w">        </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${特定内容，必须包含明确目标、目的地、交通方式、到达动作等}(${进度}) - ${奖励}点数</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">已兑换商品-${商品名称}</span>
+<span class="w">        </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">扣除${价格}点数</span>
+<span class="w">        </span><span class="nt">special</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">此外，输出一个`更换商品${编号}-${物品名称}`提示</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">更换商品${编号}-${物品名称}</span>
+<span class="w">        </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${商品效果，必须包含使用次数/持续时间/使用条件或其他限制}(${一果对商品的评论，比如&#39;哥哥看不见这个商品哦~&#39;，不超过10个字}) - ${价格}点数</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">遭遇特殊${事件/任务/商品}</span>
+<span class="w">        </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h3>立绘列表<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p>实例: <a class="reference internal" href="../../../../络络/作品集/"><span class="doc">日记络络</span></a></p>
+</div></blockquote>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">立绘列表</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">文件信息</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">格式</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PNG</span>
+<span class="w">    </span><span class="nt">后缀</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.png</span>
+<span class="w">    </span><span class="nt">不在场表示</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">无人</span>
+<span class="w">  </span><span class="nt">服装</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">开衫</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">格纹衫</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">水手服</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">睡衣</span>
+<span class="w">  </span><span class="nt">表情</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">微笑</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">浅笑</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">哭泣</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">擦眼泪</span>
+
+<span class="w">    </span><span class="c1"># 特殊表情及其含义（并非严肃而是用于有趣的幽默剧情，例如并不是只有生气的时候才能使用生气和猫爪生气，开玩笑的时候也可以用，其中猫爪生气是举起一只手比作猫爪状，在络络和&lt;user&gt;开玩笑的时候可以用）</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">看透一切的坏笑</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">发现秘密时的调侃表情</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">邪恶的坏笑</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">更强烈的坏笑版本</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">星星眼</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">强烈崇拜或兴奋状态</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">晕晕眼</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">大脑当机状态</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">猫爪生气</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">举猫爪的可爱威胁</span>
+<span class="w">  </span><span class="nt">调用格式</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${服装}/${表情}.png</span>
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h3>允许自定义选项类型的选择框<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p>实例: <a class="reference internal" href="../../../作品集/"><span class="doc">可点击的选择框</span></a></p>
+</div></blockquote>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">选择框开始</span><a class="headerlink" href="#id11" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">略</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">basic</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">      </span><span class="no">&lt;roleplay_options&gt;</span>
+<span class="w">      </span><span class="no">```</span>
+<span class="w">      </span><span class="no">${按照content而非type拟定标题标题}:${content，必须以第三人称输出行为的主语}</span>
+<span class="w">      </span><span class="no">...$(generate {{random::4::5::6}} options based on `option type` below)</span>
+<span class="w">      </span><span class="no">```</span>
+<span class="w">      </span><span class="no">&lt;/roleplay_options&gt;</span>
+<span class="w">    </span><span class="nt">option type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">某个选项条目</span><a class="headerlink" href="#id12" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">{</span>
+<span class="nt">  type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;普通发展&#39;</span><span class="p p-Indicator">,</span>
+<span class="nt">  content</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;${根据当前的情况，合理构思当前可能出现的不同发展}&#39;</span>
+<span class="p p-Indicator">}</span><span class="err">,</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">另一个选项条目</span><a class="headerlink" href="#id13" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">{</span>
+<span class="nt">  type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;跳过场景&#39;</span><span class="p p-Indicator">,</span>
+<span class="nt">  content</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;${当前场景描写十分足够时，用概括性的语言来跳过当前动作的描写并展开下一场景进行新描写，剧情上保持连贯}&#39;</span><span class="p p-Indicator">,</span>
+<span class="nt">  rule</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;必须给出一个跳过场景选项&#39;</span>
+<span class="p p-Indicator">}</span><span class="err">,</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text">选择框结束</span><a class="headerlink" href="#id14" title="Link to this code">#</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="err">]</span>
+<span class="nn">...</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="typescript-json">
+<h3>用 Typescript 语法定义 JSON 格式输出<a class="headerlink" href="#typescript-json" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p>实例: <a class="reference internal" href="../../../../络络/作品集/"><span class="doc">日记络络</span></a></p>
+</div></blockquote>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">略</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">interface Chat {</span>
+<span class="w">      </span><span class="no">speaker: string; // 当前发言者的名字或`旁白`二字</span>
+<span class="w">      </span><span class="no">message: string; // 当前发言者的台词</span>
+<span class="w">      </span><span class="no">background: string; // `背景列表`中支持的当前所处地点位置、时间等的背景文件名</span>
+<span class="w">      </span><span class="no">characters: {</span>
+<span class="w">        </span><span class="no">name: string; // 角色名称</span>
+<span class="w">        </span><span class="no">expression: string; // 表情，从`立绘列表`中选择存在的立绘文件名</span>
+<span class="w">        </span><span class="no">costume: string; // 服装，仅有格纹衫、开衫、水手服和睡衣四个选项</span>
+<span class="w">      </span><span class="no">}[];</span>
+<span class="w">    </span><span class="no">}</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">${以JSON格式输出Chat[]，包含不少于10个Chat，不多于15个Chat}</span>
+</pre></div>
+</div>
+<p>由于这往往涉及<a class="reference internal" href="../../实时编写前端界面或脚本/"><span class="doc">前端界面代码</span></a>, 你可能会用 <a class="reference external" href="https://zod.dev/">zod</a> 检验数据, 则也可以尝试直接用 zod 定义数据结构然后在 <code class="docutils literal notranslate"><span class="pre">format</span></code> 内引用.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">略</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">const Chat = z.object({</span>
+<span class="w">      </span><span class="no">speaker: z.union([z.literal(&#39;旁白&#39;), z.string()]),</span>
+<span class="w">      </span><span class="no">message: z.string().describe(&#39;当前发言者的台词&#39;),</span>
+<span class="w">      </span><span class="no">background: z.enum([&#39;白天&#39;, &#39;黄昏&#39;]),</span>
+<span class="w">      </span><span class="no">characters: z.array(</span>
+<span class="w">        </span><span class="no">z.object({</span>
+<span class="w">          </span><span class="no">name: z.literal(&#39;络络&#39;), // 目前只有络络这一个角色</span>
+<span class="w">          </span><span class="no">expression: z.enum([&#39;微笑&#39;, &#39;浅笑&#39;, &#39;生气&#39;, &#39;惊讶&#39;, &#39;害羞&#39;]).catch(&#39;微笑&#39;),</span>
+<span class="w">          </span><span class="no">costume: z.enum([&#39;水手服&#39;, &#39;格纹衫&#39;, &#39;开衫&#39;, &#39;睡衣&#39;]).catch(&#39;水手服&#39;),</span>
+<span class="w">        </span><span class="no">}),</span>
+<span class="w">      </span><span class="no">),</span>
+<span class="w">    </span><span class="no">});</span>
+<span class="w">    </span><span class="no">type Chat = z.infer&lt;typeof Chat&gt;;</span>
+<span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">${以JSON格式输出Chat[]，包含不少于10个Chat，不多于15个Chat}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">提示词个人写法</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../组合和命名提示词/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">组合和命名提示词</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">特殊语法</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">整体格式</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">考虑插入深度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">嵌套输出内容</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">另</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">示例</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">任务系统提示框</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">立绘列表</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">允许自定义选项类型的选择框</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#typescript-json">用 Typescript 语法定义 JSON 格式输出</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-03-14 14:04:37.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

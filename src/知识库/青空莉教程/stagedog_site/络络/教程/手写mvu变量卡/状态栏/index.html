@@ -1,0 +1,803 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2026-02-10T16:52:08+08:00" />
+    <title>酒馆助手界面: 显示和允许玩家修改变量 &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '络络/教程/手写mvu变量卡/状态栏/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/络络/教程/手写mvu变量卡/状态栏/" />
+    <link rel="icon" href="../../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../../search/" />
+    <link rel="next" title="附.手写变量结构" href="../手写变量结构/" />
+    <link rel="prev" title="酒馆助手脚本: 后台控制和利用变量" href="../脚本控制变量/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-02-10 16:52:08"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../作品集/">作品集</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">手写 MVU zod 变量卡</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../变量提示词/">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../脚本控制变量/">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../生成立绘、表情差分和cg/">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../青空莉/作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../青空莉/写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/">提示词个人写法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/额外输出格式/">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/多角色/">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/提示词个人写法/变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/">实时编写角色卡、世界书或预设</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/使用说明/">使用说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/用法提示/">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写角色卡、世界书或预设/特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/">实时编写前端界面或脚本</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/环境准备/">环境准备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/阅读示例/">阅读示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/实际编写/">实际编写</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/进阶技巧/">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/络络/教程/手写mvu变量卡/状态栏/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/络络/教程/手写mvu变量卡/状态栏/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F络络/教程/手写mvu变量卡/状态栏/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/络络/教程/手写mvu变量卡/状态栏/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>酒馆助手界面: 显示和允许玩家修改变量</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">仅格式提示词: 不发送界面占位符</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">仅格式显示: 显示界面</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">纯文本界面</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">前端界面</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mvu">记录玩家在前端界面的操作</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">回顾</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">在消息开头显示界面</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>酒馆助手界面: 显示和允许玩家修改变量<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>MVU 有一个便利的设计: 它会在 AI 回复结束后, 自动在回复末尾附加一串特殊文本: <code class="docutils literal notranslate"><span class="pre">&lt;StatusPlaceHolderImpl/&gt;</span></code>. <br />
+这串文本本身只是一个占位符, 没有任何作用. 但你可以用酒馆正则捕获它, 将它——</p>
+<ul class="simple">
+<li><p><span class="menuselection">仅格式提示词</span> 为空, 这样一来, 这段文本不会被发送给 AI——也就是说它不会占用任何 token!</p></li>
+<li><p><span class="menuselection">仅格式显示</span> 为我们想要展示的任何内容: 可以是单纯一句话, 也可以是一个可互动的前端界面.</p></li>
+</ul>
+<section id="id2">
+<h2>仅格式提示词: 不发送界面占位符<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>我们新增一个局部正则, 命名为 <code class="docutils literal notranslate"><span class="pre">[不发送]界面占位符</span></code> (按照青空莉的正则命名习惯, <code class="docutils literal notranslate"><span class="pre">[不发送]</span></code> 表示不发送给 AI, <code class="docutils literal notranslate"><span class="pre">[隐藏]</span></code> 表示不显示给玩家, 或者 <code class="docutils literal notranslate"><span class="pre">[按作用命名]</span></code>):</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">正则设置</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">图片参考</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">脚本名称</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">不发送</span><span class="p p-Indicator">]</span><span class="l l-Scalar l-Scalar-Plain">界面占位符</span>
+<span class="nt">查找正则表达式</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;StatusPlaceHolderImpl/&gt;</span>
+<span class="nt">替换为</span><span class="p">:</span>
+<span class="nt">作用范围</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">用户输入</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI输出</span>
+<span class="nt">短暂</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅格式显示</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅格式提示词</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><figure class="align-default">
+<img alt="../../../../_images/%E6%AD%A3%E5%88%99_%E4%B8%8D%E5%8F%91%E9%80%81%E7%95%8C%E9%9D%A2%E5%8D%A0%E4%BD%8D%E7%AC%A6.png" src="../../../../_images/%E6%AD%A3%E5%88%99_%E4%B8%8D%E5%8F%91%E9%80%81%E7%95%8C%E9%9D%A2%E5%8D%A0%E4%BD%8D%E7%AC%A6.png" />
+</figure>
+</div><div class="docutils">
+</div>
+</div>
+</section>
+<section id="id3">
+<h2>仅格式显示: 显示界面<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>同样地, 我们新建一个局部正则, 命名为 <code class="docutils literal notranslate"><span class="pre">[界面]状态栏</span></code>. 这次我们将勾选 <span class="menuselection">仅格式显示</span>, 将占位符替换为我们要显示的状态栏:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">正则设置</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">图片参考</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">脚本名称</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">界面</span><span class="p p-Indicator">]</span><span class="l l-Scalar l-Scalar-Plain">状态栏</span>
+<span class="nt">查找正则表达式</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;StatusPlaceHolderImpl/&gt;</span>
+<span class="nt">替换为</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">见下文</span>
+<span class="nt">作用范围</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">用户输入</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI输出</span>
+<span class="nt">短暂</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅格式显示</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅格式提示词</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>照着图片的话, 会显示成<code class="docutils literal notranslate"><span class="pre">见下文</span></code>三个字, 但不会作为提示词发给 AI:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E6%AD%A3%E5%88%99_%E7%95%8C%E9%9D%A2%E7%8A%B6%E6%80%81%E6%A0%8F.png" src="../../../../_images/%E6%AD%A3%E5%88%99_%E7%95%8C%E9%9D%A2%E7%8A%B6%E6%80%81%E6%A0%8F.png" />
+</figure>
+</div><div class="docutils">
+</div>
+</div>
+<section id="id4">
+<h3>纯文本界面<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>与 <code class="docutils literal notranslate"><span class="pre">&lt;user&gt;</span></code>、<code class="docutils literal notranslate"><span class="pre">{{user}}</span></code> 等酒馆宏相同, <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::变量}}</span></code> 除了作为提示词在发送给 ai 时被替换, 也会在显示时被替换. <br />
+因此我们可以将 <code class="docutils literal notranslate"><span class="pre">&lt;StatusPlaceHolderImpl/&gt;</span></code> 替换为一串带有 <code class="docutils literal notranslate"><span class="pre">{{format_message_variable::变量}}</span></code> 的文本, 来显示变量值:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>💖 白娅当前依存度: {{format_message_variable::stat_data.白娅.依存度}}
+</pre></div>
+</div>
+<p>这样, 每次 AI 回复的下方都会自动显示这行文字, 并显示正确的数值:</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E7%BA%AF%E6%96%87%E6%9C%AC%E7%8A%B6%E6%80%81%E6%A0%8F.png" src="../../../../_images/%E7%BA%AF%E6%96%87%E6%9C%AC%E7%8A%B6%E6%80%81%E6%A0%8F.png" />
+</figure>
+<p>当然, 你也可以使用 HTML 和 CSS 进行美化:</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="c">/* 在这里写你的CSS样式 */</span>
+<span class="p">.</span><span class="nc">status-bar</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#ff69b4</span><span class="p">;</span>
+<span class="w">  </span><span class="k">border</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="w"> </span><span class="kc">solid</span><span class="w"> </span><span class="mh">#ff69b4</span><span class="p">;</span>
+<span class="w">  </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">  </span><span class="k">border-radius</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;status-bar&quot;</span><span class="p">&gt;</span>
+💖 白娅当前依存度: {{format_message_variable::stat_data.白娅.依存度}}
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../../../_images/%E7%BE%8E%E5%8C%96%E7%8A%B6%E6%80%81%E6%A0%8F.png" src="../../../../_images/%E7%BE%8E%E5%8C%96%E7%8A%B6%E6%80%81%E6%A0%8F.png" />
+</figure>
+<p>不过, 我其实非常不建议你只为了显示变量值而做个状态栏: 想看变量值的玩家会自己开变量管理器看. <br />
+比起只显示数值, 你可以做更多有趣的事情:</p>
+<div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E6%8A%98%E5%8F%A0%E7%8A%B6%E6%80%81%E6%A0%8F.mp4" type="video/mp4"></video></div></section>
+<section id="id5">
+<h3>前端界面<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>至于包含复杂代码的前端界面, 这已超出本教程范围……但其实用<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>拷打 AI 写起来很简单!</p>
+<p>在前端界面中, 你不仅仅可以显示变量值或做一些简单的美化——你还能让玩家和界面交互!</p>
+<p><a class="reference external" href="https://github.com/StageDog/tavern_helper_template/tree/main/%E7%A4%BA%E4%BE%8B/%E8%A7%92%E8%89%B2%E5%8D%A1%E7%A4%BA%E4%BE%8B">角色卡示例</a>中为了演示这一点, 在界面中支持了直接增减白娅依存度; 同时, 变量管理器中对变量的修改也会实时更新在界面上:</p>
+<div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E4%BE%9D%E5%AD%98%E5%BA%A6%E7%8A%B6%E6%80%81%E6%A0%8F.mp4" type="video/mp4"></video></div><p>但你当然可以做得更复杂, 比如:</p>
+<ul class="simple">
+<li><p>允许玩家通过界面修改变量, 为操纵的天选者发布任务</p></li>
+<li><p>请求 AI 生成</p></li>
+<li><p>Galgame 风格界面</p></li>
+<li><p>直接制作杀戮尖塔等游戏 (是的, 有很多这类角色卡)!</p></li>
+</ul>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">发布任务</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">流式 Galgame 界面</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E4%BB%BB%E5%8A%A1%E7%95%8C%E9%9D%A2%E7%8A%B6%E6%80%81%E6%A0%8F.mp4" type="video/mp4"></video></div></div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../../../../_images/%E6%B5%81%E5%BC%8F%E7%95%8C%E9%9D%A2.mp4" type="video/mp4"></video></div></div></div>
+<p>总之, 电脑建议用<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>, 电脑建议用<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>, 电脑建议用<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>!</p>
+<p>当然, 如果你是手机端, 那想生成复杂前端界面是很困难的……可以尝试将<em>变量结构</em>和<em>下面的前端界面模板</em>发给 AI 来制作:</p>
+<div class="hint dropdown admonition">
+<p class="admonition-title">手机上的简易前端界面模板</p>
+<ul class="simple">
+<li><p>如果需要能在界面里修改变量, 除了下面的提示词, 你还需要发送<a class="reference external" href="https://github.com/StageDog/tavern_helper_template/blob/main/.cursor/rules/mvu%E5%8F%98%E9%87%8F%E6%A1%86%E6%9E%B6.mdc">这段提示词</a>给 AI.</p></li>
+<li><p>如果需要能在界面里请求 AI 生成、修改世界书、修改预设、播放音乐等等, 你还需要按需发送<a class="reference external" href="https://n0vi028.github.io/JS-Slash-Runner-Doc/guide/%E5%8A%9F%E8%83%BD%E8%AF%A6%E6%83%85/%E8%AF%B7%E6%B1%82%E7%94%9F%E6%88%90.html">对应的类型定义文件</a>给 AI.</p></li>
+</ul>
+<p><strong>当然如果你有电脑, 我更建议你用<a class="reference internal" href="../../../../青空莉/工具经验/实时编写前端界面或脚本/"><span class="doc">实时编写前端界面或脚本</span></a>来让 AI 边自己看酒馆网页边编写状态栏.</strong></p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span>```html
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="w">  </span><span class="o">$</span><span class="p">{</span><span class="err">纯</span><span class="w"> </span><span class="err">CSS</span><span class="w"> </span><span class="err">设计样式</span><span class="p">}</span>
+<span class="w">  </span><span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;module&quot;</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="nx">$</span><span class="p">{</span>
+<span class="w">      </span><span class="nx">逻辑代码</span>
+<span class="w">      </span><span class="nx">example</span><span class="o">:</span><span class="w"> </span><span class="o">|-</span>
+<span class="w">        </span><span class="kd">function</span><span class="w"> </span><span class="nx">populateCharacterData</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">all_variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getAllVariables</span><span class="p">();</span>
+
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">property_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">all_variables</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stat_data.${variable path}&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;N/A&#39;</span><span class="p">);</span>
+<span class="w">          </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#${character}-${variable path}&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">property_value</span><span class="p">);</span>
+<span class="w">          </span><span class="p">...</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">function</span><span class="w"> </span><span class="nx">toggleSection</span><span class="p">(</span><span class="nx">$header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="c1">// 优先使用 jquery 而不是 javascript 的 DOM 操作</span>
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">$content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$header</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="s1">&#39;.section-content&#39;</span><span class="p">);</span>
+<span class="w">          </span><span class="nx">$content</span><span class="p">.</span><span class="nx">toggleClass</span><span class="p">(</span><span class="s1">&#39;expanded&#39;</span><span class="p">);</span>
+
+<span class="w">          </span><span class="kd">const</span><span class="w"> </span><span class="nx">$arrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$header</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;span:last-child&#39;</span><span class="p">);</span>
+<span class="w">          </span><span class="nx">$arrow</span><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">$content</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span><span class="s1">&#39;expanded&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;▼&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;►&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">init</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">await</span><span class="w"> </span><span class="nx">waitGlobalInitialized</span><span class="p">(</span><span class="s1">&#39;Mvu&#39;</span><span class="p">);</span>
+<span class="w">          </span><span class="nx">populateCharacterData</span><span class="p">();</span>
+
+<span class="w">          </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.section-header&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">toggleSection</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="w">          </span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="nx">$</span><span class="p">(</span><span class="nx">errorCatched</span><span class="p">(</span><span class="nx">init</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;card-body&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;section&quot;</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;section-header&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>${角色名} 核心状态<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>▼<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;section-content expanded&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;property&quot;</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;property-name&quot;</span><span class="p">&gt;</span>${variable name in Chinese}<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;property-value-container&quot;</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;property-value&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;${character}-${variable path}&quot;</span><span class="p">&gt;</span>--<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;property&quot;</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;property-name&quot;</span><span class="p">&gt;</span>${...}<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;property-value-container&quot;</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;property-value&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;${...}&quot;</span><span class="p">&gt;</span>--<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        ...
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;section&quot;</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;section-header&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>世界状态<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>►<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;section-content&quot;</span><span class="p">&gt;</span>${...}<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    ...
+  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+```
+</pre></div>
+</div>
+</div>
+</section>
+<section id="mvu">
+<span id="id6"></span><h3>记录玩家在前端界面的操作<a class="headerlink" href="#mvu" title="Link to this heading">#</a></h3>
+<p>不过, 在玩家与前端界面交互时, 除了更新对应的变量, 我还建议你记录下玩家的操作日志: 如果只是更新对应变量, 对于剧情 AI 而言, 就像是变量无理由地发生了变化.</p>
+<p>例如, 假设你记录了<code class="docutils literal notranslate"><span class="pre">积分</span></code>变量, 上一次剧情中玩家有 100 积分, 本次剧情中玩家与前端界面交互, 用 100 积分兑换了 &quot;大师之剑&quot;. 如果没有记录玩家的操作日志, 剧情 AI 将会看到玩家无理由地失去了 100 积分、获得了 &quot;大师之剑&quot;——它很可能认为变量发生了错乱, 尝试去修正它!</p>
+<p>为了解决这个问题, 我建议你在变量结构中添加一个类似<code class="docutils literal notranslate"><span class="pre">系统日志</span></code>的变量:</p>
+<ul class="simple">
+<li><p>清空: 当前端界面渲染完成时, 让 AI 判断这个前端界面是不是在最新楼层 (也就是说, 它属于最新 AI 回复), 如果在就把这个<code class="docutils literal notranslate"><span class="pre">系统日志</span></code>变量清空;</p></li>
+<li><p>记录: 把玩家在界面上所做的修改变量操作都记录到<code class="docutils literal notranslate"><span class="pre">系统日志</span></code>变量里, 比如<code class="docutils literal notranslate"><span class="pre">&lt;user&gt;用</span> <span class="pre">100</span> <span class="pre">积分兑换了</span> <span class="pre">&quot;大师之剑&quot;</span></code>.</p></li>
+<li><p>发给 AI: <code class="docutils literal notranslate"><span class="pre">系统日志</span></code>也是你设置的变量, 自然是会发给 AI 的.</p></li>
+</ul>
+</section>
+</section>
+<section id="id7">
+<h2>回顾<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>至此, 我们利用 <code class="docutils literal notranslate"><span class="pre">&lt;StatusPlaceHolderImpl/&gt;</span></code> 占位符制作了这样一个界面:</p>
+<ul class="simple">
+<li><p>显示不消耗任何 token;</p></li>
+<li><p>AI 对它只需要更新需要更新的变量, 而不需要像传统状态栏一样每次都输出所有信息.</p></li>
+</ul>
+<p><strong>但不要让这里的界面教程限制了你的想象力.</strong></p>
+<p>你没必要非要用 <code class="docutils literal notranslate"><span class="pre">&lt;StatusPlaceHolderImpl/&gt;</span></code> 来显示界面, 你可以用其他任何方式来显示它: 你可以自己定义一个输出格式, 让 AI 输出其他必要信息, 然后通过酒馆正则捕获它, 替换为你的界面.</p>
+</section>
+<section id="id8">
+<h2>在消息开头显示界面<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p>此外, 即便使用 <code class="docutils literal notranslate"><span class="pre">&lt;StatusPlaceHolderImpl/&gt;</span></code> 占位符, 你也可以调整酒馆正则, 来在消息开头而不是结尾 <code class="docutils literal notranslate"><span class="pre">&lt;StatusPlaceHolderImpl/&gt;</span></code> 实际位置显示界面:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-3-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-3-3-0" name="3-0" role="tab" tabindex="0">正则设置</button><button aria-controls="panel-3-3-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-3-3-1" name="3-1" role="tab" tabindex="-1">结果</button></div><div aria-labelledby="tab-3-3-0" class="sphinx-tabs-panel" id="panel-3-3-0" name="3-0" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">脚本名称</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">界面</span><span class="p p-Indicator">]</span><span class="l l-Scalar l-Scalar-Plain">状态栏</span>
+<span class="nt">查找正则表达式</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/(.*)&lt;StatusPlaceHolderImpl/&gt;/s</span>
+<span class="nt">替换为</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">你的界面</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">$1</span>
+<span class="nt">作用范围</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">用户输入</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI输出</span>
+<span class="nt">短暂</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">x</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅格式显示</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">仅格式提示词</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-3-1" class="sphinx-tabs-panel" hidden="true" id="panel-3-3-1" name="3-1" role="tabpanel" tabindex="0"><figure class="align-default">
+<img alt="../../../../_images/%E6%98%BE%E7%A4%BA%E5%9C%A8%E5%BC%80%E5%A4%B4.png" src="../../../../_images/%E6%98%BE%E7%A4%BA%E5%9C%A8%E5%BC%80%E5%A4%B4.png" />
+</figure>
+</div><div class="docutils">
+</div>
+</div>
+<p>以此为例, <strong>不要让这里的界面教程限制了你的想象力.</strong></p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../脚本控制变量/"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">酒馆助手脚本: 后台控制和利用变量</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../手写变量结构/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">附.手写变量结构</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">仅格式提示词: 不发送界面占位符</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">仅格式显示: 显示界面</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">纯文本界面</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">前端界面</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mvu">记录玩家在前端界面的操作</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">回顾</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">在消息开头显示界面</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-02-10 16:52:08.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

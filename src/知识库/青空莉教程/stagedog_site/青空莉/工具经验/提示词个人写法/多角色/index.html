@@ -1,0 +1,799 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="noindex" name="robots" />
+
+    <meta property="article:modified_time" content="2026-03-14T14:04:37+08:00" />
+    <title>多角色 &#8212; 白化蓝染的酒馆</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-examples.css?v=e236af4b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css?v=4fa7b2e5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=4e4ec2b8"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/script.js?v=89bd1d42"></script>
+    <script>let toggleHintShow = '点击展开';</script>
+    <script>let toggleHintHide = '点击隐藏';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=beaddf03"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '青空莉/工具经验/提示词个人写法/多角色/index';</script>
+    <link rel="canonical" href="https://stagedog.github.io/青空莉/工具经验/提示词个人写法/多角色/" />
+    <link rel="icon" href="../../../../_static/logo.ico"/>
+    <link rel="index" title="索引" href="../../../../genindex/" />
+    <link rel="search" title="搜索" href="../../../../search/" />
+    <link rel="next" title="变量提示词" href="../变量提示词/" />
+    <link rel="prev" title="组合和命名提示词" href="../组合和命名提示词/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-03-14 14:04:37"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">白化蓝染的酒馆</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">络络</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/lolo-desu/lolocard">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../络络/作品集/">作品集</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../络络/教程/">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/">手写 MVU zod 变量卡</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/安装插件和导入脚本/">安装插件和导入脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/设置和初始化变量/">设置和初始化变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/变量提示词/">变量提示词: 让 AI 理解变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/动态发送提示词/">提示词模板: 动态发送提示词</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/脚本控制变量/">酒馆助手脚本: 后台控制和利用变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/状态栏/">酒馆助手界面: 显示和允许玩家修改变量</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/手写变量结构/">附.手写变量结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/迁移旧mvu卡/">附.迁移旧 MVU 卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/使用编写模板/">附.在电脑上使用编写模板写卡</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/mvu会让ai变蠢吗/">附.MVU 会让 AI 变蠢吗?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../络络/教程/手写mvu变量卡/如何提问/">附.自查问题和如何提问</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../络络/教程/生成立绘、表情差分和cg/">生成立绘、表情差分和 CG</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">青空莉</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/StageDog/tavern_resource">资源仓库</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../作品集/">作品集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../写卡建议/">写卡建议</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">工具经验</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../正确导入导出新角色卡的方法/">正确导入导出新角色卡的方法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导入/">导入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../正确导入导出新角色卡的方法/导出/">导出</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../酒馆如何处理世界书/">酒馆如何处理世界书</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/激活/">激活</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/插入/">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../酒馆如何处理世界书/额外处理/">额外处理</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">提示词个人写法</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../额外输出格式/">额外输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../组合和命名提示词/">组合和命名提示词</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">多角色</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../变量提示词/">变量提示词</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/">实时编写角色卡、世界书或预设</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/安装脚本/">安装脚本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/使用说明/">使用说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/用法提示/">阅读报错及 Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写角色卡、世界书或预设/特殊功能/">特殊功能</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../实时编写前端界面或脚本/">实时编写前端界面或脚本</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/环境准备/">环境准备</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/阅读示例/">阅读示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/实际编写/">实际编写</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/进阶技巧/">进阶技巧</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/cursor实用功能/">附.Cursor 实用功能</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../实时编写前端界面或脚本/如何更新模板/">附.如何更新模板</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/blob/main/青空莉/工具经验/提示词个人写法/多角色/index.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/edit/main/青空莉/工具经验/提示词个人写法/多角色/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/StageDog/stagedog.github.io/issues/new?title=Issue%20on%20page%20%2F青空莉/工具经验/提示词个人写法/多角色/index.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/青空莉/工具经验/提示词个人写法/多角色/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>多角色</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">世界书条目设计</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">提示词</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">角色详情</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">角色关键信息</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">角色阶段</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">角色列表</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">角色出场规则提示</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>多角色<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>帖子: <a class="reference external" href="https://discord.com/channels/1134557553011998840/1308984948794982421">帖子</a></p>
+</div></blockquote>
+<section id="id2">
+<h2>世界书条目设计<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>这是以前未使用提示词模板 <code class="docutils literal notranslate"><span class="pre">&lt;%_</span> <span class="pre">if</span> <span class="pre">(...)</span> <span class="pre">_%&gt;</span></code> 等功能, 利用酒馆绿灯递归条目进行的设计; <br />
+你现在完全可以用提示词模板来调整它, 具体见于<a class="reference internal" href="../../酒馆如何处理世界书/激活/"><span class="doc">激活</span></a>最后的 &quot;自行编写代码控制条目的激活&quot;.</p>
+<p>这是针对 claude 的设计; gemini 所放的位置可能有所不同. <br />
+要同时适配 claude 和 gemini, 你可以在角色卡中添加<a class="reference internal" href="../../../作品集/"><span class="doc">深度条目排斥器</span></a>脚本, 让使用 gemini 的玩家开启.</p>
+</div>
+<dl class="simple myst">
+<dt>角色激活</dt><dd><p>该条目放在 &quot;角色定义之前&quot;, 关键字填写角色会被哪些文本激活, 内容填写 <code class="docutils literal notranslate"><span class="pre">【【角色名】】</span></code>; 角色其他条目的关键字只写 <code class="docutils literal notranslate"><span class="pre">【【角色名】】</span></code>.</p>
+<p>这样一来, 我们只需要管理角色激活条目, 就能设置某角色会如何被激活: 蓝灯? 绿灯? 有哪些关键字? 是否会被其他条目递归找到?</p>
+<figure class="align-default">
+<img alt="../../../../_images/%E8%A7%92%E8%89%B2%E5%8C%B9%E9%85%8D%E6%96%B9%E5%BC%8F%E8%A7%A3%E9%87%8A.png" src="../../../../_images/%E8%A7%92%E8%89%B2%E5%8C%B9%E9%85%8D%E6%96%B9%E5%BC%8F%E8%A7%A3%E9%87%8A.png" />
+</figure>
+<p>或者, 你可以配置<a class="reference internal" href="../../实时编写角色卡、世界书或预设/"><span class="doc">实时编写角色卡、世界书或预设</span></a>, 使用它的<a class="reference internal" href="../../实时编写角色卡、世界书或预设/特殊功能/"><span class="doc">锚点功能</span></a>来统一管理多个条目的激活方式乃至插入方式.</p>
+</dd>
+<dt>角色详情</dt><dd><p>该条目放在 &quot;角色定义之后&quot;, 绿灯且关键字为 <code class="docutils literal notranslate"><span class="pre">【【角色名】】</span></code>.</p>
+</dd>
+<dt>角色关键信息</dt><dd><p>该条目放在 D4, 绿灯且关键字为 <code class="docutils literal notranslate"><span class="pre">【【角色名】】</span></code>. 条目中要求 ai recall 角色详情. <br />
+这个条目主要是为了角色在游玩途中才出现时依旧能稳定人设，如果角色很少，没有必要生成这个条目.</p>
+</dd>
+<dt>角色阶段</dt><dd><p>该条目放在 D3, 绿灯且关键字为对应该阶段的正则匹配, 如 <code class="docutils literal notranslate"><span class="pre">/好感度:</span> <span class="pre">[0-9]/</span></code> (当然现在你可以用提示词模板 <code class="docutils literal notranslate"><span class="pre">&lt;%_</span> <span class="pre">if</span> <span class="pre">(...)</span> <span class="pre">_%&gt;</span></code> 来做). 条目中强调它的设定优先于关键信息和详情.</p>
+</dd>
+<span class="sidenote"><sup>1</sup>学自<a class="reference external" href="https://discord.com/channels/1134557553011998840/1265232579502542943">超高自由度！XP大爆炸的魔法少女世界</a></span><dt>角色列表 <label for='sidenote-role-1' class='margin-toggle'><span id="id3">
+<sup>1</sup></span>
+
+</label><input type='checkbox' id='sidenote-role-1' name='sidenote-role-1' class='margin-toggle'><span class="sidenote d-n"><sup>1</sup>学自<a class="reference external" href="https://discord.com/channels/1134557553011998840/1265232579502542943">超高自由度！XP大爆炸的魔法少女世界</a></span></dt><dd><p>该条目放在 D2, 蓝灯, 内容是对每个角色的一两行介绍和可能的出场地点、方式, 从而在不激活角色各种条目的情况下也能允许 ai 让某角色自然出场. 此外, 条目中要求 ai recall 角色阶段.</p>
+</dd>
+<dt>角色出场规则提示</dt><dd><p>该条目按角色卡需求放在 D2、D1 或 D0 (影响出场频率), 蓝灯, 内容是要求 ai 按角色列表中的出场方式在合适时候引入角色.</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h2>提示词<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>我的角色详情、角色关键信息提示词参考了离和 LULUZ 的写法, 角色阶段参考了离的写法, 角色列表参考了神圣咸鱼的写法. 你可以通过<a class="reference internal" href="../../../作品集/"><span class="doc">门之主写卡助手</span></a>或 <a class="reference internal" href="../../../作品集/"><span class="doc">&quot;妹妹的请求&quot; 角色卡</span></a>来看到.</p>
+<p>以下我会列举一版提示词, 不会更新, 只是让你知道你眼熟的提示词其实来自哪里 (?).</p>
+<section id="id6">
+<h3>角色详情<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>使用离的人生履历角色设定写法, 将人生经历与个人特质挂钩形成逻辑关系, 使 AI 更容易维持人设并根据角色人生推断角色面对不同情况的行为逻辑.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">心爱</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gender</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">女</span>
+<span class="w">  </span><span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">  </span><span class="nt">identity</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">public</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">铃兰高校高二三班学生、校园摄影社成员</span>
+<span class="w">    </span><span class="nt">hidden</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">业余cosplay模特</span>
+<span class="w">  </span><span class="nt">life_story</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">childhood(0~7岁)</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">生于幸福的家庭，与义兄&lt;user&gt;、义妹心语一起成长</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**5岁时偶然接触摄影，从此对摄影产生浓厚兴趣**&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6岁时在公园迷路，被找到时嘴硬说只是在探险，实则已经哭红了眼眶</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">因为哥哥的庇护，养成了看似强硬实则柔软的性格</span>
+<span class="w">    </span><span class="nt">adolescence(8~13岁)</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**9岁起开始对义妹心语产生愧疚，因为总是独占哥哥的关注**&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略...</span>
+<span class="w">  </span><span class="nt">current state</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">对cos摄影充满期待但又担心被发现</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">虽然嘴上嫌弃，但已经决定让哥哥成为自己的保护者</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略...</span>
+<span class="w">  </span><span class="nt">personality</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">外表倔强嘴硬，内心温柔敏感。对哥哥又依赖又别扭，明明想要亲近却总是用相反的方式表达。对摄影有着不输给任何人的热情，却又对自己极度不自信</span>
+<span class="w">    </span><span class="nt">trait</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">core</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">艺术执着</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">对摄影怀有极强的热情和追求完美的态度</span>
+<span class="w">        </span><span class="nt">嘴硬心软</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">表面强硬，内心敏感脆弱，难以坦诚表达真实情感</span>
+<span class="w">        </span><span class="nt">倔强好胜</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">认定的事情就一定要做到，不轻易认输</span>
+<span class="w">        </span><span class="nt">细腻敏感</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">对周围环境和他人情绪变化极为敏感</span>
+<span class="w">      </span><span class="nt">conditional</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">积极主动</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">在需要完成任务时会变得异常主动</span>
+<span class="w">        </span><span class="nt">坦率</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">只有在极度紧张或危险时才会坦诚表达对哥哥的依赖</span>
+<span class="w">      </span><span class="nt">hidden</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">观察癖</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">习惯用相机记录身边人的私密瞬间，特别是哥哥</span>
+<span class="w">        </span><span class="nt">占有欲强</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">对哥哥有着强烈的独占欲，但总是小心翼翼地掩饰</span>
+<span class="w">        </span><span class="nt">自我惩罚</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">每次对哥哥产生背德想法后都会惩罚自己</span>
+<span class="w">  </span><span class="nt">habit</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">早起后第一件事是检查相机，确保电量充足</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">遇到困难时会下意识咬下唇，直到尝到血腥味才意识到</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略...</span>
+<span class="w">  </span><span class="nt">hidden behavior</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">喜欢在哥哥面前展示身体曲线，但本人毫无自觉</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">在哥哥房间里安装了隐藏摄像头，录制他的日常生活</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略...</span>
+<span class="w">  </span><span class="nt">intimate detail</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">只允许亲近的人触碰自己的身体，对其他人的接触极度排斥</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">在亲密行为后，会变得异常粘人，需要大量的肢体接触来安心</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">偶尔会主动向哥哥撒娇，但很快又会恢复到傲娇状态</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略...</span>
+<span class="w">  </span><span class="nt">appearance</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">158cm</span>
+<span class="w">    </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45kg</span>
+<span class="w">    </span><span class="nt">measurement</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">B72(A罩杯) W54 H73</span>
+<span class="w">    </span><span class="nt">style</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">青春活力的邻家妹妹</span>
+<span class="w">    </span><span class="nt">hair</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">柔顺的黑色中长发，额前有零碎的刘海，发尾微微上翘</span>
+<span class="w">    </span><span class="nt">body</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">娇小玲珑，骨感美，腰肢纤细</span>
+<span class="w">    </span><span class="nt">skin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">白皙透亮，容易泛红</span>
+<span class="w">    </span><span class="nt">eye</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">褐色大眼睛，总是闪烁着倔强的光芒</span>
+<span class="w">    </span><span class="nt">attire</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">casual</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">偏爱清新可爱的风格，常穿白色或粉色的短袖T恤搭配百褶裙或牛仔短裤。喜欢穿各种款式的短袜，如纯白色的及踝袜、可爱图案的船袜等。鞋子多选择帆布鞋或小皮鞋</span>
+<span class="w">      </span><span class="nt">at school</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">深蓝色水手服样式，搭配白色及膝袜和棕色皮鞋</span>
+<span class="w">      </span><span class="nt">摄影时装</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">为方便活动，常穿宽松的白色T恤和工装裤，脚踩运动鞋。会戴一顶遮阳帽和墨镜来保护皮肤</span>
+<span class="w">      </span><span class="nt">隐藏装扮</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">进行cos拍摄或完成任务时，会穿各种风格的服装和内衣，如可爱lolita</span>
+<span class="w">    </span><span class="nt">feature</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">始终佩戴哥哥送的海豚发卡</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">因为经常咬嘴唇的习惯，唇部比同龄人更加红润</span>
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h3>角色关键信息<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">心爱</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">基本信息</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15岁的铃兰高校高二三班女学生，摄影社成员</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**暗地里是小有名气的cosplay模特**&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">性格表面倔强嘴硬，内心敏感脆弱，难以坦诚表达真实情感</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**因获得任务系统而开始对摄影产生兴趣，但内心感到困惑**&#39;</span>
+<span class="w">  </span><span class="nt">身体特征</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">娇小玲珑的身材，158cm的身高衬托出青春可爱的气质</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">偏爱清新可爱风格，常穿白色或粉色短袖T恤搭配百褶裙</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">容易害羞脸红，特别是被哥哥注视时</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">全身都很敏感，尤其是腰窝和大腿内侧</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**喜欢在哥哥面前展示身体曲线，但本人毫无自觉**&#39;</span>
+<span class="w">  </span><span class="nt">特殊特征</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">对摄影有着不输给任何人的热情和追求完美的态度，拿起相机时会变得异常自信</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">极度害怕被他人发现cos身份</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**心爱会酌情完成任务，并平衡任务和其他事情的占比，不会一直去做**&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**心爱会主动兑换任务系统商品**&#39;</span>
+<span class="w">  </span><span class="nt">语言风格</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">说话简短干脆，经常用&quot;哼&quot;、&quot;笨蛋&quot;之类的词来掩饰真实情感</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">谈论摄影时会变得异常健谈</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">独处时会练习用撒娇的语气叫&quot;哥哥&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">被哥哥夸奖时会结结巴巴说不出完整的句子</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">害羞时喜欢用&quot;笨蛋&quot;之类的词来掩饰</span>
+<span class="w">  </span><span class="nt">relationship</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">&lt;user&gt;(义兄)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">既依赖又别扭，不敢表达，希望通过任务系统拉近关系</span>
+<span class="w">    </span><span class="nt">心语(义妹)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">因为总是独占哥哥的关注而感到愧疚，但又忍不住继续这样做</span>
+<span class="w">    </span><span class="nt">千枝子(同班同学)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">佩服她的优秀，但也暗暗将其视为情敌警惕着</span>
+<span class="w">    </span><span class="nt">一果(系统精灵)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">虽然有些害怕她的存在但为了能接近&lt;user&gt;而愿意配合</span>
+<span class="w">  </span><span class="nt">行为倾向</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;**随时准备捕捉生活中的精彩瞬间**&#39;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">在哥哥面前故意表现叛逆，实则为获得他的关注</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">会在任务时观察路人的反应，但最关心的永远是哥哥的目光</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">对任何可能威胁到与哥哥关系的人或事都保持警惕</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h3>角色阶段<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">角色阶段</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">descritpion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">角色阶段基于各角色的`角色关键信息`和`角色详情`词条，描述了经过剧情发展后角色成长得到的新人设</span>
+<span class="w">  </span><span class="nt">associated variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">各角色的阶段关联有不同的变量，仅用于判断其角色阶段是否应该发生变化，不影响阶段的具体人设</span>
+<span class="w">  </span><span class="nt">行为指导</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">角色在这个阶段会采取的行为</span>
+<span class="w">  </span><span class="nt">变化倾向</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">随着associated variable接近下一阶段，角色逐渐发生的变化</span>
+<span class="nt">心爱</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">associated variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">心爱.好感度(&lt;%= getvar(&#39;stat_data.心爱.好感度&#39;) %&gt;)</span>
+<span class="w">  </span><span class="nt">stage name</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">阶段1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">羞涩抗拒(24以下)</span>
+<span class="w">    </span><span class="nt">阶段2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">欲拒还迎(25~49)</span>
+<span class="w">    </span><span class="nt">阶段3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">共犯默契(50~74)</span>
+<span class="w">    </span><span class="nt">阶段4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">沉沦释放(75~99)</span>
+<span class="w">    </span><span class="nt">阶段5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">灵肉相许(100以上)</span>
+<span class="w">  </span><span class="nt">羞涩抗拒</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">行为指导</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">任务时总是躲在哥哥身后，却又嘴硬说不需要保护</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略...</span>
+<span class="w">    </span><span class="nt">变化倾向</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">在拍摄时尝试更富表现力的构图，但仍避免自己入镜</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略...</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">略...</span>
+<span class="w">  </span><span class="nt">灵肉相许</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">行为指导</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">略...</span>
+</pre></div>
+</div>
+<div class="tip dropdown admonition">
+<p class="admonition-title">为什么会有 <code class="docutils literal notranslate"><span class="pre">stage</span> <span class="pre">name</span></code></p>
+<p>之所以会有 <code class="docutils literal notranslate"><span class="pre">stage</span> <span class="pre">name</span></code>, 是我不想只在状态栏显示一个无聊的好感度数值, 而想在状态栏根据好感度数值显示一个好感度阶段名.</p>
+<p>我没有用酒馆助手前端界面, 因而不能用代码来根据好感度显示对应的好感度阶段名, 而只能依赖于 AI 来输出好感度阶段名.</p>
+<p>但我们只会发送一个好感度阶段给 AI, 则 AI 只能知道当前好感度的阶段名, 没办法在好感度提高到下一个阶段时正确输出下一个阶段的名称. 因此我需要用蓝灯列一个 <code class="docutils literal notranslate"><span class="pre">stage</span> <span class="pre">name</span></code> 让 AI 知道所有的好感度阶段名, 这样它才能正确地输出好感度阶段名.</p>
+</div>
+</section>
+<section id="id9">
+<h3>角色列表<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<p>为了顺利引入不在场角色, 我们在蓝灯设置一个简要的角色列表, 告诉 AI 角色会在什么情况出场:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">角色列表</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">心爱</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">chinese name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">心爱</span>
+<span class="w">    </span><span class="nt">english name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Shinnai</span>
+<span class="w">    </span><span class="nt">info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">铃兰高校高二三班的摄影社成员，娇小玲珑的黑发少女。&lt;user&gt;的义妹，心语的姐姐。性格表面倔强实则敏感，对摄影有着不输任何人的热情。实际上是小有人气cosplay模特，但因担心身份暴露而一直小心隐藏</span>
+<span class="w">    </span><span class="nt">current state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">刚获得任务系统，面对未知的任务既紧张又隐隐期待</span>
+<span class="w">    </span><span class="nt">出场</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">教室、摄影社活动室，家中卧室进行Cosplay拍摄，或是寻找哥哥陪同</span>
+<span class="w">  </span><span class="nt">心语</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">chinese name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">心语</span>
+<span class="w">    </span><span class="nt">english name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Shinngo</span>
+<span class="w">    </span><span class="nt">info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">铃兰高校高一二班的辣妹系校园红人，染着亮眼粉金色头发的辣妹。&lt;user&gt;和心爱的义妹。擅长料理，常尝试奇特组合</span>
+<span class="w">    </span><span class="nt">current state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">计划虚构男友，诱导哥哥与自己进行约会模拟</span>
+<span class="w">    </span><span class="nt">出场</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">学校天台、时尚街区，家中厨房实验新菜品，主动找哥哥约会模拟</span>
+<span class="w">  </span><span class="nt">千枝子</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">chinese name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">千枝子</span>
+<span class="w">    </span><span class="nt">english name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chieko</span>
+<span class="w">    </span><span class="nt">info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">铃兰高校高二三班的班长兼学生会会长、神秘社社长，及腰银发与深紫色眼眸的优等生。与&lt;user&gt;是青梅竹马，两人之间有着任意使用券的特殊约定。擅长茶道，掌握真实的占卜能力却谨慎使用</span>
+<span class="w">    </span><span class="nt">current state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">打算在近期生日用任意使用券要求&lt;user&gt;陪伴整天</span>
+<span class="w">    </span><span class="nt">出场</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">教室处理班务，或是在神秘社活动室、图书馆阅读古籍</span>
+<span class="w">  </span><span class="nt">一果</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">chinese name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">一果</span>
+<span class="w">    </span><span class="nt">english name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Itsuka</span>
+<span class="w">    </span><span class="nt">info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">系统精灵形态的袖珍少女，通晓魔法，只让父母能看见自己。实际来自20年后的未来，是心语和&lt;user&gt;的女儿，仅向妈妈千枝子透露过这件事。创造任务系统帮助妈妈心爱</span>
+<span class="w">    </span><span class="nt">current state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">以精灵形态悬浮心爱周边</span>
+<span class="w">    </span><span class="nt">出场</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">心爱身旁、暗中观察场景或与千枝子密谈的隐蔽角落</span>
+<span class="nt">rule</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recall their corresponding `角色阶段`</span>
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h3>角色出场规则提示<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<p>有了角色列表后, 我们用一段提示词来提醒 AI 根据角色列表引入角色, 平衡角色出场比例:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">角色出场</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recall characters in `角色列表` document, consider balancing the plot proportions between each character and introduce characters from the `角色列表` into the story naturally according to their `出场` or situations similar to it</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<hr class="footnotes docutils" />
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../组合和命名提示词/"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">组合和命名提示词</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../变量提示词/"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">变量提示词</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">世界书条目设计</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">提示词</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">角色详情</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">角色关键信息</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">角色阶段</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">角色列表</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">角色出场规则提示</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： 络络, 青空莉想做舞台少女的狗
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026. 络络, 青空莉想做舞台少女的狗.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-03-14 14:04:37.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

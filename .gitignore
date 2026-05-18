@@ -1,0 +1,16 @@
+﻿node_modules/
+dist/
+*.log
+l2-report.json
+_diag*.mjs
+_explore*.mjs
+_frames.mjs
+_th_test.mjs
+_ctx.mjs
+_emit_test.mjs
+_gen_test.cjs
+_write.cjs
+_append.cjs
+_rebuild_validate.cjs
+_final_victory.cjs
+
