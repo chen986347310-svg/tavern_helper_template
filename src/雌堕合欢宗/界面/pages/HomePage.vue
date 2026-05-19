@@ -53,33 +53,35 @@ const store = useDataStore();
 const data = store.data;
 
 const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
-const selectedNpc = ref<string | null>(null);
+type NpcName = typeof NPC列表[number];
+const selectedNpc = ref<NpcName | null>(null);
 
-function selectNpc(name: string) {
+function selectNpc(name: NpcName) {
   selectedNpc.value = selectedNpc.value === name ? null : name;
 }
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
 /* ═══════════════════════════════════
-   首页·宗门总览
+   首页·宗门总览 — 金册扉页
    ═══════════════════════════════════ */
 
 .home-page {
   padding: 12px 0;
 }
 
-/* 系统状态栏 */
+/* 系统状态栏 — 金册扉页 */
 .system-bar {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
   margin-bottom: 16px;
-  background:
-    linear-gradient(180deg, rgba(42, 31, 20, 0.8) 0%, rgba(30, 21, 13, 0.9) 100%);
-  border: 1px solid rgba(212, 160, 23, 0.15);
-  border-radius: 6px;
+  @include gold-foil;
+  border-radius: $radius-md;
 
   .phase-badge {
     display: flex;
@@ -88,18 +90,18 @@ function selectNpc(name: string) {
     padding: 4px 10px;
     background: rgba(212, 160, 23, 0.1);
     border: 1px solid rgba(212, 160, 23, 0.25);
-    border-radius: 4px;
+    border-radius: $radius-sm;
 
     .badge-glyph {
-      font-family: 'Noto Serif SC', serif;
+      font-family: $font-铭文;
       font-size: 12px;
       color: rgba(212, 160, 23, 0.6);
     }
 
     .badge-text {
-      font-family: 'Noto Serif SC', serif;
+      font-family: $font-铭文;
       font-size: 13px;
-      color: #d4a017;
+      color: $册缘鎏金;
       letter-spacing: 0.08em;
     }
   }
@@ -123,7 +125,7 @@ function selectNpc(name: string) {
     }
 
     .stat-value {
-      font-family: 'Noto Serif SC', serif;
+      font-family: $font-铭文;
       font-size: 16px;
       font-weight: 700;
       color: rgba(212, 160, 23, 0.8);
@@ -131,7 +133,7 @@ function selectNpc(name: string) {
   }
 }
 
-/* 区域标签 */
+/* 区域标签 — 金册装饰线 */
 .section-label {
   display: flex;
   align-items: center;
@@ -145,14 +147,14 @@ function selectNpc(name: string) {
   }
 
   .label-text {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 12px;
     color: rgba(180, 150, 100, 0.4);
     letter-spacing: 0.15em;
   }
 }
 
-/* NPC 网格 */
+/* NPC 网格 — 五位女修的命格金页 */
 .npc-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -165,7 +167,7 @@ function selectNpc(name: string) {
   margin-top: 4px;
 }
 
-/* 详情展开动画 */
+/* 详情展开动画 — 金册翻页 */
 .slide-enter-active,
 .slide-leave-active {
   transition: all 0.3s ease;

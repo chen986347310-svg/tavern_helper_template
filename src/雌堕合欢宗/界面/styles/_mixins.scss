@@ -1,0 +1,184 @@
+/* ═══════════════════════════════════
+   金册玉牒 · Mixins
+   ═══════════════════════════════════ */
+
+@use 'sass:color';
+@use 'variables' as *;
+
+// 纸张纤维纹理
+@mixin paper-texture {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(139, 90, 43, 0.03) 3px,
+      rgba(139, 90, 43, 0.03) 4px
+    ),
+    linear-gradient(180deg, rgba(42, 31, 20, 0.8) 0%, rgba(30, 21, 13, 0.9) 100%);
+}
+
+// 金册幽光背景
+@mixin gold-book-bg($center-x: 50%, $center-y: 50%) {
+  background:
+    radial-gradient(ellipse at $center-x $center-y, rgba(212, 160, 23, 0.06) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, $册底玄金 0%, color.adjust($册底玄金, $lightness: -5%) 100%);
+}
+
+// 金箔贴片效果
+@mixin gold-foil {
+  border: 1px solid rgba(212, 160, 23, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(212, 160, 23, 0.1),
+    inset 0 -1px 0 rgba(212, 160, 23, 0.05),
+    $shadow-金色发光;
+  position: relative;
+
+  // 金属拉丝效果（横向渐变）
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(212, 160, 23, 0.03) 25%,
+      transparent 50%,
+      rgba(212, 160, 23, 0.03) 75%,
+      transparent 100%
+    );
+    pointer-events: none;
+    border-radius: inherit;
+  }
+}
+
+// 区域标题装饰
+@mixin section-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+
+  .header-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.2), transparent);
+  }
+
+  .header-glyph {
+    font-family: $font-铭文;
+    font-size: 13px;
+    color: rgba(212, 160, 23, 0.5);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(212, 160, 23, 0.15);
+    border-radius: 3px;
+    background: rgba(212, 160, 23, 0.03);
+  }
+
+  .header-text {
+    font-family: $font-铭文;
+    font-size: 13px;
+    color: rgba(180, 150, 100, 0.5);
+    letter-spacing: 0.1em;
+  }
+}
+
+// 三态样式
+@mixin status-badge($status) {
+  @if $status == 'completed' {
+    border-color: rgba(212, 160, 23, 0.5);
+    box-shadow: $shadow-金色发光强, inset 0 0 20px rgba(212, 160, 23, 0.03);
+
+    .npc-name {
+      color: $册缘鎏金;
+      text-shadow: 0 0 8px rgba(212, 160, 23, 0.3);
+    }
+  } @else if $status == 'active' {
+    border-color: rgba(180, 150, 100, 0.3);
+
+    .status-dot {
+      background: #8b7355;
+      box-shadow: 0 0 4px rgba(139, 115, 85, 0.4);
+    }
+  } @else {
+    opacity: 0.45;
+    filter: saturate(0.3);
+  }
+}
+
+// 悬停上浮效果
+@mixin hover-float($distance: 3px) {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-$distance);
+    box-shadow: $shadow-卡片;
+  }
+}
+
+// 铭文刻入效果
+@mixin inscription-engrave {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(212, 160, 23, 0.3);
+}
+
+// 金印押章按钮
+@mixin gold-seal-btn {
+  background: rgba(212, 160, 23, 0.15);
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(212, 160, 23, 0.25);
+    box-shadow: 0 0 12px rgba(212, 160, 23, 0.15);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+// 好感度温度计效果 — 使用 CSS 自定义属性在运行时计算
+@mixin thermometer-bar($value) {
+  // 低好感度: 暗铜 → 中好感度: 金 → 高好感度: 亮金
+  // 通过 CSS color-mix 在运行时根据好感度值混合颜色
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, #6b5b3a calc(100% - clamp(0%, var(--affinity-value, 0) * 1.43%, 100%)), #8b7355) 0%,
+    color-mix(in srgb, #8b7355 calc(100% - clamp(0%, (var(--affinity-value, 0) - 30) * 2.5%, 100%)), #d4a017) 50%,
+    color-mix(in srgb, #d4a017 calc(100% - clamp(0%, (var(--affinity-value, 0) - 70) * 3.33%, 100%)), #e8c44a) 100%
+  );
+}
+
+// NPC专属色
+@mixin npc-color($npc-name) {
+  @if $npc-name == '白芷' {
+    color: #a8c4e0;
+    text-shadow: 0 0 8px rgba(168, 196, 224, 0.3);
+  } @else if $npc-name == '苏芸' {
+    color: #e0a860;
+    text-shadow: 0 0 8px rgba(224, 168, 96, 0.3);
+  } @else if $npc-name == '纪兰' {
+    color: #b088d4;
+    text-shadow: 0 0 8px rgba(176, 136, 212, 0.3);
+  } @else if $npc-name == '沈月秋' {
+    color: #d46048;
+    text-shadow: 0 0 8px rgba(212, 96, 72, 0.3);
+  } @else if $npc-name == '柳素衣' {
+    color: #e8e0d0;
+    text-shadow: 0 0 8px rgba(232, 224, 208, 0.3);
+  }
+}

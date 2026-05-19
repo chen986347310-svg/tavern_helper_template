@@ -185,15 +185,18 @@ function buyItem(item: ShopItem) {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
 /* ═══════════════════════════════════
-   坊市·商城页面
+   坊市·商城页面 — 金册玉牒
    ═══════════════════════════════════ */
 
 .shop-page {
   padding: 12px 0;
 }
 
-/* 灵石余额 */
+/* 灵石余额 — 金库天窗 */
 .shop-header {
   display: flex;
   justify-content: flex-end;
@@ -205,12 +208,11 @@ function buyItem(item: ShopItem) {
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  background: linear-gradient(180deg, rgba(42, 31, 20, 0.8) 0%, rgba(30, 21, 13, 0.9) 100%);
-  border: 1px solid rgba(212, 160, 23, 0.2);
-  border-radius: 6px;
+  @include gold-foil;
+  border-radius: $radius-md;
 
   .balance-glyph {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 16px;
     color: rgba(212, 160, 23, 0.6);
     width: 22px;
@@ -219,7 +221,7 @@ function buyItem(item: ShopItem) {
     align-items: center;
     justify-content: center;
     border: 1px solid rgba(212, 160, 23, 0.2);
-    border-radius: 4px;
+    border-radius: $radius-sm;
     background: rgba(212, 160, 23, 0.05);
   }
 
@@ -236,14 +238,15 @@ function buyItem(item: ShopItem) {
   }
 
   .balance-value {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 18px;
     font-weight: 700;
-    color: #d4a017;
+    color: $铭文赤金;
+    @include inscription-engrave;
   }
 }
 
-/* 分类标签 */
+/* 分类标签 — 金箔签条 */
 .category-tabs {
   display: flex;
   gap: 6px;
@@ -268,13 +271,13 @@ function buyItem(item: ShopItem) {
   padding: 6px 12px;
   background: rgba(42, 31, 20, 0.6);
   border: 1px solid rgba(212, 160, 23, 0.1);
-  border-radius: 4px;
+  border-radius: $radius-sm;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.25s ease;
 
   .tab-glyph {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 13px;
     color: rgba(180, 150, 100, 0.4);
     transition: all 0.25s ease;
@@ -290,9 +293,10 @@ function buyItem(item: ShopItem) {
   &.active {
     background: rgba(212, 160, 23, 0.1);
     border-color: rgba(212, 160, 23, 0.3);
+    box-shadow: $shadow-金色发光;
 
     .tab-glyph {
-      color: #d4a017;
+      color: $册缘鎏金;
     }
 
     .tab-text {
@@ -313,7 +317,7 @@ function buyItem(item: ShopItem) {
   }
 }
 
-/* 物品格子 */
+/* 物品格子 — 金册货架 */
 .item-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -325,17 +329,8 @@ function buyItem(item: ShopItem) {
   flex-direction: column;
   justify-content: space-between;
   padding: 12px 10px;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(139, 90, 43, 0.03) 3px,
-      rgba(139, 90, 43, 0.03) 4px
-    ),
-    linear-gradient(180deg, rgba(42, 31, 20, 0.9) 0%, rgba(30, 21, 13, 0.95) 100%);
-  border: 1px solid rgba(212, 160, 23, 0.12);
-  border-radius: 6px;
+  @include gold-foil;
+  border-radius: $radius-md;
   cursor: pointer;
   transition: all 0.25s ease;
   min-height: 80px;
@@ -343,7 +338,7 @@ function buyItem(item: ShopItem) {
   &:hover {
     border-color: rgba(212, 160, 23, 0.3);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: $shadow-卡片;
   }
 
   &.disabled {
@@ -358,7 +353,7 @@ function buyItem(item: ShopItem) {
 
   .card-top {
     .item-name {
-      font-family: 'Noto Serif SC', serif;
+      font-family: $font-铭文;
       font-size: 14px;
       color: rgba(212, 160, 23, 0.8);
       letter-spacing: 0.08em;
@@ -379,16 +374,16 @@ function buyItem(item: ShopItem) {
       gap: 4px;
 
       .price-glyph {
-        font-family: 'Noto Serif SC', serif;
+        font-family: $font-铭文;
         font-size: 11px;
         color: rgba(212, 160, 23, 0.5);
       }
 
       .price-num {
-        font-family: 'Noto Serif SC', serif;
+        font-family: $font-铭文;
         font-size: 15px;
         font-weight: 700;
-        color: #d4a017;
+        color: $册缘鎏金;
       }
     }
   }
@@ -406,27 +401,15 @@ function buyItem(item: ShopItem) {
   backdrop-filter: blur(2px);
 }
 
-/* 详情弹窗 */
+/* 详情弹窗 — 展开金函 */
 .detail-modal {
   position: relative;
   width: 90%;
   max-width: 300px;
   padding: 24px 20px;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(139, 90, 43, 0.04) 3px,
-      rgba(139, 90, 43, 0.04) 4px
-    ),
-    linear-gradient(180deg, #2a1f14 0%, #1e150d 100%);
-  border: 1px solid rgba(212, 160, 23, 0.3);
-  border-radius: 8px;
-  box-shadow:
-    0 0 40px rgba(0, 0, 0, 0.6),
-    0 0 80px rgba(0, 0, 0, 0.3),
-    inset 0 0 40px rgba(0, 0, 0, 0.2);
+  @include gold-foil;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-弹窗;
 }
 
 /* 弹窗角落装饰 */
@@ -486,21 +469,21 @@ function buyItem(item: ShopItem) {
   }
 
   .header-glyph {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 12px;
     color: rgba(212, 160, 23, 0.5);
   }
 }
 
 .modal-title {
-  font-family: 'Noto Serif SC', serif;
+  font-family: $font-铭文;
   font-size: 20px;
   font-weight: 700;
-  color: #d4a017;
+  color: $册缘鎏金;
   text-align: center;
   letter-spacing: 0.15em;
   margin: 0 0 12px;
-  text-shadow: 0 0 10px rgba(212, 160, 23, 0.2);
+  @include inscription-engrave;
 }
 
 .modal-desc {
@@ -532,45 +515,31 @@ function buyItem(item: ShopItem) {
   margin-bottom: 16px;
 
   .price-glyph {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 14px;
     color: rgba(212, 160, 23, 0.5);
   }
 
   .price-num {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 22px;
     font-weight: 700;
-    color: #d4a017;
+    color: $铭文赤金;
+    @include inscription-engrave;
   }
 }
 
 .buy-btn {
   width: 100%;
   padding: 10px;
-  background: rgba(212, 160, 23, 0.15);
-  border: 1px solid rgba(212, 160, 23, 0.3);
-  border-radius: 6px;
-  font-family: 'Noto Serif SC', serif;
+  @include gold-seal-btn;
+  font-family: $font-铭文;
   font-size: 15px;
-  color: #d4a017;
-  cursor: pointer;
+  color: $册缘鎏金;
   letter-spacing: 0.1em;
-  transition: all 0.25s ease;
-
-  &:hover:not(:disabled) {
-    background: rgba(212, 160, 23, 0.25);
-    box-shadow: 0 0 12px rgba(212, 160, 23, 0.15);
-  }
-
-  &:disabled {
-    color: rgba(180, 150, 100, 0.3);
-    border-color: rgba(180, 150, 100, 0.1);
-    cursor: not-allowed;
-  }
 }
 
-/* 弹窗动画 */
+/* 弹窗动画 — 金函展开 */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.25s ease;

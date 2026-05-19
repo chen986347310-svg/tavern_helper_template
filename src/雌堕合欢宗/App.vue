@@ -36,12 +36,20 @@ import BackpackPage from './界面/pages/BackpackPage.vue';
 import GalleryPage from './界面/pages/GalleryPage.vue';
 import PageNav from './界面/components/PageNav.vue';
 
+// 导入全局样式
+import './界面/styles/_variables.scss';
+import './界面/styles/_mixins.scss';
+import './界面/styles/_global.scss';
+
 const currentTab = ref('home');
 </script>
 
 <style lang="scss" scoped>
+@use './界面/styles/variables' as *;
+@use './界面/styles/mixins' as *;
+
 /* ═══════════════════════════════════
-   夜卷·合欢渊 — 主容器
+   夜卷·合欢渊 — 主容器 — 金册玉牒
    ═══════════════════════════════════ */
 
 .app-container {
@@ -53,32 +61,18 @@ const currentTab = ref('home');
   background:
     radial-gradient(ellipse at 50% 30%, rgba(101, 67, 33, 0.15) 0%, transparent 60%),
     radial-gradient(ellipse at 50% 80%, rgba(60, 40, 20, 0.1) 0%, transparent 50%),
-    #0a0604;
+    $册底玄金;
   overflow: hidden;
 }
 
-/* 卷轴外框 */
+/* 卷轴外框 — 金册幽光 */
 .scroll-frame {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
-  background:
-    /* 纸张纤维纹理 */
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(139, 90, 43, 0.03) 2px,
-      rgba(139, 90, 43, 0.03) 3px
-    ),
-    /* 墨渍斑驳 */
-    radial-gradient(ellipse at 20% 15%, rgba(80, 50, 20, 0.08) 0%, transparent 40%),
-    radial-gradient(ellipse at 75% 60%, rgba(80, 50, 20, 0.06) 0%, transparent 35%),
-    radial-gradient(ellipse at 40% 85%, rgba(80, 50, 20, 0.05) 0%, transparent 30%),
-    /* 基底渐变 */
-    linear-gradient(180deg, #2a1f14 0%, #1e150d 50%, #2a1f14 100%);
+  @include gold-book-bg(50%, 50%);
   border: 1px solid rgba(212, 160, 23, 0.3);
   box-shadow:
     0 0 40px rgba(0, 0, 0, 0.8),
@@ -101,7 +95,7 @@ const currentTab = ref('home');
   &::after {
     content: '';
     position: absolute;
-    background: linear-gradient(135deg, #d4a017, #b8860b);
+    background: linear-gradient(135deg, $册缘鎏金, #b8860b);
     opacity: 0.6;
   }
 
@@ -149,14 +143,14 @@ const currentTab = ref('home');
   }
 
   .header-glyph {
-    font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 14px;
     color: rgba(212, 160, 23, 0.5);
     letter-spacing: 0.1em;
   }
 }
 
-/* 内容区域 */
+/* 内容区域 — 金册幽光 */
 .content-area {
   flex: 1;
   overflow-y: auto;
@@ -182,7 +176,7 @@ const currentTab = ref('home');
   }
 }
 
-/* 页面切换动画 */
+/* 页面切换动画 — 金册翻页 */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;

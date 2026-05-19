@@ -1,5 +1,5 @@
 <template>
-  <div :class="['npc-card', statusClass]" @click="$emit('click')">
+  <div :class="['npc-card', statusClass]" :style="{ '--npc-name': npc名, '--affinity-value': data.好感度 }" @click="$emit('click')">
     <!-- 灵牌顶部装饰 -->
     <div class="card-crest">
       <div class="crest-line"></div>
@@ -42,8 +42,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+type NpcName = '白芷' | '苏芸' | '纪兰' | '沈月秋' | '柳素衣';
+
 const props = defineProps<{
-  npc名: string;
+  npc名: NpcName;
   data: {
     好感度: number;
     攻略值: number;
@@ -66,83 +68,57 @@ const statusClass = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
 /* ═══════════════════════════════════
-   灵牌·NPC卡片
+   灵牌·NPC卡片 — 金箔贴片
    ═══════════════════════════════════ */
 
 .npc-card {
   position: relative;
   padding: 14px 12px 12px;
-  background:
-    /* 纸纹 */
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(139, 90, 43, 0.04) 3px,
-      rgba(139, 90, 43, 0.04) 4px
-    ),
-    linear-gradient(180deg, rgba(42, 31, 20, 0.95) 0%, rgba(30, 21, 13, 0.98) 100%);
-  border: 1px solid rgba(212, 160, 23, 0.2);
-  border-radius: 6px;
+  @include gold-foil;
+  border-radius: $radius-md;
   cursor: pointer;
   transition: all 0.3s ease;
   overflow: hidden;
 
-  /* 内发光 */
-  &::before {
+  // 双层描边（深金 + 浅金，间距 2px）
+  &::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: 6px;
-    background: radial-gradient(ellipse at 50% 0%, rgba(212, 160, 23, 0.06) 0%, transparent 60%);
+    inset: -3px;
+    border: 1px solid rgba(212, 160, 23, 0.1);
+    border-radius: $radius-lg;
     pointer-events: none;
   }
 
   &:hover {
     transform: translateY(-3px);
-    border-color: rgba(212, 160, 23, 0.4);
     box-shadow:
       0 8px 24px rgba(0, 0, 0, 0.5),
       0 0 16px rgba(212, 160, 23, 0.08);
   }
 
-  /* 已完成：金框高亮 */
+  // 已完成：金框高亮 + NPC专属色
   &.completed {
-    border-color: rgba(212, 160, 23, 0.5);
-    box-shadow:
-      0 0 12px rgba(212, 160, 23, 0.1),
-      inset 0 0 20px rgba(212, 160, 23, 0.03);
+    @include status-badge('completed');
 
+    // NPC专属微色（仅在已完成攻略状态时显示）
     .npc-name {
-      color: #d4a017;
-      text-shadow: 0 0 8px rgba(212, 160, 23, 0.3);
-    }
-
-    .status-dot {
-      background: #d4a017;
-      box-shadow: 0 0 6px rgba(212, 160, 23, 0.5);
+      @include npc-color(var(--npc-name));
     }
   }
 
-  /* 进行中：微光 */
+  // 进行中：微光
   &.active {
-    border-color: rgba(180, 150, 100, 0.3);
-
-    .status-dot {
-      background: #8b7355;
-      box-shadow: 0 0 4px rgba(139, 115, 85, 0.4);
-    }
+    @include status-badge('active');
   }
 
-  /* 锁定：暗淡 */
+  // 锁定：暗淡
   &.locked {
-    opacity: 0.45;
-    filter: saturate(0.3);
-
-    &:hover {
-      opacity: 0.6;
-    }
+    @include status-badge('locked');
   }
 }
 
@@ -169,7 +145,7 @@ const statusClass = computed(() => {
 
 /* NPC 名号 */
 .npc-name {
-  font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+  font-family: $font-铭文;
   font-size: 18px;
   font-weight: 700;
   color: rgba(212, 160, 23, 0.85);
@@ -199,7 +175,7 @@ const statusClass = computed(() => {
   }
 }
 
-/* 好感度轨道 */
+/* 好感度轨道 — 温度计隐喻 */
 .progress-track {
   display: flex;
   align-items: center;
@@ -224,26 +200,31 @@ const statusClass = computed(() => {
 
   .bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #6b5b3a, #d4a017);
     border-radius: 2px;
     transition: width 0.4s ease;
     position: relative;
 
+    // 好感度温度计效果
+    @include thermometer-bar(var(--affinity-value, 0));
+
+    // 当前位置光点
     &::after {
       content: '';
       position: absolute;
       right: 0;
-      top: 0;
-      width: 3px;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 0 2px 2px 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
     }
   }
 
   .progress-value {
     font-size: 11px;
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     color: rgba(212, 160, 23, 0.7);
     min-width: 24px;
     text-align: right;
@@ -270,7 +251,7 @@ const statusClass = computed(() => {
 
   .stat-value {
     font-size: 13px;
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     color: rgba(180, 150, 100, 0.7);
   }
 }

@@ -30,8 +30,11 @@ const tabs = [
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
 /* ═══════════════════════════════════
-   玉牌标签栏
+   玉牌标签栏 — 鎏金包边
    ═══════════════════════════════════ */
 
 .page-nav {
@@ -52,13 +55,13 @@ const tabs = [
   padding: 4px 12px;
   background: none;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: $radius-sm;
   cursor: pointer;
   transition: all 0.25s ease;
   position: relative;
 
   .tab-glyph {
-    font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 18px;
     color: rgba(180, 150, 100, 0.5);
     transition: all 0.25s ease;
@@ -82,7 +85,7 @@ const tabs = [
       inset 0 0 8px rgba(212, 160, 23, 0.05);
 
     .tab-glyph {
-      color: #d4a017;
+      color: $册缘鎏金;
       text-shadow: 0 0 8px rgba(212, 160, 23, 0.4);
     }
 
@@ -90,7 +93,7 @@ const tabs = [
       color: rgba(212, 160, 23, 0.8);
     }
 
-    /* 底部指示线 */
+    /* 底部指示线 — 金色光柱 */
     &::after {
       content: '';
       position: absolute;
@@ -99,7 +102,7 @@ const tabs = [
       transform: translateX(-50%);
       width: 16px;
       height: 2px;
-      background: linear-gradient(90deg, transparent, #d4a017, transparent);
+      background: linear-gradient(90deg, transparent, $册缘鎏金, transparent);
       border-radius: 1px;
     }
   }

@@ -116,8 +116,11 @@ function selectNpc(name: string) {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
 /* ═══════════════════════════════════
-   鉴·图鉴页面
+   鉴·图鉴页面 — 金册玉牒
    ═══════════════════════════════════ */
 
 .gallery-page {
@@ -129,42 +132,12 @@ function selectNpc(name: string) {
   margin-bottom: 20px;
 }
 
-/* 区域标题 */
+/* 区域标题 — 金册装饰线 */
 .section-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-
-  .header-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.2), transparent);
-  }
-
-  .header-glyph {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 13px;
-    color: rgba(212, 160, 23, 0.5);
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(212, 160, 23, 0.15);
-    border-radius: 3px;
-    background: rgba(212, 160, 23, 0.03);
-  }
-
-  .header-text {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 13px;
-    color: rgba(180, 150, 100, 0.5);
-    letter-spacing: 0.1em;
-  }
+  @include section-header;
 }
 
-/* NPC 列表 */
+/* NPC 列表 — 金线姻缘 */
 .npc-list {
   display: flex;
   flex-direction: column;
@@ -178,7 +151,7 @@ function selectNpc(name: string) {
   padding: 10px 12px;
   background: linear-gradient(180deg, rgba(42, 31, 20, 0.6) 0%, rgba(30, 21, 13, 0.7) 100%);
   border: 1px solid rgba(100, 80, 50, 0.15);
-  border-radius: 5px;
+  border-radius: $radius-sm;
   cursor: pointer;
   transition: all 0.25s ease;
 
@@ -197,7 +170,7 @@ function selectNpc(name: string) {
   }
 
   .npc-name {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 14px;
     color: rgba(180, 150, 100, 0.5);
     letter-spacing: 0.05em;
@@ -216,6 +189,7 @@ function selectNpc(name: string) {
 
     .entry-left .entry-dot {
       background: rgba(212, 160, 23, 0.4);
+      box-shadow: 0 0 4px rgba(212, 160, 23, 0.3);
     }
 
     .npc-name {
@@ -228,6 +202,7 @@ function selectNpc(name: string) {
 
     &:hover {
       border-color: rgba(212, 160, 23, 0.3);
+      box-shadow: $shadow-金色发光;
     }
   }
 
@@ -236,21 +211,12 @@ function selectNpc(name: string) {
   }
 }
 
-/* NPC 详情面板 */
+/* NPC 详情面板 — 金箔贴片 */
 .npc-detail-panel {
   margin-bottom: 20px;
   padding: 16px;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(139, 90, 43, 0.03) 3px,
-      rgba(139, 90, 43, 0.03) 4px
-    ),
-    linear-gradient(180deg, rgba(42, 31, 20, 0.9) 0%, rgba(30, 21, 13, 0.95) 100%);
-  border: 1px solid rgba(212, 160, 23, 0.2);
-  border-radius: 6px;
+  @include gold-foil;
+  border-radius: $radius-md;
 
   .panel-header {
     display: flex;
@@ -265,12 +231,12 @@ function selectNpc(name: string) {
     }
 
     .panel-name {
-      font-family: 'Noto Serif SC', serif;
+      font-family: $font-铭文;
       font-size: 18px;
       font-weight: 700;
-      color: #d4a017;
+      color: $册缘鎏金;
       letter-spacing: 0.2em;
-      text-shadow: 0 0 10px rgba(212, 160, 23, 0.2);
+      @include inscription-engrave;
     }
   }
 }
@@ -289,10 +255,10 @@ function selectNpc(name: string) {
   padding: 10px 6px;
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(212, 160, 23, 0.06);
-  border-radius: 4px;
+  border-radius: $radius-sm;
 
   .cell-glyph {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 12px;
     color: rgba(212, 160, 23, 0.4);
     width: 18px;
@@ -312,7 +278,7 @@ function selectNpc(name: string) {
   }
 
   .cell-value {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 18px;
     font-weight: 700;
     color: rgba(212, 160, 23, 0.75);
@@ -334,14 +300,15 @@ function selectNpc(name: string) {
       }
 
       &.已完成 {
-        color: #d4a017;
+        color: $册缘鎏金;
         background: rgba(212, 160, 23, 0.1);
+        box-shadow: $shadow-金色发光;
       }
     }
   }
 }
 
-/* 解锁列表 */
+/* 解锁列表 — 金册年表 */
 .unlock-list {
   display: flex;
   flex-direction: column;
@@ -353,9 +320,8 @@ function selectNpc(name: string) {
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
-  background: linear-gradient(180deg, rgba(42, 31, 20, 0.7) 0%, rgba(30, 21, 13, 0.8) 100%);
-  border: 1px solid rgba(212, 160, 23, 0.08);
-  border-radius: 5px;
+  @include gold-foil;
+  border-radius: $radius-sm;
   transition: border-color 0.25s ease;
 
   &:hover {
@@ -371,7 +337,7 @@ function selectNpc(name: string) {
   }
 
   .item-text {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 13px;
     color: rgba(180, 150, 100, 0.6);
     letter-spacing: 0.05em;
@@ -387,7 +353,7 @@ function selectNpc(name: string) {
   padding: 20px;
 
   .empty-glyph {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 20px;
     color: rgba(180, 150, 100, 0.12);
   }

@@ -135,8 +135,11 @@ function toggleEquip(target: string) {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
 /* ═══════════════════════════════════
-   囊·背包页面
+   囊·背包页面 — 金册玉牒
    ═══════════════════════════════════ */
 
 .backpack-page {
@@ -148,42 +151,12 @@ function toggleEquip(target: string) {
   margin-bottom: 20px;
 }
 
-/* 区域标题 */
+/* 区域标题 — 金册装饰线 */
 .section-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-
-  .header-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.2), transparent);
-  }
-
-  .header-glyph {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 13px;
-    color: rgba(212, 160, 23, 0.5);
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(212, 160, 23, 0.15);
-    border-radius: 3px;
-    background: rgba(212, 160, 23, 0.03);
-  }
-
-  .header-text {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 13px;
-    color: rgba(180, 150, 100, 0.5);
-    letter-spacing: 0.1em;
-  }
+  @include section-header;
 }
 
-/* 道具列表 */
+/* 道具列表 — 囊中金石 */
 .item-list {
   display: flex;
   flex-direction: column;
@@ -195,9 +168,8 @@ function toggleEquip(target: string) {
   justify-content: space-between;
   align-items: center;
   padding: 10px 12px;
-  background: linear-gradient(180deg, rgba(42, 31, 20, 0.8) 0%, rgba(30, 21, 13, 0.9) 100%);
-  border: 1px solid rgba(212, 160, 23, 0.08);
-  border-radius: 5px;
+  @include gold-foil;
+  border-radius: $radius-sm;
   cursor: pointer;
   transition: all 0.25s ease;
 
@@ -210,12 +182,12 @@ function toggleEquip(target: string) {
     background: rgba(212, 160, 23, 0.06);
 
     .item-name {
-      color: #d4a017;
+      color: $册缘鎏金;
     }
   }
 
   .item-name {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 14px;
     color: rgba(180, 150, 100, 0.7);
     letter-spacing: 0.05em;
@@ -223,7 +195,7 @@ function toggleEquip(target: string) {
   }
 
   .item-count {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 13px;
     color: rgba(212, 160, 23, 0.5);
   }
@@ -238,7 +210,7 @@ function toggleEquip(target: string) {
   padding: 24px;
 
   .empty-glyph {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 24px;
     color: rgba(180, 150, 100, 0.15);
   }
@@ -250,13 +222,12 @@ function toggleEquip(target: string) {
   }
 }
 
-/* 装备区域 */
+/* 装备区域 — 金印分配 */
 .equip-section {
   margin-bottom: 20px;
   padding: 14px;
-  background: rgba(212, 160, 23, 0.03);
-  border: 1px solid rgba(212, 160, 23, 0.1);
-  border-radius: 6px;
+  @include gold-foil;
+  border-radius: $radius-md;
 }
 
 .equip-targets {
@@ -270,15 +241,11 @@ function toggleEquip(target: string) {
   align-items: center;
   gap: 5px;
   padding: 7px 14px;
-  background: rgba(42, 31, 20, 0.7);
-  border: 1px solid rgba(212, 160, 23, 0.1);
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: 'Noto Serif SC', serif;
+  @include gold-seal-btn;
+  font-family: $font-铭文;
   font-size: 13px;
   color: rgba(180, 150, 100, 0.6);
   letter-spacing: 0.05em;
-  transition: all 0.25s ease;
 
   .btn-dot {
     width: 5px;
@@ -291,10 +258,10 @@ function toggleEquip(target: string) {
   &.equipped {
     background: rgba(212, 160, 23, 0.12);
     border-color: rgba(212, 160, 23, 0.3);
-    color: #d4a017;
+    color: $册缘鎏金;
 
     .btn-dot {
-      background: #d4a017;
+      background: $册缘鎏金;
       box-shadow: 0 0 4px rgba(212, 160, 23, 0.5);
     }
   }
@@ -315,7 +282,7 @@ function toggleEquip(target: string) {
   }
 }
 
-/* 装备列表 */
+/* 装备列表 — 已盖金印 */
 .equip-list {
   display: flex;
   flex-direction: column;
@@ -328,10 +295,10 @@ function toggleEquip(target: string) {
   padding: 8px 12px;
   background: linear-gradient(180deg, rgba(42, 31, 20, 0.6) 0%, rgba(30, 21, 13, 0.7) 100%);
   border: 1px solid rgba(212, 160, 23, 0.06);
-  border-radius: 4px;
+  border-radius: $radius-sm;
 
   .target-name {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 13px;
     color: rgba(212, 160, 23, 0.6);
     min-width: 48px;

@@ -75,8 +75,10 @@
 </template>
 
 <script setup lang="ts">
+type NpcName = '白芷' | '苏芸' | '纪兰' | '沈月秋' | '柳素衣';
+
 defineProps<{
-  npc名: string;
+  npc名: NpcName;
   data: {
     好感度: number;
     攻略值: number;
@@ -87,33 +89,17 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
 /* ═══════════════════════════════════
-   灵鉴·NPC详情面板
+   灵鉴·NPC详情面板 — 金箔贴片
    ═══════════════════════════════════ */
 
 .npc-detail {
   padding: 16px;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(139, 90, 43, 0.03) 3px,
-      rgba(139, 90, 43, 0.03) 4px
-    ),
-    linear-gradient(180deg, rgba(42, 31, 20, 0.9) 0%, rgba(30, 21, 13, 0.95) 100%);
-  border: 1px solid rgba(212, 160, 23, 0.2);
-  border-radius: 8px;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 8px;
-    background: radial-gradient(ellipse at 50% 0%, rgba(212, 160, 23, 0.04) 0%, transparent 50%);
-    pointer-events: none;
-  }
+  @include gold-foil;
+  border-radius: $radius-lg;
 }
 
 /* 标题栏 */
@@ -130,10 +116,10 @@ defineProps<{
   }
 
   .detail-name {
-    font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 20px;
     font-weight: 700;
-    color: #d4a017;
+    color: $册缘鎏金;
     letter-spacing: 0.2em;
     margin: 0;
     text-shadow: 0 0 12px rgba(212, 160, 23, 0.2);
@@ -163,7 +149,7 @@ defineProps<{
   flex-shrink: 0;
 
   .label-glyph {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 14px;
     color: rgba(212, 160, 23, 0.5);
     width: 18px;
@@ -208,7 +194,7 @@ defineProps<{
   overflow: hidden;
 
   &.favor {
-    background: linear-gradient(90deg, #6b5b3a, #d4a017);
+    @include thermometer-bar(var(--affinity-value, 0));
   }
 
   &.progress {
@@ -227,7 +213,7 @@ defineProps<{
 }
 
 .bar-value {
-  font-family: 'Noto Serif SC', serif;
+  font-family: $font-铭文;
   font-size: 14px;
   color: rgba(212, 160, 23, 0.7);
   min-width: 28px;
@@ -239,7 +225,7 @@ defineProps<{
   flex: 1;
 
   .value-num {
-    font-family: 'Noto Serif SC', serif;
+    font-family: $font-铭文;
     font-size: 16px;
     color: rgba(180, 150, 100, 0.7);
   }
@@ -286,11 +272,11 @@ defineProps<{
 
   &.已完成 {
     background: rgba(212, 160, 23, 0.1);
-    color: #d4a017;
+    color: $册缘鎏金;
     border: 1px solid rgba(212, 160, 23, 0.25);
 
     .badge-dot {
-      background: #d4a017;
+      background: $册缘鎏金;
       box-shadow: 0 0 6px rgba(212, 160, 23, 0.5);
     }
   }
