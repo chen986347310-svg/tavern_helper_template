@@ -1,4 +1,4 @@
-import { FSWatcher, watch } from 'chokidar';
+﻿import { FSWatcher, watch } from 'chokidar';
 import HtmlInlineScriptWebpackPlugin from 'html-inline-script-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import _ from 'lodash';
@@ -345,6 +345,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
               test: /\.ya?ml$/,
               loader: 'yaml-loader',
             },
+            {
+              test: /\.(png|jpe?g|gif|webp)$/i,
+              include: path.resolve(import.meta.dirname, 'src/雌堕合欢宗/界面/assets/avatars'),
+              type: 'asset/inline'
+            },
           ].concat(
             entry.html === undefined
               ? ([
@@ -569,3 +574,6 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
 }
 
 export default config.entries.map(parse_configuration);
+
+
+

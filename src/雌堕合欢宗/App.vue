@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="app-container">
     <div class="scroll-frame">
       <!-- 金色角落装饰 -->
@@ -16,34 +16,41 @@
 
       <div class="content-area">
         <Transition name="fade" mode="out-in">
-          <HomePage v-if="currentTab === 'home'" />
+          <HomePage v-if="currentTab === 'home' && data.系统.阶段 === '攻略期'" />
+          <Phase2Page v-else-if="currentTab === 'home' && data.系统.阶段 === '牝奴期'" />
           <ShopPage v-else-if="currentTab === 'shop'" />
           <BackpackPage v-else-if="currentTab === 'backpack'" />
           <GalleryPage v-else-if="currentTab === 'gallery'" />
         </Transition>
       </div>
 
-      <PageNav :currentTab="currentTab" @change="currentTab = $event" />
+      <PageNav :currentTab="currentTab" @change="navigateTo" />
     </div>
   </div>
+
+  <!-- 调试面板 (仅 dev 模式) -->
+  <DebugPanel />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import HomePage from './界面/pages/HomePage.vue';
+import Phase2Page from './界面/pages/Phase2Page.vue';
 import ShopPage from './界面/pages/ShopPage.vue';
 import BackpackPage from './界面/pages/BackpackPage.vue';
 import GalleryPage from './界面/pages/GalleryPage.vue';
 import PageNav from './界面/components/PageNav.vue';
+import DebugPanel from './界面/components/DebugPanel.vue';
+import { useNavigation } from './界面/composables/useNavigation';
+import { useDataStore } from './界面/store';
 
 // 导入全局样式
 import './界面/styles/_variables.scss';
 import './界面/styles/_mixins.scss';
 import './界面/styles/_global.scss';
 
-const currentTab = ref('home');
+const { currentTab, navigateTo } = useNavigation();
+const data = useDataStore().data;
 </script>
-
 <style lang="scss" scoped>
 @use './界面/styles/variables' as *;
 @use './界面/styles/mixins' as *;
@@ -61,7 +68,7 @@ const currentTab = ref('home');
   background:
     radial-gradient(ellipse at 50% 30%, rgba(101, 67, 33, 0.15) 0%, transparent 60%),
     radial-gradient(ellipse at 50% 80%, rgba(60, 40, 20, 0.1) 0%, transparent 50%),
-    $册底玄金;
+    ;
   overflow: hidden;
 }
 
@@ -150,14 +157,13 @@ const currentTab = ref('home');
   }
 }
 
-/* 内容区域 — 金册幽光 */
+/* 内容区域 */
 .content-area {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0 8px;
 
-  /* 自定义滚动条 */
   &::-webkit-scrollbar {
     width: 4px;
   }
@@ -176,7 +182,7 @@ const currentTab = ref('home');
   }
 }
 
-/* 页面切换动画 — 金册翻页 */
+/* 页面切换动画 */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;
