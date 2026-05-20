@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="home-page">
     <!-- 系统状态栏 -->
     <SystemBar
@@ -57,10 +57,10 @@ function toggleExpand(name: NpcName) {
 @use '../styles/mixins' as *;
 
 .home-page {
-  padding: 12px 0;
+  padding: 8px 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 /* 区域标签 */
@@ -68,18 +68,18 @@ function toggleExpand(name: NpcName) {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 
   .label-line {
     flex: 1;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, var(--theme-border), transparent);
   }
 
   .label-text {
     font-family: $font-铭文;
     font-size: 12px;
-    color: rgba(180, 150, 100, 0.4);
+    color: var(--theme-text-muted);
     letter-spacing: 0.15em;
   }
 }

@@ -16,7 +16,6 @@ import { VueUseComponentsResolver, VueUseDirectiveResolver } from 'unplugin-vue-
 import unpluginVueComponents from 'unplugin-vue-components/webpack';
 import { VueLoaderPlugin } from 'vue-loader';
 import webpack from 'webpack';
-import WebpackObfuscator from 'webpack-obfuscator';
 const require = createRequire(import.meta.url);
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
 
@@ -183,9 +182,6 @@ function tavern_sync(compiler: webpack.Compiler) {
 }
 
 function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Configuration {
-  const should_obfuscate = fs
-    .readFileSync(path.join(import.meta.dirname, entry.script), 'utf-8')
-    .includes('@obfuscate');
   const script_filepath = path.parse(entry.script);
 
   return (_env, argv) => ({
@@ -455,7 +451,6 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
             '@vueuse/core',
             { from: 'dedent', imports: [['default', 'dedent']] },
             { from: 'klona', imports: ['klona'] },
-            { from: 'vue-final-modal', imports: ['useModal'] },
             { from: 'zod', imports: ['z'] },
           ],
         }),
@@ -471,20 +466,6 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
           __VUE_PROD_DEVTOOLS__: process.env.CI !== 'true',
           __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
         }),
-      )
-      .concat(
-        should_obfuscate
-          ? [
-              new WebpackObfuscator({
-                controlFlowFlattening: true,
-                numbersToExpressions: true,
-                selfDefending: true,
-                simplify: true,
-                splitStrings: true,
-                seed: 1,
-              }),
-            ]
-          : [],
       ),
     optimization: {
       minimize: true,

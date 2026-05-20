@@ -1,9 +1,22 @@
-﻿<template>
+<template>
   <div
     :class="['npc-strip', statusClass, { expanded: expanded }]"
-    :style="{ '--npc-color': npcColor }"
+    :style="{ '--npc-color': npcColor, '--npc-color-dark': npcColorDark }"
     @click="handleClick"
   >
+    <!-- 金印封章 (已攻略状态) -->
+    <div v-if="data.状态 === '已完成'" class="seal-badge">
+      <span class="seal-text">已攻略</span>
+    </div>
+
+    <!-- 角落装饰 (已攻略状态) -->
+    <template v-if="data.状态 === '已完成'">
+      <div class="card-corner top-left"></div>
+      <div class="card-corner top-right"></div>
+      <div class="card-corner bottom-left"></div>
+      <div class="card-corner bottom-right"></div>
+    </template>
+
     <!-- 头像图片区 (响应式宽度, mask渐融) -->
     <div :class="['avatar-zone', { 'img-loaded': imageLoaded }]">
       <img
@@ -120,7 +133,17 @@ const statusClass = computed(() => {
   }
 });
 
+
+
+const NPC_COLORS_DARK: Record<NpcName, string> = {
+  白芷: '#4a7a9b',
+  苏芸: '#8b5e0f',
+  纪兰: '#6a3d8a',
+  沈月秋: '#a03020',
+  柳素衣: '#6b5b3a',
+};
 const npcColor = computed(() => NPC_COLORS[props.npc名] || '#d4a017');
+const npcColorDark = computed(() => NPC_COLORS_DARK[props.npc名] || '#8b5e0f');
 
 const avatarSrc = computed(() => {
   const map = AVATAR_MAP[props.npc名];
@@ -140,7 +163,8 @@ function handleClick() {
 
 /* NPC 水平横条 */
 .npc-strip {
-  border: 1px solid rgba(212, 160, 23, 0.2);
+  position: relative;
+  border: 1px solid var(--theme-border);
   border-radius: $radius-md;
   transition: all 0.35s ease;
   overflow: hidden;
@@ -200,18 +224,18 @@ function handleClick() {
   }
 
   .avatar-fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    font-family: $font-铭文;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--npc-color);
-    text-shadow: 0 0 8px rgba(212, 160, 23, 0.2);
-    min-height: 64px;
-    background: linear-gradient(135deg, rgba(212, 160, 23, 0.05), transparent);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     width: 100%;
+     height: 100%;
+     font-family: $font-铭文;
+     font-size: 20px;
+     font-weight: 700;
+     color: var(--npc-color);
+     text-shadow: 0 0 8px rgba(212, 160, 23, 0.2);
+     min-height: 44px;
+     background: linear-gradient(135deg, rgba(212, 160, 23, 0.05), transparent);
   }
 
   .locked & .avatar-img {
@@ -270,7 +294,7 @@ function handleClick() {
   justify-content: center;
   gap: 2px;
   padding: 8px 12px;
-  min-height: 64px;
+  min-height: 44px;
   transition: opacity 0.35s ease;
 
   &.text-fade {
@@ -284,7 +308,7 @@ function handleClick() {
     font-family: $font-铭文;
     font-size: 16px;
     font-weight: 700;
-    color: rgba(212, 160, 23, 0.85);
+    color: var(--theme-text-primary);
     letter-spacing: 0.1em;
   }
 
@@ -293,7 +317,7 @@ function handleClick() {
     align-items: center;
     gap: 4px;
     font-size: 11px;
-    color: rgba(180, 150, 100, 0.5);
+    color: var(--theme-text-secondary);
 
     .status-dot {
       width: 5px;
@@ -340,80 +364,98 @@ function handleClick() {
 .card-expand {
   @include expand-panel;
   width: 100%;
-  border-top: 1px solid rgba(212, 160, 23, 0.1);
+
+  &.expanded {
+    border-top: 1px solid var(--theme-border-subtle);
+  }
 }
 
 .expand-inner {
-  padding: 12px 14px;
+  padding: 0 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: padding 0.35s ease;
+
+  .expanded & {
+    padding: 12px 14px;
+  }
 }
 
 .expand-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 
   .expand-label {
-    font-size: 11px;
-    color: rgba(180, 150, 100, 0.5);
-    letter-spacing: 0.05em;
-    min-width: 48px;
+    font-size: 12px;
+    color: var(--theme-text-secondary);
+    letter-spacing: 0.08em;
+    min-width: 52px;
     flex-shrink: 0;
+    font-weight: 500;
   }
 
   .expand-bar {
     flex: 1;
-    height: 6px;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 3px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
     overflow: hidden;
-    border: 1px solid rgba(212, 160, 23, 0.06);
+    border: 1px solid var(--theme-border-subtle);
+    position: relative;
   }
 
   .expand-bar-fill {
     height: 100%;
-    border-radius: 3px;
+    border-radius: 4px;
     transition: width 0.4s ease;
 
     &.favor {
-      @include thermometer-bar(var(--affinity-value, 0));
+      background: var(--theme-bar-fill);
+      box-shadow: 0 0 8px rgba(212, 160, 23, 0.2);
     }
 
     &.progress {
-      background: linear-gradient(90deg, #5a4a30, #b8860b);
+      background: var(--theme-progress-fill);
+      box-shadow: 0 0 6px rgba(90, 74, 48, 0.3);
     }
   }
 
   .expand-value {
     font-family: $font-铭文;
-    font-size: 12px;
-    color: rgba(212, 160, 23, 0.7);
-    min-width: 28px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--theme-gold);
+    min-width: 32px;
     text-align: right;
+    @include inscription-engrave;
   }
 }
 
 /* 装备折叠面板 */
 .equip-section {
-  margin-top: 4px;
+  margin-top: 8px;
+  border-top: 1px solid var(--theme-border-subtle);
+  padding-top: 8px;
 }
 
 .equip-toggle {
-  background: none;
-  border: 1px solid rgba(212, 160, 23, 0.15);
-  border-radius: $radius-sm;
-  color: rgba(180, 150, 100, 0.5);
-  font-size: 11px;
-  padding: 3px 8px;
-  cursor: pointer;
+  @include gold-seal-btn;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
   font-family: $font-铭文;
-  transition: all 0.25s ease;
+  color: var(--theme-text-secondary);
+  min-height: 44px;
 
-  &:hover {
-    background: rgba(212, 160, 23, 0.08);
-    color: rgba(212, 160, 23, 0.7);
+  .equip-arrow {
+    margin-left: auto;
+    font-size: 11px;
   }
 }
 
@@ -421,11 +463,200 @@ function handleClick() {
   @include expand-panel;
 }
 
-.equip-empty {
-  font-size: 11px;
-  color: rgba(180, 150, 100, 0.3);
-  text-align: center;
-  padding: 4px 0;
+.equip-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0 4px;
 }
+
+.equip-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--theme-text-secondary);
+  border: 1px solid var(--theme-border-subtle);
+  border-radius: $radius-sm;
+  background: var(--theme-accent-glow);
+  transition: all 0.2s ease;
+
+  &::before {
+    content: '◆';
+    font-size: 8px;
+    color: var(--theme-accent);
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: var(--theme-border);
+    color: var(--theme-text-primary);
+  }
+}
+
+.equip-empty {
+  font-size: 12px;
+  color: var(--theme-text-muted);
+  text-align: center;
+  padding: 8px 0;
+  font-style: italic;
+}
+
+/* === 攻略完成装饰 === */
+
+/* 金印封章 */
+.seal-badge {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  z-index: 5;
+  pointer-events: none;
+  animation: seal-appear 0.6s ease-out;
+}
+
+.seal-text {
+  display: inline-block;
+  font-family: $font-铭文;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--npc-accent);
+  letter-spacing: 0.15em;
+  padding: 2px 8px;
+  border: 1.5px solid var(--npc-accent);
+  border-radius: 3px;
+  opacity: 0.85;
+  text-shadow: 0 0 6px color-mix(in srgb, var(--npc-accent) 50%, transparent);
+  background: color-mix(in srgb, var(--npc-accent) 12%, transparent);
+  transform: rotate(-6deg);
+
+}
+
+@keyframes seal-appear {
+  0% { opacity: 0; transform: scale(1.8) rotate(-15deg); }
+  60% { opacity: 1; transform: scale(0.95) rotate(-4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* 角落装饰线 */
+.card-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  z-index: 3;
+  pointer-events: none;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    background: var(--npc-accent);
+    opacity: 0.6;
+  }
+
+
+  &.top-left {
+    top: 3px;
+    left: 3px;
+    &::before { top: 0; left: 0; width: 10px; height: 1px; }
+    &::after { top: 0; left: 0; width: 1px; height: 10px; }
+  }
+
+  &.top-right {
+    top: 3px;
+    right: 3px;
+    &::before { top: 0; right: 0; width: 10px; height: 1px; }
+    &::after { top: 0; right: 0; width: 1px; height: 10px; }
+  }
+
+  &.bottom-left {
+    bottom: 3px;
+    left: 3px;
+    &::before { bottom: 0; left: 0; width: 10px; height: 1px; }
+    &::after { bottom: 0; left: 0; width: 1px; height: 10px; }
+  }
+
+  &.bottom-right {
+    bottom: 3px;
+    right: 3px;
+    &::before { bottom: 0; right: 0; width: 10px; height: 1px; }
+    &::after { bottom: 0; right: 0; width: 1px; height: 10px; }
+  }
+}
+
+/* 已攻略卡片特殊样式 */
+.npc-strip.completed {
+  border-color: var(--npc-accent);
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--npc-accent) 35%, transparent),
+    inset 0 0 20px color-mix(in srgb, var(--npc-accent) 10%, transparent);
+  animation: completed-breathe 4s ease-in-out infinite;
+
+  &::before {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--npc-accent) 8%, transparent) 25%,
+      transparent 50%,
+      color-mix(in srgb, var(--npc-accent) 8%, transparent) 75%,
+      transparent 100%
+    ) !important;
+  }
+
+  .strip-name {
+    color: var(--npc-accent);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--npc-accent) 40%, transparent);
+  }
+
+  .strip-status .status-dot {
+    background: var(--npc-accent);
+    box-shadow: 0 0 4px color-mix(in srgb, var(--npc-accent) 50%, transparent);
+  }
+
+}
+
+@keyframes completed-breathe {
+  0%, 100% {
+    box-shadow:
+      0 0 12px color-mix(in srgb, var(--npc-accent) 20%, transparent),
+      inset 0 0 20px color-mix(in srgb, var(--npc-accent) 4%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 20px color-mix(in srgb, var(--npc-accent) 35%, transparent),
+      inset 0 0 30px color-mix(in srgb, var(--npc-accent) 8%, transparent);
+  }
+}
+
+/* 头像区域在已攻略状态上浓度更高 */
+.npc-strip.completed .avatar-zone {
+  &::before {
+    background: linear-gradient(to left, color-mix(in srgb, var(--npc-accent) 15%, rgba(26, 18, 12, 1)), transparent 60%);
+  }
+}
+
+/* 展开区域进度条在已攻略状态下加强 */
+.npc-strip.completed .expand-bar-fill.favor {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--npc-accent) 30%, transparent);
+}
+
+.npc-strip.completed .expand-bar-fill.progress {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--npc-accent) 25%, transparent);
+}
+
+
+@keyframes completed-breathe-light {
+  0%, 100% {
+    box-shadow:
+      0 0 10px color-mix(in srgb, var(--npc-accent) 25%, rgba(0,0,0,0.08)),
+      inset 0 0 15px color-mix(in srgb, var(--npc-accent) 6%, rgba(44,26,8,0.04));
+  }
+  50% {
+    box-shadow:
+      0 0 18px color-mix(in srgb, var(--npc-accent) 40%, rgba(0,0,0,0.12)),
+      inset 0 0 25px color-mix(in srgb, var(--npc-accent) 12%, rgba(44,26,8,0.06));
+  }
+}
+
 </style>
 

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="app-container">
     <div class="scroll-frame">
       <!-- 金色角落装饰 -->
@@ -80,7 +80,7 @@ const data = useDataStore().data;
   flex-direction: column;
   position: relative;
   @include gold-book-bg(50%, 50%);
-  border: 1px solid rgba(212, 160, 23, 0.3);
+  border: 1px solid var(--theme-border);
   box-shadow:
     0 0 40px rgba(0, 0, 0, 0.8),
     0 0 80px rgba(0, 0, 0, 0.4),
@@ -159,7 +159,7 @@ const data = useDataStore().data;
 
 /* 内容区域 */
 .content-area {
-  flex: 1;
+   flex: 0 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0 8px;

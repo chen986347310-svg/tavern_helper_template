@@ -87,6 +87,42 @@ describe("SystemBar", () => {
       const names = wrapper.findAll(".taiji-name").map(w => w.text());
       expect(names).toEqual(["白芷", "苏芸", "纪兰", "沈月秋", "柳素衣"]);
     });
+
+    it("包含 SVG 太极图标", () => {
+      const wrapper = mount(SystemBar, {
+        props: {
+          mode: "攻略期",
+          npcList,
+          npcStates: {
+            白芷: { 状态: "未开始" }, 苏芸: { 状态: "未开始" },
+            纪兰: { 状态: "未开始" }, 沈月秋: { 状态: "未开始" },
+            柳素衣: { 状态: "未开始" },
+          },
+        },
+      });
+      const svgs = wrapper.findAll(".taiji-svg");
+      expect(svgs).toHaveLength(5);
+    });
+
+    it("攻略期有正确的无障碍属性", () => {
+      const wrapper = mount(SystemBar, {
+        props: {
+          mode: "攻略期",
+          npcList,
+          npcStates: {
+            白芷: { 状态: "已完成" }, 苏芸: { 状态: "未开始" },
+            纪兰: { 状态: "未开始" }, 沈月秋: { 状态: "未开始" },
+            柳素衣: { 状态: "未开始" },
+          },
+        },
+      });
+      const bar = wrapper.find(".system-bar");
+      expect(bar.attributes("role")).toBe("toolbar");
+      expect(bar.attributes("aria-label")).toBe("攻略进度状态栏");
+      const firstIcon = wrapper.find(".taiji-icon");
+      expect(firstIcon.attributes("role")).toBe("img");
+      expect(firstIcon.attributes("aria-label")).toContain("已攻略");
+    });
   });
 
   describe("牝奴期模式", () => {
@@ -114,12 +150,14 @@ describe("SystemBar", () => {
       expect(litPetals).toHaveLength(5);
     });
 
-    it("圆环角度匹配堕落度", () => {
+    it("SVG 圆环进度匹配堕落度", () => {
       const wrapper = mount(SystemBar, {
         props: { mode: "牝奴期", 堕落度: 60 },
       });
-      const track = wrapper.find(".blossom-ring-track");
-      expect(track.attributes("style")).toContain("216deg");
+      const progress = wrapper.find(".blossom-progress");
+      const circumference = 2 * Math.PI * 34;
+      const expectedOffset = circumference * (1 - 60 / 100);
+      expect(progress.attributes("stroke-dashoffset")).toBeCloseTo(expectedOffset, 1);
     });
 
     it("显示堕落度百分比", () => {
@@ -127,6 +165,26 @@ describe("SystemBar", () => {
         props: { mode: "牝奴期", 堕落度: 75 },
       });
       expect(wrapper.find(".blossom-value").text()).toBe("75%");
+    });
+
+    it("包含 SVG 樱花圆环", () => {
+      const wrapper = mount(SystemBar, {
+        props: { mode: "牝奴期", 堕落度: 50 },
+      });
+      expect(wrapper.find(".blossom-ring-svg").exists()).toBe(true);
+      expect(wrapper.findAll(".blossom-petal")).toHaveLength(5);
+    });
+
+    it("牝奴期有正确的无障碍属性", () => {
+      const wrapper = mount(SystemBar, {
+        props: { mode: "牝奴期", 堕落度: 50 },
+      });
+      const bar = wrapper.find(".system-bar");
+      expect(bar.attributes("role")).toBe("toolbar");
+      expect(bar.attributes("aria-label")).toBe("牝奴堕落状态栏");
+      const progress = wrapper.find(".blossom-ring-wrapper");
+      expect(progress.attributes("role")).toBe("progressbar");
+      expect(progress.attributes("aria-valuenow")).toBe("50");
     });
   });
 });
