@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <Teleport to="body">
     <div v-if="debug.visible.value" class="debug-overlay" @click.self="debug.toggle()">
       <div class="debug-panel">
@@ -11,7 +11,7 @@
           <!-- 阶段切换 -->
           <div class="debug-row">
             <label class="debug-label">阶段</label>
-            <select v-model="data.系统.阶段" class="debug-select">
+            <select v-model="store.data.系统.阶段" class="debug-select">
               <option value="攻略期">攻略期</option>
               <option value="牝奴期">牝奴期</option>
             </select>
@@ -20,13 +20,13 @@
           <!-- 剩余天数 -->
           <div class="debug-row">
             <label class="debug-label">剩余天数</label>
-            <input v-model.number="data.系统.剩余天数" type="number" min="0" max="30" class="debug-input" />
+            <input v-model.number="store.data.系统.剩余天数" type="number" min="0" max="30" class="debug-input" />
           </div>
 
           <!-- 灵石 -->
           <div class="debug-row">
             <label class="debug-label">灵石</label>
-            <input v-model.number="data.系统.灵石" type="number" min="0" class="debug-input" />
+            <input v-model.number="store.data.系统.灵石" type="number" min="0" class="debug-input" />
           </div>
 
           <div class="debug-divider"></div>
@@ -36,17 +36,17 @@
             <div class="debug-npc-name">{{ npc }}</div>
             <div class="debug-row">
               <label class="debug-label">好感度</label>
-              <input v-model.number="data.NPC[npc].好感度" type="range" min="0" max="100" class="debug-range" />
-              <span class="debug-range-value">{{ data.NPC[npc].好感度 }}</span>
+              <input v-model.number="store.data.NPC[npc].好感度" type="range" min="0" max="100" class="debug-range" />
+              <span class="debug-range-value">{{ store.data.NPC[npc].好感度 }}</span>
             </div>
             <div class="debug-row">
               <label class="debug-label">攻略值</label>
-              <input v-model.number="data.NPC[npc].攻略值" type="range" min="0" max="100" class="debug-range" />
-              <span class="debug-range-value">{{ data.NPC[npc].攻略值 }}</span>
+              <input v-model.number="store.data.NPC[npc].攻略值" type="range" min="0" max="100" class="debug-range" />
+              <span class="debug-range-value">{{ store.data.NPC[npc].攻略值 }}</span>
             </div>
             <div class="debug-row">
               <label class="debug-label">状态</label>
-              <select v-model="data.NPC[npc].状态" class="debug-select">
+              <select v-model="store.data.NPC[npc].状态" class="debug-select">
                 <option value="未开始">未开始</option>
                 <option value="进行中">进行中</option>
                 <option value="已完成">已完成</option>
@@ -59,25 +59,25 @@
           <!-- 牝奴期数值 -->
           <div class="debug-row">
             <label class="debug-label">堕落度</label>
-            <input v-model.number="data.牝奴.堕落度" type="range" min="0" max="100" class="debug-range" />
-            <span class="debug-range-value">{{ data.牝奴.堕落度 }}</span>
+            <input v-model.number="store.data.牝奴.堕落度" type="range" min="0" max="100" class="debug-range" />
+            <span class="debug-range-value">{{ store.data.牝奴.堕落度 }}</span>
           </div>
           <div class="debug-row">
             <label class="debug-label">牝阴决层数</label>
-            <input v-model.number="data.牝奴.牝阴决层数" type="range" min="0" max="9" class="debug-range" />
-            <span class="debug-range-value">{{ data.牝奴.牝阴决层数 }}</span>
+            <input v-model.number="store.data.牝奴.牝阴决层数" type="range" min="0" max="9" class="debug-range" />
+            <span class="debug-range-value">{{ store.data.牝奴.牝阴决层数 }}</span>
           </div>
           <div class="debug-row">
             <label class="debug-label">改造-泌乳</label>
-            <input v-model="data.牝奴.改造进度.泌乳" type="checkbox" class="debug-checkbox" />
+            <input v-model="store.data.牝奴.改造进度.泌乳" type="checkbox" class="debug-checkbox" />
           </div>
           <div class="debug-row">
             <label class="debug-label">改造-肛门</label>
-            <input v-model="data.牝奴.改造进度.肛门" type="checkbox" class="debug-checkbox" />
+            <input v-model="store.data.牝奴.改造进度.肛门" type="checkbox" class="debug-checkbox" />
           </div>
           <div class="debug-row">
             <label class="debug-label">改造-憋尿</label>
-            <input v-model="data.牝奴.改造进度.憋尿" type="checkbox" class="debug-checkbox" />
+            <input v-model="store.data.牝奴.改造进度.憋尿" type="checkbox" class="debug-checkbox" />
           </div>
         </div>
 
@@ -97,7 +97,7 @@ import { useDebug } from '../composables/useDebug';
 
 const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
 
-const data = useDataStore().data;
+const store = useDataStore();
 const debug = useDebug();
 onMounted(() => debug.initShortcut());
 </script>

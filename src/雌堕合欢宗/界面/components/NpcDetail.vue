@@ -21,7 +21,7 @@
               <div class="bar-glow"></div>
             </div>
           </div>
-          <span class="bar-value">{{ data.好感度 }}</span>
+          <span class="bar-value">{{ get灵犀等级(data.好感度) }}</span>
         </div>
       </div>
 
@@ -37,7 +37,7 @@
               <div class="bar-glow"></div>
             </div>
           </div>
-          <span class="bar-value">{{ data.攻略值 }}</span>
+          <span class="bar-value">{{ get道心侵蚀(data.攻略值) }}</span>
         </div>
       </div>
 
@@ -75,6 +75,8 @@
 </template>
 
 <script setup lang="ts">
+import { get灵犀等级, get道心侵蚀 } from '../composables/useStatusText';
+
 type NpcName = '白芷' | '苏芸' | '纪兰' | '沈月秋' | '柳素衣';
 
 defineProps<{
@@ -98,7 +100,9 @@ defineProps<{
 
 .npc-detail {
   padding: 16px;
-  @include gold-foil;
+  border: none;
+  box-shadow: none;
+  background: var(--hh-bg-surface);
   border-radius: $radius-lg;
 }
 
@@ -112,7 +116,7 @@ defineProps<{
   .header-ornament {
     flex: 1;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, var(--hh-border-accent), transparent);
   }
 
   .detail-name {
@@ -122,7 +126,7 @@ defineProps<{
     color: $册缘鎏金;
     letter-spacing: 0.2em;
     margin: 0;
-    text-shadow: 0 0 12px rgba(212, 160, 23, 0.2);
+    text-shadow: 0 0 12px var(--hh-gold-glow);
   }
 }
 
@@ -151,21 +155,21 @@ defineProps<{
   .label-glyph {
     font-family: $font-铭文;
     font-size: 14px;
-    color: rgba(212, 160, 23, 0.5);
+    color: var(--hh-gold);
     width: 18px;
     height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(212, 160, 23, 0.15);
+    border: none;
     border-radius: 3px;
-    background: rgba(212, 160, 23, 0.03);
+    background: var(--hh-bg-card);
   }
 
   .label-text {
     font-size: 12px;
-    color: rgba(180, 150, 100, 0.5);
-    letter-spacing: 0.05em;
+    color: var(--hh-text-secondary);
+    letter-spacing: 4px;
   }
 }
 
@@ -183,7 +187,7 @@ defineProps<{
   background: rgba(0, 0, 0, 0.4);
   border-radius: 3px;
   overflow: hidden;
-  border: 1px solid rgba(212, 160, 23, 0.06);
+  border: none;
 }
 
 .bar-fill {
@@ -215,7 +219,7 @@ defineProps<{
 .bar-value {
   font-family: $font-铭文;
   font-size: 14px;
-  color: rgba(212, 160, 23, 0.7);
+  color: var(--hh-gold);
   min-width: 28px;
   text-align: right;
 }
@@ -227,7 +231,7 @@ defineProps<{
   .value-num {
     font-family: $font-铭文;
     font-size: 16px;
-    color: rgba(180, 150, 100, 0.7);
+    color: var(--hh-text-secondary);
   }
 }
 
@@ -239,7 +243,7 @@ defineProps<{
   padding: 3px 10px;
   border-radius: 4px;
   font-size: 12px;
-  letter-spacing: 0.05em;
+  letter-spacing: 4px;
   transition: all 0.3s ease;
 
   .badge-dot {
@@ -251,18 +255,18 @@ defineProps<{
 
   &.未开始 {
     background: rgba(100, 80, 50, 0.15);
-    color: rgba(180, 150, 100, 0.5);
-    border: 1px solid rgba(100, 80, 50, 0.2);
+    color: var(--hh-text-secondary);
+    border: none;
 
     .badge-dot {
-      background: rgba(180, 150, 100, 0.3);
+      background: var(--hh-text-muted);
     }
   }
 
   &.进行中 {
     background: rgba(139, 115, 85, 0.15);
-    color: rgba(180, 150, 100, 0.7);
-    border: 1px solid rgba(139, 115, 85, 0.25);
+    color: var(--hh-text-secondary);
+    border: none;
 
     .badge-dot {
       background: #8b7355;
@@ -271,13 +275,13 @@ defineProps<{
   }
 
   &.已完成 {
-    background: rgba(212, 160, 23, 0.1);
+    background: var(--hh-gold-glow);
     color: $册缘鎏金;
-    border: 1px solid rgba(212, 160, 23, 0.25);
+    border: none;
 
     .badge-dot {
       background: $册缘鎏金;
-      box-shadow: 0 0 6px rgba(212, 160, 23, 0.5);
+      box-shadow: 0 0 6px var(--hh-gold);
     }
   }
 }
@@ -288,7 +292,7 @@ defineProps<{
 
   .footer-line {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.15), transparent);
+    background: linear-gradient(90deg, transparent, var(--hh-gold-glow), transparent);
   }
 }
 </style>

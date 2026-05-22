@@ -4,7 +4,9 @@ import { calculate攻略值增量 } from '../../界面/guards';
 
 const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
 
-function makeNpcData(overrides: Record<string, Partial<{ 好感度: number; 攻略值: number; 粘滞计数: number; 状态: string }>> = {}) {
+function makeNpcData(
+  overrides: Record<string, Partial<{ 好感度: number; 攻略值: number; 粘滞计数: number; 状态: string }>> = {},
+) {
   const result: Record<string, any> = {};
   for (const npc of NPC列表) {
     result[npc] = {
@@ -21,9 +23,20 @@ function makeNpcData(overrides: Record<string, Partial<{ 好感度: number; 攻�
 function makeData(overrides: Record<string, any> = {}) {
   return {
     系统: { 阶段: '攻略期', 剩余天数: 30, 灵石: 1000, 已使用阵法: false, ...((overrides as any).系统 || {}) },
-    牝奴: { 堕落度: 0, 牝阴决层数: 0, 上次支配者: '', 支配次数: {}, 改造进度: { 泌乳: false, 肛门: false, 憋尿: false }, ...((overrides as any).牝奴 || {}) },
+    牝奴: {
+      堕落度: 0,
+      牝阴决层数: 0,
+      上次支配者: '',
+      支配次数: {},
+      改造进度: { 泌乳: false, 肛门: false, 憋尿: false },
+      ...((overrides as any).牝奴 || {}),
+    },
     NPC: makeNpcData((overrides as any).NPC),
-    道具: { 拥有: {}, 装备: { '玩家': [], '白芷': [], '苏芸': [], '纪兰': [], '沈月秋': [], '柳素衣': [] }, ...((overrides as any).道具 || {}) },
+    道具: {
+      拥有: {},
+      装备: { 玩家: [], 白芷: [], 苏芸: [], 纪兰: [], 沈月秋: [], 柳素衣: [] },
+      ...((overrides as any).道具 || {}),
+    },
     场景: { 已解锁: [], ...((overrides as any).场景 || {}) },
     剧情: { 已解锁: [], ...((overrides as any).剧情 || {}) },
   };
@@ -135,16 +148,32 @@ describe('Scenario 3: 粘滞 auto-trigger', () => {
 // ══════════════════════════════════════════
 describe('Scenario 4: 攻略链 enforcement', () => {
   it('白芷 is current, 苏芸 攻略值 0→5 → reverted', () => {
-    const old_data = makeData({ NPC: { 白芷: { 好感度: 50, 攻略值: 10, 状态: '进行中' }, 苏芸: { 好感度: 40, 攻略值: 0 } } });
-    const new_data = makeData({ NPC: { 白芷: { 好感度: 50, 攻略值: 10, 状态: '进行中' }, 苏芸: { 好感度: 40, 攻略值: 5 } } });
+    const old_data = makeData({
+      NPC: { 白芷: { 好感度: 50, 攻略值: 10, 状态: '进行中' }, 苏芸: { 好感度: 40, 攻略值: 0 } },
+    });
+    const new_data = makeData({
+      NPC: { 白芷: { 好感度: 50, 攻略值: 10, 状态: '进行中' }, 苏芸: { 好感度: 40, 攻略值: 5 } },
+    });
     validateVariables(new_data, old_data);
     expect(new_data.NPC['苏芸'].攻略值).toBe(0); // reverted
     expect(new_data.NPC['白芷'].攻略值).toBe(10); // unchanged
   });
 
   it('白芷 completed, 苏芸 is current, 纪兰 攻略值 0→5 → reverted', () => {
-    const old_data = makeData({ NPC: { 白芷: { 好感度: 100, 攻略值: 100, 状态: '已完成' }, 苏芸: { 好感度: 50, 攻略值: 0, 状态: '进行中' }, 纪兰: { 好感度: 40, 攻略值: 0 } } });
-    const new_data = makeData({ NPC: { 白芷: { 好感度: 100, 攻略值: 100, 状态: '已完成' }, 苏芸: { 好感度: 50, 攻略值: 0, 状态: '进行中' }, 纪兰: { 好感度: 40, 攻略值: 5 } } });
+    const old_data = makeData({
+      NPC: {
+        白芷: { 好感度: 100, 攻略值: 100, 状态: '已完成' },
+        苏芸: { 好感度: 50, 攻略值: 0, 状态: '进行中' },
+        纪兰: { 好感度: 40, 攻略值: 0 },
+      },
+    });
+    const new_data = makeData({
+      NPC: {
+        白芷: { 好感度: 100, 攻略值: 100, 状态: '已完成' },
+        苏芸: { 好感度: 50, 攻略值: 0, 状态: '进行中' },
+        纪兰: { 好感度: 40, 攻略值: 5 },
+      },
+    });
     validateVariables(new_data, old_data);
     expect(new_data.NPC['纪兰'].攻略值).toBe(0); // reverted
   });
@@ -175,49 +204,52 @@ describe('Scenario 4: 攻略链 enforcement', () => {
 describe('Scenario 5: 装备门槛', () => {
   it('口塞 on 白芷 (好感度=20) → removed (需要30)', () => {
     const old_data = makeData();
-    const new_data = makeData({ NPC: { 白芷: { 好感度: 20 } }, 道具: { 装备: { '白芷': ['口塞'] } } });
+    const new_data = makeData({ NPC: { 白芷: { 好感度: 20 } }, 道具: { 装备: { 白芷: ['口塞'] } } });
     validateVariables(new_data, old_data);
     expect(new_data.道具.装备['白芷']).toEqual([]);
   });
 
   it('口塞 on 白芷 (好感度=30) → kept', () => {
     const old_data = makeData();
-    const new_data = makeData({ NPC: { 白芷: { 好感度: 30 } }, 道具: { 装备: { '白芷': ['口塞'] } } });
+    const new_data = makeData({ NPC: { 白芷: { 好感度: 30 } }, 道具: { 装备: { 白芷: ['口塞'] } } });
     validateVariables(new_data, old_data);
     expect(new_data.道具.装备['白芷']).toEqual(['口塞']);
   });
 
   it('淫纹 on 白芷 (好感度=69) → removed (需要70)', () => {
     const old_data = makeData();
-    const new_data = makeData({ NPC: { 白芷: { 好感度: 69 } }, 道具: { 装备: { '白芷': ['淫纹'] } } });
+    const new_data = makeData({ NPC: { 白芷: { 好感度: 69 } }, 道具: { 装备: { 白芷: ['淫纹'] } } });
     validateVariables(new_data, old_data);
     expect(new_data.道具.装备['白芷']).toEqual([]);
   });
 
   it('淫纹 on 白芷 (好感度=70) → kept', () => {
     const old_data = makeData();
-    const new_data = makeData({ NPC: { 白芷: { 好感度: 70 } }, 道具: { 装备: { '白芷': ['淫纹'] } } });
+    const new_data = makeData({ NPC: { 白芷: { 好感度: 70 } }, 道具: { 装备: { 白芷: ['淫纹'] } } });
     validateVariables(new_data, old_data);
     expect(new_data.道具.装备['白芷']).toEqual(['淫纹']);
   });
 
   it('铃铛项圈 on 白芷 (好感度=0) → kept (门槛0)', () => {
     const old_data = makeData();
-    const new_data = makeData({ NPC: { 白芷: { 好感度: 0 } }, 道具: { 装备: { '白芷': ['铃铛项圈'] } } });
+    const new_data = makeData({ NPC: { 白芷: { 好感度: 0 } }, 道具: { 装备: { 白芷: ['铃铛项圈'] } } });
     validateVariables(new_data, old_data);
     expect(new_data.道具.装备['白芷']).toEqual(['铃铛项圈']);
   });
 
   it('mixed valid+invalid → only invalid removed', () => {
     const old_data = makeData();
-    const new_data = makeData({ NPC: { 白芷: { 好感度: 30 } }, 道具: { 装备: { '白芷': ['铃铛项圈', '口塞', '淫纹'] } } });
+    const new_data = makeData({
+      NPC: { 白芷: { 好感度: 30 } },
+      道具: { 装备: { 白芷: ['铃铛项圈', '口塞', '淫纹'] } },
+    });
     validateVariables(new_data, old_data);
     expect(new_data.道具.装备['白芷']).toEqual(['铃铛项圈', '口塞']);
   });
 
   it('player equipment has no threshold check', () => {
     const old_data = makeData();
-    const new_data = makeData({ 道具: { 装备: { '玩家': ['淫纹', '塑形丹'] } } });
+    const new_data = makeData({ 道具: { 装备: { 玩家: ['淫纹', '塑形丹'] } } });
     validateVariables(new_data, old_data);
     expect(new_data.道具.装备['玩家']).toEqual(['淫纹', '塑形丹']);
   });
@@ -454,7 +486,7 @@ describe('好感度<30 locks 攻略值 to 0', () => {
 describe('改变阵法 purchase', () => {
   it('buying with 柳素衣攻略值=100 → kept', () => {
     const old_data = makeData({ NPC: { 柳素衣: { 好感度: 50, 攻略值: 100 } }, 道具: { 拥有: {} } });
-    const new_data = makeData({ NPC: { 柳素衣: { 好感度: 50, 攻略值: 100 } }, 道具: { 拥有: { '改变阵法': 1 } } });
+    const new_data = makeData({ NPC: { 柳素衣: { 好感度: 50, 攻略值: 100 } }, 道具: { 拥有: { 改变阵法: 1 } } });
     validateVariables(new_data, old_data);
     expect(new_data.道具.拥有['改变阵法']).toBe(1);
   });
@@ -468,7 +500,7 @@ describe('改变阵法 purchase', () => {
     const new_data = makeData({
       系统: { 灵石: 100 },
       NPC: { 柳素衣: { 攻略值: 50 } },
-      道具: { 拥有: { '改变阵法': 1 } },
+      道具: { 拥有: { 改变阵法: 1 } },
     });
     validateVariables(new_data, old_data);
     expect(new_data.道具.拥有['改变阵法']).toBe(0);
@@ -479,12 +511,12 @@ describe('改变阵法 purchase', () => {
     const old_data = makeData({
       系统: { 灵石: 100 },
       NPC: { 柳素衣: { 攻略值: 50 } },
-      道具: { 拥有: { '改变阵法': 1 } },
+      道具: { 拥有: { 改变阵法: 1 } },
     });
     const new_data = makeData({
       系统: { 灵石: 100 },
       NPC: { 柳素衣: { 攻略值: 50 } },
-      道具: { 拥有: { '改变阵法': 2 } },
+      道具: { 拥有: { 改变阵法: 2 } },
     });
     validateVariables(new_data, old_data);
     // old_拥有=1, new_拥有=2 → condition is old_拥有===0, so no revert
@@ -629,7 +661,7 @@ describe('Scenario: dirty data type coercion', () => {
   it('string "999" 好感度 → coerced to 100 (clamp)', () => {
     const old_data = makeData();
     const new_data = makeData();
-    (new_data.NPC as any)['白芷'].好感度 = "999";
+    (new_data.NPC as any)['白芷'].好感度 = '999';
     validateVariables(new_data, old_data);
     expect(new_data.NPC['白芷'].好感度).toBe(100);
   });
@@ -653,7 +685,7 @@ describe('Scenario: dirty data type coercion', () => {
   it('non-numeric string "abc" 好感度 → coerced to 0', () => {
     const old_data = makeData();
     const new_data = makeData();
-    (new_data.NPC as any)['白芷'].好感度 = "abc";
+    (new_data.NPC as any)['白芷'].好感度 = 'abc';
     validateVariables(new_data, old_data);
     expect(new_data.NPC['白芷'].好感度).toBe(0);
   });
@@ -661,7 +693,7 @@ describe('Scenario: dirty data type coercion', () => {
   it('string "50" 灵石 → coerced to 50', () => {
     const old_data = makeData();
     const new_data = makeData();
-    (new_data.系统 as any).灵石 = "50";
+    (new_data.系统 as any).灵石 = '50';
     validateVariables(new_data, old_data);
     expect(new_data.系统.灵石).toBe(50);
   });

@@ -1,11 +1,11 @@
 <template>
   <div class="backpack-page">
-    <!-- 已拥有道具 -->
+    <!-- 囊中藏珍 -->
     <div class="section">
       <div class="section-header">
         <div class="header-line"></div>
         <span class="header-glyph">囊</span>
-        <span class="header-text">已拥有道具</span>
+        <span class="header-text">囊中藏珍</span>
         <div class="header-line"></div>
       </div>
 
@@ -13,15 +13,15 @@
         <div
           v-for="(count, name) in ownedItems"
           :key="name"
-          :class="['item-row', { selected: selectedItem === String(name) }]"
+          :class="['item-row', { selected: selectedItem === String(name), 'is-empty': count === 0 }]"
           @click="selectItem(String(name))"
         >
           <span class="item-name">{{ name }}</span>
-          <span class="item-count">x{{ count }}</span>
+          <span :class="['item-count', { 'count-up': countAnimating && count > 0 }]">x{{ count }}</span>
         </div>
         <div v-if="Object.keys(ownedItems).length === 0" class="empty-state">
           <span class="empty-glyph">空</span>
-          <span class="empty-text">暂无道具</span>
+          <span class="empty-text">锦囊尚空</span>
         </div>
       </div>
     </div>
@@ -32,44 +32,55 @@
         <div class="section-header">
           <div class="header-line"></div>
           <span class="header-glyph">佩</span>
-          <span class="header-text">装备「{{ selectedItem }}」</span>
+          <span class="header-text">安置「{{ selectedItem }}」</span>
           <div class="header-line"></div>
         </div>
 
-        <div class="equip-targets">
+        <div v-if="isEquippableItem(selectedItem)" class="equip-targets">
           <button
             v-for="target in equipTargets"
             :key="target"
             :class="['target-btn', { equipped: isEquipped(target), 'cannot-equip': !canEquipTo(target) }]"
-            :title="!canEquipTo(target) ? `${target}好感度不足` : ''"
+            :title="!canEquipTo(target) ? `${target}灵犀未至` : ''"
             @click="toggleEquip(target)"
           >
             <span class="btn-dot"></span>
             {{ target }}
           </button>
         </div>
+
+        <div v-else class="use-panel">
+          <button type="button" class="use-btn" @click="useItem">启用法效</button>
+        </div>
       </div>
     </Transition>
 
-    <!-- 当前装备 -->
+    <!-- 法器归属 -->
     <div class="section">
       <div class="section-header">
         <div class="header-line"></div>
         <span class="header-glyph">甲</span>
-        <span class="header-text">当前装备</span>
+        <span class="header-text">法器归属</span>
         <div class="header-line"></div>
       </div>
 
       <div class="equip-list">
-        <div
-          v-for="target in equipTargets"
-          :key="target"
-          class="equip-row"
-        >
+        <div v-for="target in equipTargets" :key="target" class="equip-row">
           <span class="target-name">{{ target }}</span>
           <span class="target-divider">：</span>
           <span class="equipped-items">
-            {{ data.道具.装备[target]?.length > 0 ? data.道具.装备[target].join('、') : '无' }}
+            <template v-if="data.道具.装备[target]?.length > 0">
+              <button
+                v-for="(item, index) in data.道具.装备[target]"
+                :key="`${target}-${item}`"
+                type="button"
+                class="equipped-item"
+                @click="selectItem(item)"
+              >
+                {{ item }}{{ index < data.道具.装备[target].length - 1 ? '、' : '' }}
+              </button>
+            </template>
+            <span v-else>虚位</span>
           </span>
         </div>
       </div>
@@ -78,24 +89,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useDataStore } from '../store';
 import { checkItemThreshold } from '../guards';
+import { canEquip牝奴道具 } from '../guards';
+import { usePendingAction } from '../composables/usePendingAction';
+import { 永久丹药, 特殊道具 } from '../data/items';
 
 const store = useDataStore();
 const data = store.data;
+const { 记录装备道具, 记录卸下道具, 记录使用物品 } = usePendingAction();
 
 const selectedItem = ref<string | null>(null);
+const countAnimating = ref(false);
 const equipTargets = ['玩家', '白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'];
+const 消耗品名称 = new Set([...永久丹药, ...特殊道具].map(item => item.名称));
+const 即时生效特殊物品 = new Set(['改变阵法']);
 
 const ownedItems = computed(() => {
-  return Object.fromEntries(
-    Object.entries(data.道具.拥有).filter(([_, count]) => count > 0)
-  );
+  return Object.fromEntries(Object.entries(data.道具.拥有).filter(([, count]) => count > 0));
 });
+
+watch(() => data.道具.拥有, () => {
+  countAnimating.value = true;
+  setTimeout(() => { countAnimating.value = false; }, 300);
+}, { deep: true });
 
 function selectItem(name: string) {
   selectedItem.value = selectedItem.value === name ? null : name;
+}
+
+function isConsumableItem(name: string | null): boolean {
+  if (!name) return false;
+  return 消耗品名称.has(name) && !即时生效特殊物品.has(name);
+}
+
+function isEquippableItem(name: string | null): boolean {
+  return !!name && !isConsumableItem(name);
 }
 
 function isEquipped(target: string): boolean {
@@ -105,13 +135,44 @@ function isEquipped(target: string): boolean {
 
 function canEquipTo(target: string): boolean {
   if (!selectedItem.value) return true;
+  if (!isEquippableItem(selectedItem.value)) return false;
+  if (isEquipped(target)) return true;
+  if ((data.道具.拥有[selectedItem.value] ?? 0) <= 0) return false;
   if (target === '玩家') return true;
+  if (!canEquip牝奴道具(data.系统.阶段, selectedItem.value)) {
+    return false;
+  }
   const npc好感度 = data.NPC[target as keyof typeof data.NPC]?.好感度 ?? 0;
   return checkItemThreshold(npc好感度, selectedItem.value);
 }
 
+function consumeOwnedItem(name: string) {
+  const count = data.道具.拥有[name] ?? 0;
+  if (count <= 1) {
+    delete data.道具.拥有[name];
+    return;
+  }
+  data.道具.拥有[name] = count - 1;
+}
+
+function restoreOwnedItem(name: string) {
+  data.道具.拥有[name] = (data.道具.拥有[name] ?? 0) + 1;
+}
+
+function useItem() {
+  if (!selectedItem.value) return;
+  if (!isConsumableItem(selectedItem.value)) return;
+  if ((data.道具.拥有[selectedItem.value] ?? 0) <= 0) return;
+
+  const itemName = selectedItem.value;
+  consumeOwnedItem(itemName);
+  记录使用物品(itemName, '玩家');
+  selectedItem.value = null;
+}
+
 function toggleEquip(target: string) {
   if (!selectedItem.value) return;
+  if (!isEquippableItem(selectedItem.value)) return;
 
   if (!data.道具.装备[target]) {
     data.道具.装备[target] = [];
@@ -120,17 +181,32 @@ function toggleEquip(target: string) {
   const index = data.道具.装备[target].indexOf(selectedItem.value);
   if (index >= 0) {
     data.道具.装备[target].splice(index, 1);
-  } else {
-    // 装备时检查好感度门槛（玩家自身无限制）
-    if (target !== '玩家') {
-      const npc好感度 = data.NPC[target as keyof typeof data.NPC]?.好感度 ?? 0;
-      if (!checkItemThreshold(npc好感度, selectedItem.value)) {
-        toastr.warning(`${target}好感度不足，无法装备「${selectedItem.value}」`);
-        return;
-      }
-    }
-    data.道具.装备[target].push(selectedItem.value);
+    restoreOwnedItem(selectedItem.value);
+    记录卸下道具(selectedItem.value, target);
+    return;
   }
+
+  if ((data.道具.拥有[selectedItem.value] ?? 0) <= 0) {
+    if (typeof toastr !== 'undefined') toastr.warning(`囊中已无「${selectedItem.value}」，不可再供此器`);
+    return;
+  }
+
+  if (target !== '玩家') {
+    const npc好感度 = data.NPC[target as keyof typeof data.NPC]?.好感度 ?? 0;
+    if (!checkItemThreshold(npc好感度, selectedItem.value)) {
+      if (typeof toastr !== 'undefined') toastr.warning(`${target}灵犀未至，禁制未开「${selectedItem.value}」`);
+      return;
+    }
+  }
+
+  if (['牝印', '牝环', '牝铃', '牝链'].includes(selectedItem.value) && target !== '玩家') {
+    if (typeof toastr !== 'undefined') toastr.warning('牝奴禁器只认本身气血');
+    return;
+  }
+
+  data.道具.装备[target].push(selectedItem.value);
+  consumeOwnedItem(selectedItem.value);
+  记录装备道具(selectedItem.value, target);
 }
 </script>
 
@@ -168,36 +244,38 @@ function toggleEquip(target: string) {
   justify-content: space-between;
   align-items: center;
   padding: 10px 12px;
-  @include gold-foil;
+  border: none;
+  background: var(--hh-bg-card);
   border-radius: $radius-sm;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.35s ease;
 
   &:hover {
-    border-color: rgba(212, 160, 23, 0.2);
+    background: var(--hh-bg-hover);
+    box-shadow: 0 0 16px var(--hh-glow-color);
   }
 
   &.selected {
-    border-color: rgba(212, 160, 23, 0.35);
-    background: rgba(212, 160, 23, 0.06);
+    background: var(--hh-accent-glow);
+    box-shadow: 0 0 20px var(--hh-glow-color);
 
     .item-name {
-      color: $册缘鎏金;
+      color: var(--hh-accent);
     }
   }
 
   .item-name {
     font-family: $font-铭文;
     font-size: 14px;
-    color: rgba(180, 150, 100, 0.7);
-    letter-spacing: 0.05em;
+    color: var(--hh-text-secondary);
+    letter-spacing: 4px;
     transition: color 0.25s ease;
   }
 
   .item-count {
     font-family: $font-铭文;
     font-size: 13px;
-    color: rgba(212, 160, 23, 0.5);
+    color: var(--hh-gold);
   }
 }
 
@@ -212,13 +290,13 @@ function toggleEquip(target: string) {
   .empty-glyph {
     font-family: $font-铭文;
     font-size: 24px;
-    color: rgba(180, 150, 100, 0.15);
+    color: var(--hh-text-muted);
   }
 
   .empty-text {
     font-size: 12px;
-    color: rgba(180, 150, 100, 0.3);
-    letter-spacing: 0.1em;
+    color: var(--hh-text-muted);
+    letter-spacing: 4px;
   }
 }
 
@@ -226,7 +304,8 @@ function toggleEquip(target: string) {
 .equip-section {
   margin-bottom: 20px;
   padding: 14px;
-  @include gold-foil;
+  border: none;
+  background: var(--hh-bg-surface);
   border-radius: $radius-md;
 }
 
@@ -241,28 +320,32 @@ function toggleEquip(target: string) {
   align-items: center;
   gap: 5px;
   padding: 7px 14px;
-  @include gold-seal-btn;
+  border: none;
+  background: var(--hh-bg-card);
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: all 0.35s ease;
   font-family: $font-铭文;
   font-size: 13px;
-  color: rgba(180, 150, 100, 0.6);
-  letter-spacing: 0.05em;
+  color: var(--hh-text-secondary);
+  letter-spacing: 4px;
 
   .btn-dot {
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: rgba(180, 150, 100, 0.2);
+    background: var(--hh-text-muted);
     transition: all 0.25s ease;
   }
 
   &.equipped {
-    background: rgba(212, 160, 23, 0.12);
-    border-color: rgba(212, 160, 23, 0.3);
-    color: $册缘鎏金;
+    background: var(--hh-accent-glow);
+    color: var(--hh-accent);
+    box-shadow: 0 0 16px var(--hh-glow-color);
 
     .btn-dot {
-      background: $册缘鎏金;
-      box-shadow: 0 0 4px rgba(212, 160, 23, 0.5);
+      background: var(--hh-accent);
+      box-shadow: 0 0 6px var(--hh-glow-color);
     }
   }
 
@@ -271,17 +354,40 @@ function toggleEquip(target: string) {
     cursor: not-allowed;
 
     &:hover {
-      border-color: rgba(212, 160, 23, 0.1);
-      color: rgba(180, 150, 100, 0.6);
+      border-color: var(--hh-gold-glow);
+      color: var(--hh-text-secondary);
     }
   }
 
-  &:hover:not(.equipped) {
-    border-color: rgba(212, 160, 23, 0.2);
-    color: rgba(212, 160, 23, 0.7);
+  &:hover:not(.equipped):not(.cannot-equip) {
+    background: var(--hh-bg-hover);
+    color: var(--hh-text-primary);
+    box-shadow: 0 0 12px var(--hh-glow-color);
   }
 }
 
+.use-panel {
+  display: flex;
+  justify-content: center;
+  padding: 6px 0;
+}
+
+.use-btn {
+  padding: 8px 28px;
+  border: none;
+  background: linear-gradient(to right, transparent, var(--hh-accent-glow), transparent);
+  cursor: pointer;
+  transition: all 0.35s ease;
+  font-family: $font-铭文;
+  font-size: 13px;
+  color: var(--hh-accent);
+  letter-spacing: 4px;
+
+  &:hover {
+    color: var(--hh-text-primary);
+    text-shadow: 0 0 12px var(--hh-glow-color);
+  }
+}
 /* 装备列表 — 已盖金印 */
 .equip-list {
   display: flex;
@@ -293,26 +399,45 @@ function toggleEquip(target: string) {
   display: flex;
   align-items: baseline;
   padding: 8px 12px;
-  background: linear-gradient(180deg, rgba(42, 31, 20, 0.6) 0%, rgba(30, 21, 13, 0.7) 100%);
-  border: 1px solid rgba(212, 160, 23, 0.06);
+  background: var(--hh-bg-card);
+  border: none;
   border-radius: $radius-sm;
 
   .target-name {
     font-family: $font-铭文;
     font-size: 13px;
-    color: rgba(212, 160, 23, 0.6);
+    color: var(--hh-gold);
     min-width: 48px;
   }
 
   .target-divider {
-    color: rgba(180, 150, 100, 0.2);
+    color: var(--hh-text-muted);
     margin-right: 4px;
   }
 
   .equipped-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
     font-size: 12px;
-    color: rgba(180, 150, 100, 0.45);
+    color: var(--hh-text-secondary);
     letter-spacing: 0.03em;
+  }
+
+  .equipped-item {
+    border: none;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+    color: var(--hh-text-secondary);
+    transition: color 0.25s ease, text-shadow 0.25s ease;
+
+
+    &:hover {
+      color: var(--hh-text-primary);
+      text-shadow: 0 0 8px var(--hh-glow-color);
+    }
   }
 }
 

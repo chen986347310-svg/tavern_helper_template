@@ -1,6 +1,12 @@
 import _ from 'lodash';
 import type { Schema } from '../../schema';
-import { getCurrentNpc, canIncrease攻略值, checkItemThreshold, calculate攻略值增量, initializePhase2 } from '../../界面/guards';
+import {
+  getCurrentNpc,
+  canIncrease攻略值,
+  checkItemThreshold,
+  calculate攻略值增量,
+  initializePhase2,
+} from '../../界面/guards';
 
 const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
 
@@ -25,10 +31,7 @@ function coerceNumeric(value: any, max: number = 100, min: number = 0): number {
  * Pure backend validation function.
  * Mutates new_data in place to enforce all game rules.
  */
-export function validateVariables(
-  new_data: Record<string, any>,
-  old_data: Record<string, any>,
-): void {
+export function validateVariables(new_data: Record<string, any>, old_data: Record<string, any>): void {
   // 0. type coercion for AI dirty data
   for (const npc of NPC列表) {
     _.set(new_data, `NPC.${npc}.好感度`, coerceNumeric(_.get(new_data, `NPC.${npc}.好感度`, 0), 100, 0));
@@ -92,9 +95,7 @@ export function validateVariables(
     const new_equipped: string[] = _.get(new_data, `道具.装备.${target}`, []);
     if (!Array.isArray(new_equipped) || new_equipped.length === 0) continue;
 
-    const npc好感度 = target === '玩家'
-      ? 100
-      : _.get(new_data, `NPC.${target}.好感度`, 0);
+    const npc好感度 = target === '玩家' ? 100 : _.get(new_data, `NPC.${target}.好感度`, 0);
 
     const valid = new_equipped.filter((item: string) => {
       if (target === '玩家') return true;

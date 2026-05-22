@@ -14,10 +14,28 @@
         <div class="header-line"></div>
       </div>
 
+      <SystemBar
+        v-if="currentTab === 'home' && store.data.系统.阶段 === '攻略期'"
+        mode="攻略期"
+        :npcList="NPC列表"
+        :npcStates="store.data.NPC"
+        :remainingDays="store.data.系统.剩余天数"
+        :gems="store.data.系统.灵石"
+        :currentScene="currentScene"
+        @sceneChange="switchScene"
+          :时辰="store.data.系统.时辰"
+      />
+      <SystemBar
+        v-else-if="currentTab === 'home' && store.data.系统.阶段 === '牝奴期'"
+        mode="牝奴期"
+        :堕落度="store.data.牝奴.堕落度"
+        :牝阴决层数="store.data.牝奴.牝阴决层数"
+          :时辰="store.data.系统.时辰"
+      />
       <div class="content-area">
         <Transition name="fade" mode="out-in">
-          <HomePage v-if="currentTab === 'home' && data.系统.阶段 === '攻略期'" />
-          <Phase2Page v-else-if="currentTab === 'home' && data.系统.阶段 === '牝奴期'" />
+          <HomePage v-if="currentTab === 'home' && store.data.系统.阶段 === '攻略期'" :currentScene="currentScene" />
+          <Phase2Page v-else-if="currentTab === 'home' && store.data.系统.阶段 === '牝奴期'" />
           <ShopPage v-else-if="currentTab === 'shop'" />
           <BackpackPage v-else-if="currentTab === 'backpack'" />
           <GalleryPage v-else-if="currentTab === 'gallery'" />
@@ -38,9 +56,12 @@ import Phase2Page from './界面/pages/Phase2Page.vue';
 import ShopPage from './界面/pages/ShopPage.vue';
 import BackpackPage from './界面/pages/BackpackPage.vue';
 import GalleryPage from './界面/pages/GalleryPage.vue';
+import SystemBar from './界面/components/SystemBar.vue';
 import PageNav from './界面/components/PageNav.vue';
 import DebugPanel from './界面/components/DebugPanel.vue';
+import { ref } from 'vue';
 import { useNavigation } from './界面/composables/useNavigation';
+import { useGradientCenter } from './界面/composables/useGradientCenter';
 import { useDataStore } from './界面/store';
 
 // 导入全局样式
@@ -49,7 +70,16 @@ import './界面/styles/_mixins.scss';
 import './界面/styles/_global.scss';
 
 const { currentTab, navigateTo } = useNavigation();
-const data = useDataStore().data;
+useGradientCenter();
+const store = useDataStore();
+
+const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
+type SceneName = '莲灯前苑' | '醉玉小筑' | '绮梦幽阁';
+const currentScene = ref<SceneName>((store.data.系统.当前场景 as SceneName) ?? '莲灯前苑');
+
+function switchScene(scene: SceneName) {
+  currentScene.value = scene;
+}
 </script>
 <style lang="scss" scoped>
 @use './界面/styles/variables' as *;
@@ -67,27 +97,21 @@ const data = useDataStore().data;
   align-items: center;
   background:
     radial-gradient(ellipse at 50% 30%, rgba(101, 67, 33, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 50% 80%, rgba(60, 40, 20, 0.1) 0%, transparent 50%),
-    ;
+    radial-gradient(ellipse at 50% 80%, rgba(60, 40, 20, 0.1) 0%, transparent 50%);
   overflow: hidden;
 }
 
 /* 卷轴外框 — 金册幽光 */
 .scroll-frame {
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
   @include gold-book-bg(50%, 50%);
-  border: 1px solid var(--theme-border);
-  box-shadow:
-    0 0 40px rgba(0, 0, 0, 0.8),
-    0 0 80px rgba(0, 0, 0, 0.4),
-    inset 0 0 60px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(212, 160, 23, 0.15),
-    inset 0 -1px 0 rgba(212, 160, 23, 0.1);
-  overflow: hidden;
+  border: none;
+  box-shadow: none;
 }
 
 /* 金色角落装饰 */
@@ -109,29 +133,69 @@ const data = useDataStore().data;
   &.top-left {
     top: 4px;
     left: 4px;
-    &::before { top: 0; left: 0; width: 16px; height: 1px; }
-    &::after { top: 0; left: 0; width: 1px; height: 16px; }
+    &::before {
+      top: 0;
+      left: 0;
+      width: 16px;
+      height: 1px;
+    }
+    &::after {
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 16px;
+    }
   }
 
   &.top-right {
     top: 4px;
     right: 4px;
-    &::before { top: 0; right: 0; width: 16px; height: 1px; }
-    &::after { top: 0; right: 0; width: 1px; height: 16px; }
+    &::before {
+      top: 0;
+      right: 0;
+      width: 16px;
+      height: 1px;
+    }
+    &::after {
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 16px;
+    }
   }
 
   &.bottom-left {
     bottom: 4px;
     left: 4px;
-    &::before { bottom: 0; left: 0; width: 16px; height: 1px; }
-    &::after { bottom: 0; left: 0; width: 1px; height: 16px; }
+    &::before {
+      bottom: 0;
+      left: 0;
+      width: 16px;
+      height: 1px;
+    }
+    &::after {
+      bottom: 0;
+      left: 0;
+      width: 1px;
+      height: 16px;
+    }
   }
 
   &.bottom-right {
     bottom: 4px;
     right: 4px;
-    &::before { bottom: 0; right: 0; width: 16px; height: 1px; }
-    &::after { bottom: 0; right: 0; width: 1px; height: 16px; }
+    &::before {
+      bottom: 0;
+      right: 0;
+      width: 16px;
+      height: 1px;
+    }
+    &::after {
+      bottom: 0;
+      right: 0;
+      width: 1px;
+      height: 16px;
+    }
   }
 }
 
@@ -159,10 +223,11 @@ const data = useDataStore().data;
 
 /* 内容区域 */
 .content-area {
-   flex: 0 1 auto;
+  flex: 0 1 auto;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 8px;
+  padding: 0 6px;
 
   &::-webkit-scrollbar {
     width: 4px;

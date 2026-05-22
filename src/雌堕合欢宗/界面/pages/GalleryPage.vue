@@ -149,11 +149,11 @@ function selectNpc(name: string) {
   justify-content: space-between;
   align-items: center;
   padding: 10px 12px;
-  background: linear-gradient(180deg, rgba(42, 31, 20, 0.6) 0%, rgba(30, 21, 13, 0.7) 100%);
-  border: 1px solid rgba(100, 80, 50, 0.15);
+  background: var(--hh-bg-card);
+  border: none;
   border-radius: $radius-sm;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.35s ease;
 
   .entry-left {
     display: flex;
@@ -164,7 +164,7 @@ function selectNpc(name: string) {
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: rgba(100, 80, 50, 0.3);
+      background: var(--hh-text-muted);
       transition: all 0.25s ease;
     }
   }
@@ -172,42 +172,41 @@ function selectNpc(name: string) {
   .npc-name {
     font-family: $font-铭文;
     font-size: 14px;
-    color: rgba(180, 150, 100, 0.5);
-    letter-spacing: 0.05em;
+    color: var(--hh-text-secondary);
+    letter-spacing: 4px;
     transition: color 0.25s ease;
   }
 
   .npc-status {
     font-size: 12px;
-    color: rgba(180, 150, 100, 0.3);
-    letter-spacing: 0.05em;
+    color: var(--hh-text-muted);
+    letter-spacing: 4px;
   }
 
   &.unlocked {
-    border-color: rgba(212, 160, 23, 0.15);
-    background: linear-gradient(180deg, rgba(42, 31, 20, 0.8) 0%, rgba(30, 21, 13, 0.9) 100%);
+    background: var(--hh-bg-hover);
 
     .entry-left .entry-dot {
-      background: rgba(212, 160, 23, 0.4);
-      box-shadow: 0 0 4px rgba(212, 160, 23, 0.3);
+      background: var(--hh-accent);
+      box-shadow: 0 0 6px var(--hh-glow-color);
     }
 
     .npc-name {
-      color: rgba(212, 160, 23, 0.75);
+      color: var(--hh-text-primary);
     }
 
     .npc-status {
-      color: rgba(212, 160, 23, 0.5);
+      color: var(--hh-accent);
     }
 
     &:hover {
-      border-color: rgba(212, 160, 23, 0.3);
-      box-shadow: $shadow-金色发光;
+      background: var(--hh-accent-glow);
+      box-shadow: 0 0 18px var(--hh-glow-color);
     }
   }
 
   &:hover {
-    border-color: rgba(180, 150, 100, 0.2);
+    background: var(--hh-bg-hover);
   }
 }
 
@@ -215,7 +214,8 @@ function selectNpc(name: string) {
 .npc-detail-panel {
   margin-bottom: 20px;
   padding: 16px;
-  @include gold-foil;
+  border: none;
+  background: var(--hh-bg-surface);
   border-radius: $radius-md;
 
   .panel-header {
@@ -227,7 +227,7 @@ function selectNpc(name: string) {
     .header-line {
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.25), transparent);
+      background: linear-gradient(90deg, transparent, var(--hh-gold-glow), transparent);
     }
 
     .panel-name {
@@ -235,7 +235,7 @@ function selectNpc(name: string) {
       font-size: 18px;
       font-weight: 700;
       color: $册缘鎏金;
-      letter-spacing: 0.2em;
+      letter-spacing: 4px;
       @include inscription-engrave;
     }
   }
@@ -253,35 +253,35 @@ function selectNpc(name: string) {
   align-items: center;
   gap: 4px;
   padding: 10px 6px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(212, 160, 23, 0.06);
+  background: var(--hh-bg-card);
+  border: none;
   border-radius: $radius-sm;
 
   .cell-glyph {
     font-family: $font-铭文;
     font-size: 12px;
-    color: rgba(212, 160, 23, 0.4);
+    color: var(--hh-text-muted);
     width: 18px;
     height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(212, 160, 23, 0.1);
+    border: none;
     border-radius: 3px;
-    background: rgba(212, 160, 23, 0.03);
+    background: var(--hh-bg-card);
   }
 
   .cell-label {
     font-size: 10px;
-    color: rgba(180, 150, 100, 0.35);
-    letter-spacing: 0.05em;
+    color: var(--hh-text-muted);
+    letter-spacing: 4px;
   }
 
   .cell-value {
     font-family: $font-铭文;
     font-size: 18px;
     font-weight: 700;
-    color: rgba(212, 160, 23, 0.75);
+    color: var(--hh-text-primary);
 
     &.status {
       font-size: 12px;
@@ -290,18 +290,18 @@ function selectNpc(name: string) {
       border-radius: 3px;
 
       &.未开始 {
-        color: rgba(180, 150, 100, 0.35);
+        color: var(--hh-text-muted);
         background: rgba(100, 80, 50, 0.1);
       }
 
       &.进行中 {
-        color: rgba(180, 150, 100, 0.6);
-        background: rgba(139, 115, 85, 0.15);
+        color: var(--hh-text-secondary);
+        background: var(--hh-gold-glow);
       }
 
       &.已完成 {
         color: $册缘鎏金;
-        background: rgba(212, 160, 23, 0.1);
+        background: var(--hh-gold-glow);
         box-shadow: $shadow-金色发光;
       }
     }
@@ -320,27 +320,29 @@ function selectNpc(name: string) {
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
-  @include gold-foil;
+  border: none;
+  background: var(--hh-bg-card);
   border-radius: $radius-sm;
-  transition: border-color 0.25s ease;
+  transition: all 0.35s ease;
 
   &:hover {
-    border-color: rgba(212, 160, 23, 0.2);
+    background: var(--hh-bg-hover);
+    box-shadow: 0 0 12px var(--hh-glow-color);
   }
 
   .item-dot {
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: rgba(212, 160, 23, 0.3);
+    background: var(--hh-accent);
     flex-shrink: 0;
   }
 
   .item-text {
     font-family: $font-铭文;
     font-size: 13px;
-    color: rgba(180, 150, 100, 0.6);
-    letter-spacing: 0.05em;
+    color: var(--hh-text-secondary);
+    letter-spacing: 4px;
   }
 }
 
@@ -355,13 +357,13 @@ function selectNpc(name: string) {
   .empty-glyph {
     font-family: $font-铭文;
     font-size: 20px;
-    color: rgba(180, 150, 100, 0.12);
+    color: var(--hh-text-muted);
   }
 
   .empty-text {
     font-size: 12px;
-    color: rgba(180, 150, 100, 0.25);
-    letter-spacing: 0.1em;
+    color: var(--hh-text-muted);
+    letter-spacing: 4px;
   }
 }
 

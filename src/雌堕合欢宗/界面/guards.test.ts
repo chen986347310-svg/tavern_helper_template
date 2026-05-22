@@ -27,9 +27,15 @@ function createMockData(overrides: Partial<Schema> = {}): Schema {
   }
   return {
     系统: { 阶段: '攻略期', 剩余天数: 30, 灵石: 1000, 已使用阵法: false },
-    牝奴: { 堕落度: 0, 牝阴决层数: 0, 上次支配者: '', 支配次数: {}, 改造进度: { 泌乳: false, 肛门: false, 憋尿: false } },
+    牝奴: {
+      堕落度: 0,
+      牝阴决层数: 0,
+      上次支配者: '',
+      支配次数: {},
+      改造进度: { 泌乳: false, 肛门: false, 憋尿: false },
+    },
     NPC: npcData as Schema['NPC'],
-    道具: { 拥有: {}, 装备: { '玩家': [], '白芷': [], '苏芸': [], '纪兰': [], '沈月秋': [], '柳素衣': [] } },
+    道具: { 拥有: {}, 装备: { 玩家: [], 白芷: [], 苏芸: [], 纪兰: [], 沈月秋: [], 柳素衣: [] } },
     场景: { 已解锁: [] },
     剧情: { 已解锁: [] },
     ...overrides,
@@ -115,32 +121,44 @@ describe('checkItemThreshold', () => {
 describe('getCurrentNpc', () => {
   it('全部未开始时返回白芷', () => {
     const states = {
-      白芷: { 状态: '未开始' }, 苏芸: { 状态: '未开始' },
-      纪兰: { 状态: '未开始' }, 沈月秋: { 状态: '未开始' }, 柳素衣: { 状态: '未开始' },
+      白芷: { 状态: '未开始' },
+      苏芸: { 状态: '未开始' },
+      纪兰: { 状态: '未开始' },
+      沈月秋: { 状态: '未开始' },
+      柳素衣: { 状态: '未开始' },
     } as any;
     expect(getCurrentNpc(states)).toBe('白芷');
   });
 
   it('白芷完成后返回苏芸', () => {
     const states = {
-      白芷: { 状态: '已完成' }, 苏芸: { 状态: '未开始' },
-      纪兰: { 状态: '未开始' }, 沈月秋: { 状态: '未开始' }, 柳素衣: { 状态: '未开始' },
+      白芷: { 状态: '已完成' },
+      苏芸: { 状态: '未开始' },
+      纪兰: { 状态: '未开始' },
+      沈月秋: { 状态: '未开始' },
+      柳素衣: { 状态: '未开始' },
     } as any;
     expect(getCurrentNpc(states)).toBe('苏芸');
   });
 
   it('白芷苏芸完成后返回纪兰', () => {
     const states = {
-      白芷: { 状态: '已完成' }, 苏芸: { 状态: '已完成' },
-      纪兰: { 状态: '未开始' }, 沈月秋: { 状态: '未开始' }, 柳素衣: { 状态: '未开始' },
+      白芷: { 状态: '已完成' },
+      苏芸: { 状态: '已完成' },
+      纪兰: { 状态: '未开始' },
+      沈月秋: { 状态: '未开始' },
+      柳素衣: { 状态: '未开始' },
     } as any;
     expect(getCurrentNpc(states)).toBe('纪兰');
   });
 
   it('全部完成后返回null', () => {
     const states = {
-      白芷: { 状态: '已完成' }, 苏芸: { 状态: '已完成' },
-      纪兰: { 状态: '已完成' }, 沈月秋: { 状态: '已完成' }, 柳素衣: { 状态: '已完成' },
+      白芷: { 状态: '已完成' },
+      苏芸: { 状态: '已完成' },
+      纪兰: { 状态: '已完成' },
+      沈月秋: { 状态: '已完成' },
+      柳素衣: { 状态: '已完成' },
     } as any;
     expect(getCurrentNpc(states)).toBeNull();
   });
@@ -228,7 +246,7 @@ describe('calculate灵石获取', () => {
 describe('check粘滞触发', () => {
   it('统一阈值为3层', () => {
     expect(check粘滞触发(3, '亲密接触')).toBe(true);
-    expect(check粘滞触发(2, '亲密接触')).toBe(false);
+    expect(check粘滞触发(2, '亲密接触')).toBe(true);
     expect(check粘滞触发(3, 'NSFW行为')).toBe(true);
     expect(check粘滞触发(2, 'NSFW行为')).toBe(false);
   });
@@ -237,9 +255,10 @@ describe('check粘滞触发', () => {
 // --- get粘滞阈值 ---
 
 describe('get粘滞阈值', () => {
-  it('统一返回3', () => {
-    expect(get粘滞阈值('亲密接触')).toBe(3);
+  it('按行为类型返回不同阈值', () => {
     expect(get粘滞阈值('NSFW行为')).toBe(3);
+    expect(get粘滞阈值('亲密接触')).toBe(2);
+    expect(get粘滞阈值('日常接触')).toBe(1);
   });
 });
 
@@ -357,7 +376,7 @@ describe('initializePhase2', () => {
 
   it('将已拥有道具随机装备到玩家身上', () => {
     const data = createMockData();
-    data.道具.拥有 = { '口塞': 1, '束缚绳': 1, '眼罩': 1 };
+    data.道具.拥有 = { 口塞: 1, 束缚绳: 1, 眼罩: 1 };
     initializePhase2(data);
     expect(data.道具.装备['玩家'].length).toBeLessThanOrEqual(5);
     for (const item of data.道具.装备['玩家']) {

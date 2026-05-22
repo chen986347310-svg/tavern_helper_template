@@ -1,4 +1,4 @@
-﻿---
+---
 变量输出格式:
   rule:
     - you must output the update analysis and the actual update commands at once in the end of the next reply
@@ -26,6 +26,105 @@
       { "op": "remove", "path": "${/path/to/array/0}" },
       { "op": "move", "from": "${/path/to/variable}", "to": "${/path/to/another/path}" },
       ...
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+
+待处理交互清空格式:
+  rule:
+    - if 系统.待处理交互 is not empty and the reply has narrated those interactions, the same JSONPatch must clear it
+    - preferred patch is exactly: { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    - do not clear 系统.待处理交互 before narrating the interaction result
+  example: |-
+    <UpdateVariable>
+    <Analysis>Handled pending UI interactions and cleared queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+灵识窃取下一楼层闭环样例:
+  purpose: "用于约束AI在下一楼层承接前端UI交互：先叙事回应，再更新soul_whisper，最后清空待处理交互。"
+  input_state_example: |-
+    系统:
+      时辰: 午时
+      当前场景: 醉玉小筑
+      待处理交互:
+        - 类型: 灵识窃取
+          目标: 白芷
+          道具: ""
+          数量: 1
+          时辰: 午时
+          场景: 醉玉小筑
+    NPC:
+      白芷:
+        攻略值: 45
+        soul_whisper:
+          text: ""
+          stage: 警戒
+          is_revealed: false
+  reply_requirement:
+    - 正文必须自然描写玩家以合欢心典窥探白芷心绪的结果。
+    - 不要说“读取变量”“处理队列”“JSONPatch”等出戏词。
+    - 若判定成功，同一次变量更新必须写入 NPC.白芷.soul_whisper，并清空 系统.待处理交互。
+    - 若判定失败，也必须叙事回应心防反震或心音破碎，并清空已处理队列；可克制地调整好感度。
+  output_example: |-
+    <UpdateVariable>
+    <Analysis>Handled the pending soul whisper interaction, revealed Baizhi's inner thought, and cleared the processed UI queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/NPC/白芷/soul_whisper/text", "value": "他方才的目光，竟让我道心微乱。" },
+      { "op": "replace", "path": "/NPC/白芷/soul_whisper/stage", "value": "动摇" },
+      { "op": "replace", "path": "/NPC/白芷/soul_whisper/is_revealed", "value": true },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+使用物品下一楼层闭环样例:
+  purpose: "用于约束AI承接前端背包消耗品：先叙事回应法效，再按需要更新变量，最后清空待处理交互。"
+  input_state_example: |-
+    系统:
+      时辰: 午时
+      当前场景: 醉玉小筑
+      剩余天数: 30
+      待处理交互:
+        - 类型: 使用物品
+          目标: 玩家
+          道具: 时间延长
+          数量: 1
+          时辰: 午时
+          场景: 醉玉小筑
+  reply_requirement:
+    - 正文必须自然描写玩家启用道具后的法效，不要说“读取变量”“处理队列”。
+    - 不要重复扣除背包库存；前端已经完成 道具.拥有 的扣减。
+    - 若该物品需要变量生效，同一次变量更新必须写入对应变量，并清空 系统.待处理交互。
+    - 若只是剧情类法效，也必须在叙事回应后清空已处理队列。
+  output_example: |-
+    <UpdateVariable>
+    <Analysis>Handled the pending item use, applied the time extension effect, and cleared the processed UI queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/剩余天数", "value": 30 },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+MVU解析硬约束:
+  rule:
+    - 任何变量更新必须完整包裹在 <UpdateVariable><Analysis>...</Analysis><JSONPatch>...</JSONPatch></UpdateVariable> 内。
+    - 严禁只输出“变量更新情况”标题、YAML 摘要或裸 JSON Patch 数组；裸数组会被视为叙事文本，无法回流到 MVU。
+    - 若需要更新 NPC.*.soul_whisper，必须与清空 系统.待处理交互 放在同一个 <JSONPatch> 数组中。
+    - <JSONPatch> 标签内只能放合法 JSON 数组，不要夹杂 Markdown 代码围栏、自然语言或额外标题。
+  required_example: |-
+    <UpdateVariable>
+    <Analysis>Handled pending UI interaction, revealed the soul whisper, and cleared the queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/NPC/白芷/soul_whisper/text", "value": "他没碰到我的手……也没有大声说话。" },
+      { "op": "replace", "path": "/NPC/白芷/soul_whisper/stage", "value": "警戒" },
+      { "op": "replace", "path": "/NPC/白芷/soul_whisper/is_revealed", "value": true },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
     ]
     </JSONPatch>
     </UpdateVariable>

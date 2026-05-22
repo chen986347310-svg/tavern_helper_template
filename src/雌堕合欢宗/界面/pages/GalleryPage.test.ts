@@ -1,13 +1,18 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mount, flushPromises } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { createPinia } from 'pinia';
 import { reactive } from 'vue';
 
-vi.mock('../store', () => {
-  const mockData = reactive({
+const mockData = reactive({
     系统: { 阶段: '攻略期', 剩余天数: 30, 灵石: 10000, 已使用阵法: false },
-    牝奴: { 堕落度: 0, 牝阴决层数: 0, 上次支配者: '', 支配次数: {}, 改造进度: { 泌乳: false, 肛门: false, 憋尿: false } },
+    牝奴: {
+      堕落度: 0,
+      牝阴决层数: 0,
+      上次支配者: '',
+      支配次数: {},
+      改造进度: { 泌乳: false, 肛门: false, 憋尿: false },
+    },
     NPC: {
       白芷: { 好感度: 50, 攻略值: 30, 粘滞计数: 1, 状态: '进行中' },
       苏芸: { 好感度: 0, 攻略值: 0, 粘滞计数: 0, 状态: '未开始' },
@@ -15,18 +20,17 @@ vi.mock('../store', () => {
       沈月秋: { 好感度: 0, 攻略值: 0, 粘滞计数: 0, 状态: '未开始' },
       柳素衣: { 好感度: 0, 攻略值: 0, 粘滞计数: 0, 状态: '未开始' },
     },
-    道具: { 拥有: {}, 装备: { '玩家': [], '白芷': [], '苏芸': [], '纪兰': [], '沈月秋': [], '柳素衣': [] } },
+    道具: { 拥有: {}, 装备: { 玩家: [], 白芷: [], 苏芸: [], 纪兰: [], 沈月秋: [], 柳素衣: [] } },
     场景: { 已解锁: [] as string[] },
     剧情: { 已解锁: [] as string[] },
-  });
-  return {
-    useDataStore: () => ({ data: mockData }),
-    __mockData: mockData,
-  };
-});
+  })
+
+vi.mock('../store', () => ({
+  useDataStore: () => ({ data: mockData }),
+}));
+
 
 import GalleryPage from '../pages/GalleryPage.vue';
-import { __mockData as mockData } from '../store';
 
 function mountGallery() {
   return mount(GalleryPage, { global: { plugins: [createPinia()] } });

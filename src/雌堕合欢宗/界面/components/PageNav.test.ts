@@ -12,20 +12,21 @@ describe('PageNav', () => {
     expect(buttons).toHaveLength(4);
   });
 
-  it('显示正确的标签文字', () => {
+  it('通过 aria-label 保留语义标签且不渲染现代文字', () => {
     const wrapper = mount(PageNav, {
       props: { currentTab: 'home' },
     });
-    const labels = wrapper.findAll('.tab-label').map(w => w.text());
+    const labels = wrapper.findAll('.nav-tab').map(w => w.attributes('aria-label'));
     expect(labels).toEqual(['首页', '商城', '背包', '图鉴']);
+    expect(wrapper.findAll('.tab-label')).toHaveLength(0);
   });
 
-  it('显示正确的铭文符号', () => {
+  it('使用 SVG 铭文图标而非文本符号', () => {
     const wrapper = mount(PageNav, {
       props: { currentTab: 'home' },
     });
-    const glyphs = wrapper.findAll('.tab-glyph').map(w => w.text());
-    expect(glyphs).toEqual(['阁', '坊', '囊', '鉴']);
+    expect(wrapper.findAll('.tab-icon')).toHaveLength(4);
+    expect(wrapper.findAll('.tab-glyph')).toHaveLength(0);
   });
 
   it('当前标签高亮 (active class)', () => {

@@ -21,17 +21,17 @@
 // 金册幽光背景
 @mixin gold-book-bg($center-x: 50%, $center-y: 50%) {
   background:
-    radial-gradient(ellipse at $center-x $center-y, rgba(212, 160, 23, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at $center-x $center-y, var(--hh-gold-glow) 0%, transparent 60%),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
-    linear-gradient(180deg, $册底玄金 0%, color.adjust($册底玄金, $lightness: -5%) 100%);
+    linear-gradient(180deg, var(--hh-bg-main) 0%, color-mix(in srgb, var(--hh-bg-main) 90%, black) 100%);
 }
 
 // 金箔贴片效果
 @mixin gold-foil {
-  border: 1px solid rgba(212, 160, 23, 0.2);
+  border: 1px solid var(--hh-border);
   box-shadow:
-    inset 0 1px 0 rgba(212, 160, 23, 0.1),
-    inset 0 -1px 0 rgba(212, 160, 23, 0.05),
+    inset 0 1px 0 var(--hh-gold-glow),
+    inset 0 -1px 0 var(--hh-gold-glow),
     $shadow-金色发光;
   position: relative;
 
@@ -43,9 +43,9 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(212, 160, 23, 0.03) 25%,
+      var(--hh-gold-glow) 25%,
       transparent 50%,
-      rgba(212, 160, 23, 0.03) 75%,
+      var(--hh-gold-glow) 75%,
       transparent 100%
     );
     pointer-events: none;
@@ -63,27 +63,27 @@
   .header-line {
     flex: 1;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, var(--hh-divider-alpha), transparent);
   }
 
   .header-glyph {
     font-family: $font-铭文;
     font-size: 13px;
-    color: rgba(212, 160, 23, 0.5);
+    color: var(--hh-gold);
     width: 20px;
     height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(212, 160, 23, 0.15);
+    border: 1px solid var(--hh-border);
     border-radius: 3px;
-    background: rgba(212, 160, 23, 0.03);
+    background: var(--hh-gold-glow);
   }
 
   .header-text {
     font-family: $font-铭文;
     font-size: 13px;
-    color: rgba(180, 150, 100, 0.5);
+    color: var(--hh-text-secondary);
     letter-spacing: 0.1em;
   }
 }
@@ -91,19 +91,21 @@
 // 三态样式
 @mixin status-badge($status) {
   @if $status == 'completed' {
-    border-color: rgba(212, 160, 23, 0.5);
-    box-shadow: $shadow-金色发光强, inset 0 0 20px rgba(212, 160, 23, 0.03);
+    border-color: var(--hh-gold);
+    box-shadow:
+      $shadow-金色发光强,
+      inset 0 0 20px var(--hh-gold-glow);
 
     .npc-name {
       color: $册缘鎏金;
-      text-shadow: 0 0 8px rgba(212, 160, 23, 0.3);
+      text-shadow: 0 0 8px var(--hh-gold-glow);
     }
   } @else if $status == 'active' {
-    border-color: rgba(180, 150, 100, 0.3);
+    border-color: var(--hh-border);
 
     .status-dot {
-      background: #8b7355;
-      box-shadow: 0 0 4px rgba(139, 115, 85, 0.4);
+      background: var(--hh-gold);
+      box-shadow: 0 0 4px var(--hh-gold-glow);
     }
   } @else {
     opacity: 0.45;
@@ -125,20 +127,20 @@
 @mixin inscription-engrave {
   text-shadow:
     0 1px 0 rgba(0, 0, 0, 0.3),
-    0 0 8px rgba(212, 160, 23, 0.3);
+    0 0 8px var(--hh-gold-glow);
 }
 
 // 金印押章按钮
 @mixin gold-seal-btn {
-  background: rgba(212, 160, 23, 0.15);
-  border: 1px solid rgba(212, 160, 23, 0.3);
+  background: var(--hh-gold-glow);
+  border: 1px solid var(--hh-border-accent);
   border-radius: $radius-md;
   cursor: pointer;
   transition: all 0.25s ease;
 
   &:hover:not(:disabled) {
-    background: rgba(212, 160, 23, 0.25);
-    box-shadow: 0 0 12px rgba(212, 160, 23, 0.15);
+    background: var(--hh-gold-alpha);
+    box-shadow: 0 0 12px var(--hh-gold-glow);
   }
 
   &:active:not(:disabled) {
@@ -157,9 +159,9 @@
   // 通过 CSS color-mix 在运行时根据好感度值混合颜色
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, #6b5b3a calc(100% - clamp(0%, var(--affinity-value, 0) * 1.43%, 100%)), #8b7355) 0%,
-    color-mix(in srgb, #8b7355 calc(100% - clamp(0%, (var(--affinity-value, 0) - 30) * 2.5%, 100%)), #d4a017) 50%,
-    color-mix(in srgb, #d4a017 calc(100% - clamp(0%, (var(--affinity-value, 0) - 70) * 3.33%, 100%)), #e8c44a) 100%
+    color-mix(in srgb, var(--hh-text-muted) calc(100% - clamp(0%, var(--affinity-value, 0) * 1.43%, 100%)), var(--hh-text-secondary)) 0%,
+    color-mix(in srgb, var(--hh-text-secondary) calc(100% - clamp(0%, (var(--affinity-value, 0) - 30) * 2.5%, 100%)), var(--hh-gold)) 50%,
+    color-mix(in srgb, var(--hh-gold) calc(100% - clamp(0%, (var(--affinity-value, 0) - 70) * 3.33%, 100%)), var(--hh-text-primary)) 100%
   );
 }
 
@@ -195,8 +197,13 @@
   transition: all 0.4s ease;
 
   @keyframes taiji-breathe {
-    0%, 100% { text-shadow: 0 0 8px color-mix(in srgb, $color 40%, transparent); }
-    50% { text-shadow: 0 0 16px color-mix(in srgb, $color 80%, transparent); }
+    0%,
+    100% {
+      text-shadow: 0 0 8px color-mix(in srgb, $color 40%, transparent);
+    }
+    50% {
+      text-shadow: 0 0 16px color-mix(in srgb, $color 80%, transparent);
+    }
   }
 }
 
@@ -222,14 +229,20 @@
 
 // 通用呼吸光效
 @mixin breathing-glow($color) {
-  box-shadow: 0 0 8px color-mix(in srgb, $color 30%, transparent),
-              inset 0 0 12px color-mix(in srgb, $color 5%, transparent);
+  box-shadow:
+    0 0 8px color-mix(in srgb, $color 30%, transparent),
+    inset 0 0 12px color-mix(in srgb, $color 5%, transparent);
   border-color: color-mix(in srgb, $color 50%, transparent);
   animation: card-breathe 4s ease-in-out infinite;
 
   @keyframes card-breathe {
-    0%, 100% { box-shadow: 0 0 8px color-mix(in srgb, $color 20%, transparent); }
-    50% { box-shadow: 0 0 18px color-mix(in srgb, $color 50%, transparent); }
+    0%,
+    100% {
+      box-shadow: 0 0 8px color-mix(in srgb, $color 20%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 18px color-mix(in srgb, $color 50%, transparent);
+    }
   }
 }
 

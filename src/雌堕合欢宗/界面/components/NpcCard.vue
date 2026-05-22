@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['npc-strip', statusClass, { expanded: expanded }]"
+    :class="['npc-strip', statusClass, { expanded: expanded }]" :data-npc="npc名 === '白芷' ? 'baiji' : npc名 === '苏芸' ? 'suyun' : npc名 === '纪兰' ? 'jilan' : npc名 === '沈月秋' ? 'shenyueqiu' : 'liuyuyi'"
     :style="{ '--npc-color': npcColor, '--npc-color-dark': npcColorDark }"
     @click="handleClick"
   >
@@ -37,33 +37,66 @@
         {{ data.状态 }}
       </div>
       <div v-if="data.状态 === '进行中'" class="strip-favor">
-        <div class="favor-bar">
-          <div class="favor-fill" :style="{ width: data.好感度 + '%' }"></div>
-        </div>
-        <span class="favor-value">{{ data.好感度 }}</span>
+        <svg class="mini-ring" viewBox="0 0 24 24" aria-hidden="true">
+          <circle class="ring-track" cx="12" cy="12" r="10" />
+          <circle
+            class="ring-value favor"
+            cx="12"
+            cy="12"
+            r="10"
+            :stroke-dasharray="miniRingCircumference"
+            :stroke-dashoffset="miniFavorDashOffset"
+          />
+        </svg>
+        <span class="favor-value">{{ get灵犀等级(data.好感度) }}</span>
       </div>
     </div>
 
     <!-- 展开区域 (进度条 + 装备) -->
     <div :class="['card-expand', { expanded: expanded }]">
       <div class="expand-inner">
-        <div class="expand-row">
-          <span class="expand-label">好感度</span>
-          <div class="expand-bar">
-            <div class="expand-bar-fill favor" :style="{ width: data.好感度 + '%' }"></div>
-          </div>
-          <span class="expand-value">{{ data.好感度 }}</span>
+        <div :class="['dual-ring-panel', { 'soul-backlash': backlashVisible }]" aria-hidden="true" @click.stop="handleSoulWhisper">
+          <svg class="dual-ring" viewBox="0 0 64 64">
+            <circle class="ring-track outer" cx="32" cy="32" r="26" />
+            <circle
+              class="ring-value progress"
+              cx="32"
+              cy="32"
+              r="26"
+              :stroke-dasharray="outerRingCircumference"
+              :stroke-dashoffset="progressDashOffset"
+            />
+            <circle class="ring-track inner" cx="32" cy="32" r="20" />
+            <circle
+              class="ring-value favor"
+              cx="32"
+              cy="32"
+              r="20"
+              :stroke-dasharray="innerRingCircumference"
+              :stroke-dashoffset="favorDashOffset"
+            />
+          </svg>
+          <Transition name="ink-reveal">
+            <span v-if="backlashVisible" class="backlash-hint">心防反震</span>
+          </Transition>
         </div>
         <div class="expand-row">
-          <span class="expand-label">攻略值</span>
-          <div class="expand-bar">
-            <div class="expand-bar-fill progress" :style="{ width: data.攻略值 + '%' }"></div>
-          </div>
-          <span class="expand-value">{{ data.攻略值 }}</span>
+          <span class="expand-label">灵犀</span>
+          <span class="expand-value">{{ get灵犀等级(data.好感度) }}</span>
         </div>
+        <div class="expand-row">
+          <span class="expand-label">蚀心</span>
+          <span class="expand-value">{{ get道心侵蚀(data.攻略值) }}</span>
+        </div>
+        <Transition name="ink-reveal">
+          <div v-if="revealedSoulWhisper" class="soul-whisper" :data-stage="data.soul_whisper?.stage">
+            <span class="whisper-label">心音残片</span>
+            <span class="whisper-text">{{ revealedSoulWhisper }}</span>
+          </div>
+        </Transition>
         <div v-if="装备 && 装备.length > 0" class="equip-section">
           <button class="equip-toggle" @click.stop="equipOpen = !equipOpen">
-            装备 <span class="equip-arrow">{{ equipOpen ? '▴' : '▾' }}</span>
+            佩器 <span class="equip-arrow">{{ equipOpen ? '▴' : '▾' }}</span>
           </button>
           <div :class="['equip-list', { open: equipOpen }]">
             <div class="equip-inner">
@@ -71,14 +104,16 @@
             </div>
           </div>
         </div>
-        <div v-else class="equip-empty">暂无装备</div>
+        <div v-else class="equip-empty">未供法器</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
+
+import { get灵犀等级, get道心侵蚀 } from '../composables/useStatusText';
 
 import avatar白芷 from '../assets/avatars/白芷.png';
 import avatar白芷_fallen from '../assets/avatars/白芷_fallen.png';
@@ -111,7 +146,7 @@ const NPC_COLORS: Record<NpcName, string> = {
 
 const props = defineProps<{
   npc名: NpcName;
-  data: { 好感度: number; 攻略值: number; 状态: string };
+  data: { 好感度: number; 攻略值: number; 状态: string; soul_whisper?: { text?: string; stage?: '警戒' | '动摇' | '沉沦'; is_revealed?: boolean } };
   装备?: string[];
   expanded?: boolean;
 }>();
@@ -119,11 +154,14 @@ const props = defineProps<{
 const emit = defineEmits<{
   click: [];
   toggleExpand: [];
+  soulWhisper: [];
 }>();
 
 const equipOpen = ref(false);
 const imageLoaded = ref(false);
 const imageError = ref(false);
+const backlashVisible = ref(false);
+let backlashTimer: ReturnType<typeof setTimeout> | undefined;
 
 const statusClass = computed(() => {
   switch (props.data.状态) {
@@ -145,6 +183,26 @@ const NPC_COLORS_DARK: Record<NpcName, string> = {
 const npcColor = computed(() => NPC_COLORS[props.npc名] || '#d4a017');
 const npcColorDark = computed(() => NPC_COLORS_DARK[props.npc名] || '#8b5e0f');
 
+const miniRingCircumference = '62.83';
+const outerRingCircumference = '163.36';
+const innerRingCircumference = '125.66';
+
+function getRingDashOffset(value: number, circumference: number): string {
+  const clamped = Math.min(Math.max(value, 0), 100);
+  return (circumference * (1 - clamped / 100)).toFixed(2);
+}
+
+const miniFavorDashOffset = computed(() => getRingDashOffset(props.data.好感度, 62.83));
+const favorDashOffset = computed(() => getRingDashOffset(props.data.好感度, 125.66));
+const progressDashOffset = computed(() => getRingDashOffset(props.data.攻略值, 163.36));
+const revealedSoulWhisper = computed(() => {
+  const whisper = props.data.soul_whisper;
+  if (!whisper?.is_revealed) return '';
+  return whisper.text?.trim() ?? '';
+});
+
+const hasBacklashRisk = computed(() => props.data.攻略值 < 40 || props.data.soul_whisper?.stage === '警戒');
+
 const avatarSrc = computed(() => {
   const map = AVATAR_MAP[props.npc名];
   return props.data.状态 === '已完成' ? map.fallen : map.normal;
@@ -155,6 +213,22 @@ function handleClick() {
   emit('click');
   emit('toggleExpand');
 }
+
+function handleSoulWhisper() {
+  if (props.data.状态 === '未开始') return;
+  if (hasBacklashRisk.value) {
+    backlashVisible.value = true;
+    if (backlashTimer) clearTimeout(backlashTimer);
+    backlashTimer = setTimeout(() => {
+      backlashVisible.value = false;
+    }, 900);
+  }
+  emit('soulWhisper');
+}
+
+onUnmounted(() => {
+  if (backlashTimer) clearTimeout(backlashTimer);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -164,11 +238,15 @@ function handleClick() {
 /* NPC 水平横条 */
 .npc-strip {
   position: relative;
+  --npc-accent: var(--npc-color);
   border: 1px solid var(--theme-border);
   border-radius: $radius-md;
   transition: all 0.35s ease;
   overflow: hidden;
-  @include gold-foil;
+  border: none;
+  box-shadow: none;
+  /* stone texture */
+  background: linear-gradient(135deg, rgba(40,30,20,0.6) 0%, rgba(20,15,10,0.8) 100%);
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
@@ -184,7 +262,7 @@ function handleClick() {
   }
 
   &.completed {
-    border-color: rgba(212, 160, 23, 0.5);
+    filter: brightness(1.1);
     box-shadow: $shadow-金色发光强;
     cursor: pointer;
   }
@@ -213,8 +291,10 @@ function handleClick() {
   .avatar-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center 20%;
+    object-fit: none;
+    width: 280px;
+    height: 280px;
+    object-position: center 18%;
     opacity: 0;
     transition: opacity 0.4s ease;
   }
@@ -233,9 +313,9 @@ function handleClick() {
      font-size: 20px;
      font-weight: 700;
      color: var(--npc-color);
-     text-shadow: 0 0 8px rgba(212, 160, 23, 0.2);
-     min-height: 44px;
-     background: linear-gradient(135deg, rgba(212, 160, 23, 0.05), transparent);
+     text-shadow: 0 0 8px var(--hh-gold-glow);
+    min-height: 0;
+     background: linear-gradient(135deg, var(--hh-gold-glow), transparent);
   }
 
   .locked & .avatar-img {
@@ -275,6 +355,13 @@ function handleClick() {
     max-width: none;
   }
 
+  .expanded & .avatar-img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-position: center 20%;
+  }
+
   .expanded &::before {
     transition: opacity 0.3s ease-in-out;
     opacity: 0;
@@ -293,8 +380,8 @@ function handleClick() {
   flex-direction: column;
   justify-content: center;
   gap: 2px;
-  padding: 8px 12px;
-  min-height: 44px;
+  padding: 4px 12px;
+  min-height: 0;
   transition: opacity 0.35s ease;
 
   &.text-fade {
@@ -306,24 +393,25 @@ function handleClick() {
 
   .strip-name {
     font-family: $font-铭文;
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 42pt;
+    margin-top: -48px;
+    font-family: "Huiwen-mincho", STXingkai, KaiTi, serif;
     color: var(--theme-text-primary);
-    letter-spacing: 0.1em;
+    letter-spacing: 4px;
   }
 
   .strip-status {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 11px;
+    font-size: 18px;
+    font-family: KaiTi, STKaiti, serif;
     color: var(--theme-text-secondary);
 
     .status-dot {
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: rgba(180, 150, 100, 0.3);
+      background: var(--hh-text-muted);
     }
   }
 }
@@ -335,6 +423,14 @@ function handleClick() {
   gap: 6px;
   flex-shrink: 0;
   min-width: 80px;
+
+  .mini-ring {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    transform: rotate(-90deg);
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--npc-color) 24%, transparent));
+  }
 
   .favor-bar {
     flex: 1;
@@ -348,16 +444,97 @@ function handleClick() {
     height: 100%;
     border-radius: 2px;
     transition: width 0.4s ease;
-    background: linear-gradient(90deg, #6b5b3a, #d4a017);
+    background: var(--hh-bar-fill);
   }
 
   .favor-value {
     font-family: $font-铭文;
     font-size: 11px;
-    color: rgba(212, 160, 23, 0.7);
+    color: var(--hh-gold);
     min-width: 24px;
     text-align: right;
   }
+}
+
+.ring-track,
+.ring-value {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.ring-track {
+  stroke: var(--hh-border);
+  stroke-width: 2;
+  opacity: 0.35;
+}
+
+.ring-value {
+  transition: stroke-dashoffset 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+
+  &.favor {
+    stroke: var(--npc-color);
+    stroke-width: 2.2;
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--npc-color) 35%, transparent));
+  }
+
+  &.progress {
+    stroke: var(--hh-accent);
+    stroke-width: 2.4;
+    filter: drop-shadow(0 0 10px var(--hh-glow-color));
+  }
+}
+
+.dual-ring-panel {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 2px;
+
+  &.soul-backlash {
+    animation: soul-backlash-shake 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.backlash-hint {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--hh-text-highlight);
+  text-shadow: 0 0 16px var(--hh-glow-color);
+  pointer-events: none;
+}
+
+.dual-ring {
+  width: 64px;
+  height: 64px;
+  transform: rotate(-90deg);
+  animation: soul-ring-breathe 4s ease-in-out infinite;
+
+  .outer {
+    stroke-width: 2.4;
+  }
+
+  .inner {
+    stroke-width: 2;
+  }
+}
+
+@keyframes soul-ring-breathe {
+  0%, 100% { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--npc-color) 18%, transparent)); }
+  50% { filter: drop-shadow(0 0 16px color-mix(in srgb, var(--npc-color) 30%, transparent)); }
+}
+
+@keyframes soul-backlash-shake {
+  0%, 100% { transform: translateX(0); filter: hue-rotate(0deg); }
+  20% { transform: translateX(-3px); filter: hue-rotate(-18deg); }
+  45% { transform: translateX(3px); filter: hue-rotate(18deg); }
+  70% { transform: translateX(-2px); filter: hue-rotate(-10deg); }
 }
 
 /* 展开区域 */
@@ -390,7 +567,7 @@ function handleClick() {
   .expand-label {
     font-size: 12px;
     color: var(--theme-text-secondary);
-    letter-spacing: 0.08em;
+    letter-spacing: 4px;
     min-width: 52px;
     flex-shrink: 0;
     font-weight: 500;
@@ -402,7 +579,7 @@ function handleClick() {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 4px;
     overflow: hidden;
-    border: 1px solid var(--theme-border-subtle);
+    border: none;
     position: relative;
   }
 
@@ -413,7 +590,7 @@ function handleClick() {
 
     &.favor {
       background: var(--theme-bar-fill);
-      box-shadow: 0 0 8px rgba(212, 160, 23, 0.2);
+      box-shadow: 0 0 8px var(--hh-gold-glow);
     }
 
     &.progress {
@@ -433,6 +610,70 @@ function handleClick() {
   }
 }
 
+.soul-whisper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  color: var(--theme-text-primary);
+  background:
+    radial-gradient(ellipse at 20% 50%, color-mix(in srgb, var(--npc-color) 18%, transparent) 0%, transparent 62%),
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--hh-bg-card) 72%, transparent), transparent);
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--npc-color) 55%, transparent), transparent);
+    opacity: 0.65;
+  }
+
+  &::before { top: 0; }
+  &::after { bottom: 0; }
+
+  .whisper-label {
+    font-family: $font-铭文;
+    font-size: 11px;
+    color: var(--theme-text-muted);
+    letter-spacing: 4px;
+  }
+
+  .whisper-text {
+    font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 2px;
+    text-shadow: 0 0 14px color-mix(in srgb, var(--npc-color) 28%, transparent);
+  }
+
+  &[data-stage='沉沦'] .whisper-text {
+    color: var(--npc-color);
+  }
+}
+
+.ink-reveal-enter-active,
+.ink-reveal-leave-active {
+  transition: clip-path 0.55s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1), filter 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ink-reveal-enter-from,
+.ink-reveal-leave-to {
+  clip-path: circle(0% at 50% 50%);
+  opacity: 0;
+  filter: blur(6px);
+}
+
+.ink-reveal-enter-to,
+.ink-reveal-leave-from {
+  clip-path: circle(140% at 50% 50%);
+  opacity: 1;
+  filter: blur(0);
+}
 /* 装备折叠面板 */
 .equip-section {
   margin-top: 8px;
@@ -441,7 +682,11 @@ function handleClick() {
 }
 
 .equip-toggle {
-  @include gold-seal-btn;
+  border: none;
+  background: var(--hh-bg-card);
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
   display: flex;
   align-items: center;
@@ -477,7 +722,7 @@ function handleClick() {
   padding: 6px 10px;
   font-size: 12px;
   color: var(--theme-text-secondary);
-  border: 1px solid var(--theme-border-subtle);
+  border: none;
   border-radius: $radius-sm;
   background: var(--theme-accent-glow);
   transition: all 0.2s ease;
@@ -521,12 +766,12 @@ function handleClick() {
   font-size: 10px;
   font-weight: 700;
   color: var(--npc-accent);
-  letter-spacing: 0.15em;
+  letter-spacing: 4px;
   padding: 2px 8px;
-  border: 1.5px solid var(--npc-accent);
+  border: none;
   border-radius: 3px;
   opacity: 0.85;
-  text-shadow: 0 0 6px color-mix(in srgb, var(--npc-accent) 50%, transparent);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--npc-accent) 60%, transparent), 0 0 16px color-mix(in srgb, var(--npc-accent) 30%, transparent);
   background: color-mix(in srgb, var(--npc-accent) 12%, transparent);
   transform: rotate(-6deg);
 
@@ -550,7 +795,7 @@ function handleClick() {
   &::after {
     content: '';
     position: absolute;
-    background: var(--npc-accent);
+    background: linear-gradient(90deg, var(--npc-accent), transparent);
     opacity: 0.6;
   }
 
@@ -587,21 +832,12 @@ function handleClick() {
 /* 已攻略卡片特殊样式 */
 .npc-strip.completed {
   border-color: var(--npc-accent);
-  box-shadow:
-    0 0 12px color-mix(in srgb, var(--npc-accent) 35%, transparent),
-    inset 0 0 20px color-mix(in srgb, var(--npc-accent) 10%, transparent);
-  animation: completed-breathe 4s ease-in-out infinite;
+  background:
+    radial-gradient(ellipse at 30% 50%, color-mix(in srgb, var(--npc-accent) 20%, transparent) 0%, transparent 60%),
+    linear-gradient(135deg, rgba(40,30,20,0.6) 0%, rgba(20,15,10,0.8) 100%);
+  animation: soul-breathe 4s ease-in-out infinite;
 
-  &::before {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      color-mix(in srgb, var(--npc-accent) 8%, transparent) 25%,
-      transparent 50%,
-      color-mix(in srgb, var(--npc-accent) 8%, transparent) 75%,
-      transparent 100%
-    ) !important;
-  }
+  /* gradient replaces before pseudo */
 
   .strip-name {
     color: var(--npc-accent);
@@ -609,22 +845,20 @@ function handleClick() {
   }
 
   .strip-status .status-dot {
-    background: var(--npc-accent);
+    background: linear-gradient(90deg, var(--npc-accent), transparent);
     box-shadow: 0 0 4px color-mix(in srgb, var(--npc-accent) 50%, transparent);
   }
 
 }
 
-@keyframes completed-breathe {
+@keyframes soul-breathe {
   0%, 100% {
-    box-shadow:
-      0 0 12px color-mix(in srgb, var(--npc-accent) 20%, transparent),
-      inset 0 0 20px color-mix(in srgb, var(--npc-accent) 4%, transparent);
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--npc-accent) 25%, transparent));
   }
   50% {
-    box-shadow:
-      0 0 20px color-mix(in srgb, var(--npc-accent) 35%, transparent),
-      inset 0 0 30px color-mix(in srgb, var(--npc-accent) 8%, transparent);
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 16px color-mix(in srgb, var(--npc-accent) 45%, transparent));
   }
 }
 

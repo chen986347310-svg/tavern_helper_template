@@ -25,6 +25,78 @@
         "已使用阵法": {
           "default": false,
           "type": "boolean"
+        },
+        "时辰": {
+          "default": "晨时",
+          "type": "string",
+          "enum": [
+            "晨时",
+            "午时",
+            "酉时",
+            "亥时"
+          ]
+        },
+        "当前场景": {
+          "default": "莲灯前苑",
+          "type": "string",
+          "enum": [
+            "莲灯前苑",
+            "醉玉小筑",
+            "绮梦幽阁"
+          ]
+        },
+        "待处理交互": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "类型": {
+                "default": "购买",
+                "type": "string",
+                "enum": [
+                  "装备",
+                  "卸下",
+                  "购买",
+                  "灵识窃取",
+                  "装备道具",
+                  "购买物品",
+                  "使用物品"
+                ]
+              },
+              "目标": {
+                "default": "",
+                "type": "string"
+              },
+              "道具": {
+                "default": "",
+                "type": "string"
+              },
+              "数量": {
+                "default": 1,
+                "type": "number"
+              },
+              "时辰": {
+                "default": "晨时",
+                "type": "string",
+                "enum": [
+                  "晨时",
+                  "午时",
+                  "酉时",
+                  "亥时"
+                ]
+              },
+              "场景": {
+                "default": "莲灯前苑",
+                "type": "string",
+                "enum": [
+                  "莲灯前苑",
+                  "醉玉小筑",
+                  "绮梦幽阁"
+                ]
+              }
+            }
+          }
         }
       }
     },
@@ -45,7 +117,13 @@
           "type": "string"
         },
         "支配次数": {
-          "default": {},
+          "default": {
+            "白芷": 0,
+            "苏芸": 0,
+            "纪兰": 0,
+            "沈月秋": 0,
+            "柳素衣": 0
+          },
           "type": "object",
           "propertyNames": {
             "type": "string",
@@ -68,6 +146,10 @@
             "柳素衣"
           ]
         },
+        "情欲控制阶段": {
+          "default": 1,
+          "type": "number"
+        },
         "改造进度": {
           "default": {},
           "type": "object",
@@ -89,7 +171,13 @@
       }
     },
     "NPC": {
-      "default": {},
+      "default": {
+        "白芷": {},
+        "苏芸": {},
+        "纪兰": {},
+        "沈月秋": {},
+        "柳素衣": {}
+      },
       "type": "object",
       "propertyNames": {
         "type": "string",
@@ -124,6 +212,38 @@
               "进行中",
               "已完成"
             ]
+          },
+          "当前场景": {
+            "default": "莲灯前苑",
+            "type": "string",
+            "enum": [
+              "莲灯前苑",
+              "醉玉小筑",
+              "绮梦幽阁"
+            ]
+          },
+          "soul_whisper": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "text": {
+                "default": "",
+                "type": "string"
+              },
+              "stage": {
+                "default": "警戒",
+                "type": "string",
+                "enum": [
+                  "警戒",
+                  "动摇",
+                  "沉沦"
+                ]
+              },
+              "is_revealed": {
+                "default": false,
+                "type": "boolean"
+              }
+            }
           }
         }
       },
@@ -151,7 +271,14 @@
           }
         },
         "装备": {
-          "default": {},
+          "default": {
+            "玩家": [],
+            "白芷": [],
+            "苏芸": [],
+            "纪兰": [],
+            "沈月秋": [],
+            "柳素衣": []
+          },
           "type": "object",
           "propertyNames": {
             "type": "string",

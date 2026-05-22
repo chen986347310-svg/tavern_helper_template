@@ -5,10 +5,23 @@ import { createPinia } from 'pinia';
 import { reactive } from 'vue';
 
 // Mock the store
-vi.mock('../store', () => {
-  const mockData = reactive({
-    系统: { 阶段: '攻略期', 剩余天数: 30, 灵石: 10000, 已使用阵法: false },
-    牝奴: { 堕落度: 0, 牝阴决层数: 0, 上次支配者: '', 支配次数: {}, 改造进度: { 泌乳: false, 肛门: false, 憋尿: false } },
+const mockData = reactive({
+    系统: {
+      阶段: '攻略期',
+      剩余天数: 30,
+      灵石: 10000,
+      已使用阵法: false,
+      时辰: '午时',
+      当前场景: '醉玉小筑',
+      待处理交互: [] as any[],
+    },
+    牝奴: {
+      堕落度: 0,
+      牝阴决层数: 0,
+      上次支配者: '',
+      支配次数: {},
+      改造进度: { 泌乳: false, 肛门: false, 憋尿: false },
+    },
     NPC: {
       白芷: { 好感度: 50, 攻略值: 30, 粘滞计数: 1, 状态: '进行中' },
       苏芸: { 好感度: 0, 攻略值: 0, 粘滞计数: 0, 状态: '未开始' },
@@ -16,18 +29,27 @@ vi.mock('../store', () => {
       沈月秋: { 好感度: 0, 攻略值: 0, 粘滞计数: 0, 状态: '未开始' },
       柳素衣: { 好感度: 0, 攻略值: 0, 粘滞计数: 0, 状态: '未开始' },
     },
-    道具: { 拥有: {} as Record<string, number>, 装备: { '玩家': [] as string[], '白芷': [] as string[], '苏芸': [] as string[], '纪兰': [] as string[], '沈月秋': [] as string[], '柳素衣': [] as string[] } },
+    道具: {
+      拥有: {} as Record<string, number>,
+      装备: {
+        玩家: [] as string[],
+        白芷: [] as string[],
+        苏芸: [] as string[],
+        纪兰: [] as string[],
+        沈月秋: [] as string[],
+        柳素衣: [] as string[],
+      },
+    },
     场景: { 已解锁: [] },
     剧情: { 已解锁: [] },
-  });
-  return {
-    useDataStore: () => ({ data: mockData }),
-    __mockData: mockData,
-  };
-});
+  })
+
+vi.mock('../store', () => ({
+  useDataStore: () => ({ data: mockData }),
+}));
+
 
 import ShopPage from '../pages/ShopPage.vue';
-import { __mockData as mockData } from '../store';
 
 function mountShop() {
   return mount(ShopPage, { global: { plugins: [createPinia()] } });
@@ -39,6 +61,10 @@ describe('ShopPage', () => {
     mockData.NPC.白芷.好感度 = 50;
     mockData.NPC.柳素衣.攻略值 = 0;
     mockData.道具.拥有 = {};
+    mockData.场景.已解锁 = [];
+    mockData.剧情.已解锁 = [];
+    mockData.系统.已使用阵法 = false;
+    mockData.系统.待处理交互 = [];
   });
 
   // --- 灵石余额显示 ---
@@ -162,10 +188,48 @@ describe('ShopPage', () => {
     }
   });
 
+  it('购买成功后写入下一楼层待处理交互', async () => {
+    mockData.系统.灵石 = 100000;
+    mockData.NPC.白芷.好感度 = 100;
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[1].trigger('click');
+    await flushPromises();
+
+    const bellCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '铃铛项圈');
+    expect(bellCard).toBeTruthy();
+    await bellCard!.trigger('click');
+    await flushPromises();
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.系统.待处理交互).toEqual([
+      {
+        类型: '购买物品',
+        目标: '玩家',
+        道具: '铃铛项圈',
+        数量: 1,
+        时辰: '午时',
+        场景: '醉玉小筑',
+      },
+    ]);
+  });
+
+  it('灵石不足时不写入待处理交互', async () => {
+    mockData.系统.灵石 = 100;
+    const wrapper = mountShop();
+    const firstCard = wrapper.findAll('.item-card')[0];
+    await firstCard.trigger('click');
+    await flushPromises();
+
+    expect(wrapper.find('.buy-btn').attributes('disabled')).toBeDefined();
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.系统.待处理交互).toEqual([]);
+  });
+
   it('重复购买增加道具数量', async () => {
     mockData.系统.灵石 = 100000;
     mockData.NPC.白芷.好感度 = 100;
-    mockData.道具.拥有 = { '铃铛项圈': 1 };
+    mockData.道具.拥有 = { 铃铛项圈: 1 };
     const wrapper = mountShop();
     await wrapper.findAll('.tab-btn')[1].trigger('click');
     await flushPromises();
@@ -201,4 +265,65 @@ describe('ShopPage', () => {
       });
     }
   });
+  it('购买特殊场景后加入场景解锁列表且不进入背包', async () => {
+    mockData.系统.灵石 = 100000;
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[3].trigger('click');
+    await flushPromises();
+
+    const sceneCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '阴阳池');
+    expect(sceneCard).toBeTruthy();
+    await sceneCard!.trigger('click');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.场景.已解锁).toContain('阴阳池');
+    expect(mockData.道具.拥有['阴阳池']).toBeUndefined();
+  });
+
+  it('购买特殊剧情后加入剧情解锁列表且不进入背包', async () => {
+    mockData.系统.灵石 = 100000;
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[4].trigger('click');
+    await flushPromises();
+
+    const storyCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '白芷');
+    expect(storyCard).toBeTruthy();
+    await storyCard!.trigger('click');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.剧情.已解锁).toContain('白芷');
+    expect(mockData.道具.拥有['白芷']).toBeUndefined();
+  });
+
+  it('购买改变阵法后立即标记阵法已使用且不进入背包', async () => {
+    mockData.系统.灵石 = 600000;
+    mockData.NPC.柳素衣.攻略值 = 100;
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[5].trigger('click');
+    await flushPromises();
+
+    const arrayCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '改变阵法');
+    expect(arrayCard).toBeTruthy();
+    await arrayCard!.trigger('click');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.系统.已使用阵法).toBe(true);
+    expect(mockData.道具.拥有['改变阵法']).toBeUndefined();
+  });
+
+  it('购买时间延长作为可使用消耗品进入背包', async () => {
+    mockData.系统.灵石 = 100000;
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[5].trigger('click');
+    await flushPromises();
+
+    const timeCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '时间延长');
+    expect(timeCard).toBeTruthy();
+    await timeCard!.trigger('click');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.道具.拥有['时间延长']).toBe(1);
+    expect(mockData.系统.剩余天数).toBe(30);
+  });
+
 });

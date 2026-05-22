@@ -21,11 +21,11 @@ describe('NpcDetail', () => {
     expect(wrapper.find('.detail-name').text()).toBe('柳素衣');
   });
 
-  it('显示好感度数值', () => {
+  it('显示灵犀状态语', () => {
     const wrapper = mount(NpcDetail, {
       props: { npc名: '白芷', data: createNpcData({ 好感度: 80 }) },
     });
-    expect(wrapper.find('.bar-value').text()).toBe('80');
+    expect(wrapper.find('.bar-value').text()).toBe('灵犀相照');
   });
 
   it('好感度进度条宽度匹配', () => {

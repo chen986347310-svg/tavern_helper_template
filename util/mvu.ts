@@ -37,7 +37,10 @@ export function defineMvuDataStore<T extends z.ZodObject>(
             data.value = result.data;
           });
           if (!_.isEqual(stat_data, result.data)) {
-            updateVariablesWith(variables => _.set(variables, 'stat_data', result.data), variable_option);
+            updateVariablesWith(variables => {
+              _.set(variables, 'stat_data', result.data);
+              return variables;
+            }, variable_option);
           }
         }
       }, 2000);
@@ -54,7 +57,10 @@ export function defineMvuDataStore<T extends z.ZodObject>(
               data.value = result.data;
             });
           }
-          updateVariablesWith(variables => _.set(variables, 'stat_data', result.data), variable_option);
+          updateVariablesWith(variables => {
+            _.set(variables, 'stat_data', result.data);
+            return variables;
+          }, variable_option);
         },
         { deep: true },
       );

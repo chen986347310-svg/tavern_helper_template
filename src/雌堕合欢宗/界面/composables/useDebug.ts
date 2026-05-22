@@ -1,8 +1,8 @@
-import { ref } from "vue";
-import { useDataStore } from "../store";
+import { ref } from 'vue';
+import { useDataStore } from '../store';
 
-const NPC_LIST = ["白芷", "苏芸", "纪兰", "沈月秋", "柳素衣"] as const;
-type NpcName = typeof NPC_LIST[number];
+const NPC_LIST = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
+type NpcName = (typeof NPC_LIST)[number];
 
 /** 模块级共享状态 — 所有 useDebug() 调用方共享同一个 visible */
 const visible = ref(false);
@@ -22,8 +22,8 @@ export function useDebug() {
   function initShortcut() {
     if (initialized) return;
     initialized = true;
-    document.addEventListener("keydown", (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === "D") {
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
         e.preventDefault();
         toggle();
       }
@@ -33,7 +33,7 @@ export function useDebug() {
   /** 一键全攻略完成 */
   function completeAll() {
     for (const npc of NPC_LIST) {
-      store.data.NPC[npc].状态 = "已完成";
+      store.data.NPC[npc].状态 = '已完成';
       store.data.NPC[npc].好感度 = 100;
       store.data.NPC[npc].攻略值 = 100;
     }
@@ -42,12 +42,12 @@ export function useDebug() {
   /** 一键重置 */
   function resetAll() {
     for (const npc of NPC_LIST) {
-      store.data.NPC[npc].状态 = "未开始";
+      store.data.NPC[npc].状态 = '未开始';
       store.data.NPC[npc].好感度 = 0;
       store.data.NPC[npc].攻略值 = 0;
       store.data.NPC[npc].粘滞计数 = 0;
     }
-    store.data.系统.阶段 = "攻略期";
+    store.data.系统.阶段 = '攻略期';
     store.data.系统.剩余天数 = 30;
     store.data.系统.灵石 = 0;
     store.data.牝奴.堕落度 = 0;

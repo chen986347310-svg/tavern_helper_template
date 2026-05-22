@@ -22,6 +22,19 @@
         </svg>
         <span class="taiji-name">{{ npc }}</span>
       </div>
+      <div v-if="currentScene" class="scene-switcher" role="group" aria-label="场景切换">
+        <button
+          v-for="scene in 场景列表"
+          :key="scene.name"
+          :class="['scene-btn', { active: currentScene === scene.name }]"
+          type="button"
+          :aria-label="'切换到' + scene.name"
+          @click="$emit('sceneChange', scene.name)"
+        >
+          <span class="scene-glyph">{{ scene.glyph }}</span>
+          <span class="scene-name">{{ scene.name }}</span>
+        </button>
+      </div>
     </div>
 
     <!-- 牝奴期模式 -->
@@ -66,18 +79,21 @@
     <!-- 右侧数值 -->
     <div class="bar-stats" role="group" aria-label="资源数值">
       <template v-if="mode === '攻略期'">
-        <div class="stat-item">
-          <span class="stat-label">余日</span>
-          <span class="stat-value" :aria-label="'剩余 ' + (remainingDays ?? 0) + ' 天'">{{ remainingDays ?? 0 }}</span>
+        <div class="stat-item stat-time">
+          <span class="stat-glyph">辰</span>
+          <span class="stat-value time-value" :aria-label="'当前时辰 ' + (时辰 ?? '晨时')">{{ 时辰 ?? '晨时' }}</span>
+        </div>        <div class="stat-item">
+          <svg class="stat-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" opacity="0.7"/></svg>
+          <span class="stat-value" :aria-label="'剩余 ' + (remainingDays ?? 0) + ' 日'">{{ remainingDays ?? 0 }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">灵石</span>
+          <svg class="stat-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L2 12l10 10 10-10L12 2z" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.7"/><path d="M12 2L2 12h20L12 2z" fill="currentColor" opacity="0.3"/></svg>
           <span class="stat-value" :aria-label="(gems ?? 0) + ' 灵石'">{{ gems ?? 0 }}</span>
         </div>
       </template>
       <template v-else>
         <div class="stat-item">
-          <span class="stat-label">牝阴决</span>
+          <span class="stat-glyph">决</span>
           <span class="stat-value" :aria-label="'牝阴决 ' + (牝阴决层数 ?? 0) + ' 层'">{{ 牝阴决层数 ?? 0 }}/9</span>
         </div>
       </template>
@@ -98,12 +114,24 @@
 
 <script setup lang="ts">
 type NpcName = '白芷' | '苏芸' | '纪兰' | '沈月秋' | '柳素衣';
+type SceneName = '莲灯前苑' | '醉玉小筑' | '绮梦幽阁';
+type TimeName = '晨时' | '午时' | '酉时' | '亥时';
 
 type SystemBarProps =
-  | { mode: '攻略期'; npcList: NpcName[]; npcStates: Record<NpcName, { 状态: string }>; remainingDays?: number; gems?: number; 牝阴决层数?: number; 堕落度?: number }
-  | { mode: '牝奴期'; 堕落度: number; 牝阴决层数?: number; npcList?: NpcName[]; npcStates?: Record<NpcName, { 状态: string }>; remainingDays?: number; gems?: number };
+  | { mode: '攻略期'; npcList: NpcName[]; npcStates: Record<NpcName, { 状态: string }>; remainingDays?: number; gems?: number; currentScene?: SceneName; 时辰?: TimeName; 牝阴决层数?: number; 堕落度?: number }
+  | { mode: '牝奴期'; 堕落度: number; 牝阴决层数?: number; npcList?: NpcName[]; npcStates?: Record<NpcName, { 状态: string }>; remainingDays?: number; gems?: number; currentScene?: SceneName; 时辰?: TimeName };
 
 const props = defineProps<SystemBarProps>();
+
+defineEmits<{
+  sceneChange: [scene: SceneName];
+}>();
+
+const 场景列表: Array<{ name: SceneName; glyph: string }> = [
+  { name: '莲灯前苑', glyph: '苑' },
+  { name: '醉玉小筑', glyph: '玉' },
+  { name: '绮梦幽阁', glyph: '阁' },
+];
 
 const circumference = 2 * Math.PI * 34;
 
@@ -152,10 +180,28 @@ const { theme, toggleTheme } = useTheme();
   gap: 12px;
   padding: 6px 10px;
   margin-bottom: 8px;
-  @include gold-foil;
-  background: var(--theme-bg-secondary);
-  border-color: var(--theme-border);
-  border-radius: $radius-md;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  border-radius: 0;
+  position: relative;
+  overflow: visible;
+
+  /* 五气朝元阵 · 两端淡出 */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      var(--hh-bg-main) 0%,
+      transparent 15%,
+      transparent 85%,
+      var(--hh-bg-main) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
 }
 
 /* ── 左侧区域 ── */
@@ -167,6 +213,35 @@ const { theme, toggleTheme } = useTheme();
   align-items: center;
 }
 
+.scene-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.scene-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border: none;
+  background: radial-gradient(ellipse at 50% 50%, var(--hh-bg-card), transparent 70%);
+  color: var(--theme-text-muted);
+  cursor: pointer;
+  padding: 4px 7px;
+  font-family: $font-铭文;
+  letter-spacing: 2px;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .scene-name { font-size: 10px; }
+  .scene-glyph { opacity: 0.75; }
+
+  &.active {
+    color: var(--theme-text-primary);
+    text-shadow: 0 0 12px var(--hh-glow-color);
+    background: radial-gradient(ellipse at 50% 65%, var(--hh-glow-color), transparent 72%);
+  }
+}
 /* ── 攻略期太极图标 ── */
 .taiji-icon {
   display: flex;
@@ -185,29 +260,34 @@ const { theme, toggleTheme } = useTheme();
   }
 
   .taiji-name {
+    display: block;
+    min-width: max-content;
     font-family: $font-铭文;
     font-size: 9px;
-    color: rgba(180, 150, 100, 0.4);
-    letter-spacing: 0.05em;
+    color: var(--hh-text-muted);
+    letter-spacing: 1px;
     line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    writing-mode: horizontal-tb;
   }
 
   &.taiji--unconquered .taiji-svg {
     color: $taiji-未攻略色;
-    filter: drop-shadow(0 0 4px rgba(74, 122, 155, 0.4));
+    filter: drop-shadow(0 0 15px rgba(74, 122, 155, 0.3));
     animation: taiji-breathe 3s ease-in-out infinite;
   }
 
   &.taiji--conquered .taiji-svg {
     color: $taiji-已攻略色;
-    filter: drop-shadow(0 0 6px rgba(212, 96, 138, 0.5));
+    filter: drop-shadow(0 0 15px rgba(212, 96, 138, 0.3));
     animation: taiji-breathe 3s ease-in-out infinite;
   }
 }
 
 @keyframes taiji-breathe {
-  0%, 100% { filter: drop-shadow(0 0 3px currentColor); opacity: 0.8; }
-  50% { filter: drop-shadow(0 0 8px currentColor); opacity: 1; }
+  0%, 100% { filter: drop-shadow(0 0 12px currentColor); opacity: 0.8; }
+  50% { filter: drop-shadow(0 0 20px currentColor); opacity: 1; }
 }
 
 /* ── 牝奴期樱花圆环 ── */
@@ -241,7 +321,7 @@ const { theme, toggleTheme } = useTheme();
 
   &.lit {
     color: $blossom-亮色;
-    filter: drop-shadow(0 0 6px rgba(240, 160, 176, 0.6));
+    filter: drop-shadow(0 0 15px rgba(240, 160, 176, 0.3));
   }
 }
 
@@ -261,20 +341,36 @@ const { theme, toggleTheme } = useTheme();
 /* ── 右侧数值 ── */
 .bar-stats {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
   flex-shrink: 0;
 
   .stat-item {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 4px;
+  }
+
+  .stat-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--hh-text-muted);
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 6px var(--hh-glow-color, rgba(156,44,49,0.35)));
+  }
+
+  .stat-glyph {
+    font-family: $font-铭文;
+    font-size: 10px;
+    color: var(--hh-text-muted);
+    letter-spacing: 2px;
   }
 
   .stat-label {
     font-size: 9px;
-    color: rgba(180, 150, 100, 0.4);
-    letter-spacing: 0.05em;
+    color: var(--hh-text-muted);
+    letter-spacing: 4px;
   }
 
   .stat-value {
@@ -293,27 +389,44 @@ const { theme, toggleTheme } = useTheme();
   justify-content: center;
   width: 34px;
   height: 34px;
-  border: 1px solid var(--theme-border);
+  border: none;
   border-radius: 50%;
-  background: var(--theme-bg-secondary);
+  background: transparent;
   color: var(--theme-gold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
   margin-left: 8px;
   position: relative;
-  z-index: 1;
-  box-shadow: 0 0 8px var(--theme-accent-glow);
+  z-index: 2;
+  animation: array-eye-rotate 20s linear infinite;
+  filter: drop-shadow(0 0 6px var(--hh-glow-color));
 
   &:hover {
-    background: var(--theme-accent-glow);
     color: var(--theme-accent);
-    box-shadow: 0 0 12px var(--theme-border);
+    filter: drop-shadow(0 0 12px var(--hh-glow-color));
+  }
+
+  &:active {
+    animation: ink-spread 0.6s ease-out, array-eye-rotate 20s linear infinite;
   }
 
   .theme-icon {
     width: 18px;
     height: 18px;
   }
+}
+
+/* 五气朝元阵 · 阵眼自转 */
+@keyframes array-eye-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 墨迹扩散 */
+@keyframes ink-spread {
+  0% { filter: drop-shadow(0 0 0 0 var(--hh-glow-color)); }
+  50% { filter: drop-shadow(0 0 20px var(--hh-glow-color)); }
+  100% { filter: drop-shadow(0 0 6px var(--hh-glow-color)); }
 }
 </style>
