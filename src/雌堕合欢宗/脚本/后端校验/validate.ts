@@ -27,11 +27,35 @@ function coerceNumeric(value: any, max: number = 100, min: number = 0): number {
   }
   return min;
 }
+
+function ensureV4SystemFields(new_data: Record<string, any>): void {
+  if (!_.has(new_data, '系统.时辰')) _.set(new_data, '系统.时辰', '晨时');
+  if (!_.has(new_data, '系统.当前场景')) _.set(new_data, '系统.当前场景', '莲灯前苑');
+  if (!Array.isArray(_.get(new_data, '系统.待处理交互'))) _.set(new_data, '系统.待处理交互', []);
+  if (!_.isPlainObject(_.get(new_data, '系统.场景上下文'))) {
+    _.set(new_data, '系统.场景上下文', {
+      地点: _.get(new_data, '系统.当前场景', '莲灯前苑'),
+      子区域: '',
+      场景来源: '核心地点',
+      公开度: '公开',
+      在场NPC: [],
+      NPC活动: {},
+      氛围: [],
+      故事钩子: [],
+      特殊事件: '',
+    });
+  }
+  if (!Array.isArray(_.get(new_data, '系统.风声列表'))) _.set(new_data, '系统.风声列表', []);
+  if (!_.has(new_data, '系统.当前追查风声ID')) _.set(new_data, '系统.当前追查风声ID', '');
+}
 /**
  * Pure backend validation function.
  * Mutates new_data in place to enforce all game rules.
  */
 export function validateVariables(new_data: Record<string, any>, old_data: Record<string, any>): void {
+  // 0. v4 migration defaults for old chat snapshots
+  ensureV4SystemFields(new_data);
+
   // 0. type coercion for AI dirty data
   for (const npc of NPC列表) {
     _.set(new_data, `NPC.${npc}.好感度`, coerceNumeric(_.get(new_data, `NPC.${npc}.好感度`, 0), 100, 0));

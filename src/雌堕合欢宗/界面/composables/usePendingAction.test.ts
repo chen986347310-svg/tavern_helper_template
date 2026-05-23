@@ -12,13 +12,19 @@ const mockData = reactive({
     已使用阵法: false,
     时辰: '午时',
     当前场景: '醉玉小筑',
+    场景上下文: { 在场NPC: [] as string[] },
     待处理交互: [] as Array<{
-      类型: '装备' | '卸下' | '购买' | '灵识窃取' | '装备道具' | '购买物品' | '使用物品';
+      类型: '装备' | '卸下' | '购买' | '灵识窃取' | '装备道具' | '购买物品' | '使用物品' | '追查风声';
       目标: string;
       道具: string;
       数量: number;
       时辰: '晨时' | '午时' | '酉时' | '亥时';
       场景: '莲灯前苑' | '醉玉小筑' | '绮梦幽阁';
+      地点?: string;
+      子区域?: string;
+      风声ID?: string;
+      故事钩子?: string;
+      在场NPC?: string[];
     }>,
   },
 });
@@ -33,6 +39,7 @@ describe('usePendingAction', () => {
   beforeEach(() => {
     mockData.系统.时辰 = '午时';
     mockData.系统.当前场景 = '醉玉小筑';
+    mockData.系统.场景上下文 = { 在场NPC: [] };
     mockData.系统.待处理交互.splice(0);
   });
 
@@ -109,8 +116,36 @@ describe('usePendingAction', () => {
     delete (globalThis as any).generate;
   });
 
+
+  it('记录追查风声会携带地点、钩子与当前在场NPC等待下一楼层处理', () => {
+    mockData.系统.场景上下文 = { 在场NPC: ['白芷'] };
+    const { 记录追查风声 } = usePendingAction();
+
+    记录追查风声({
+      id: 'r1',
+      地点: '药庐',
+      子区域: '炼丹房',
+      相关NPC: ['白芷'],
+      故事钩子: '丹炉彻夜未熄',
+    });
+
+    expect(mockData.系统.待处理交互[0]).toEqual({
+      类型: '追查风声',
+      目标: '白芷',
+      道具: '',
+      数量: 1,
+      时辰: '午时',
+      场景: '醉玉小筑',
+      地点: '药庐',
+      子区域: '炼丹房',
+      风声ID: 'r1',
+      故事钩子: '丹炉彻夜未熄',
+      在场NPC: ['白芷'],
+    });
+  });
+
   it('待处理交互类型在schema与世界书中保持一致', () => {
-    const expectedTypes = ['装备', '卸下', '购买', '灵识窃取', '装备道具', '购买物品', '使用物品'];
+    const expectedTypes = ['装备', '卸下', '购买', '灵识窃取', '装备道具', '购买物品', '使用物品', '追查风声'];
     const root = process.cwd();
     const schema = readFileSync(join(root, 'src/雌堕合欢宗/schema.ts'), 'utf8');
     const variableList = readFileSync(join(root, 'src/雌堕合欢宗/世界书/变量/变量列表.yaml'), 'utf8');

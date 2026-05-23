@@ -1,8 +1,9 @@
 type NpcName = '白芷' | '苏芸' | '纪兰' | '沈月秋' | '柳素衣';
-type SceneName = '莲灯前苑' | '醉玉小筑' | '绮梦幽阁';
+type ShortcutSceneName = '莲灯前苑' | '醉玉小筑' | '绮梦幽阁';
+type SceneName = string;
 type WhisperStage = '警戒' | '动摇' | '沉沦';
 
-type WhisperLibrary = Record<NpcName, Record<SceneName, Record<WhisperStage, string[]>>>;
+type WhisperLibrary = Record<NpcName, Record<ShortcutSceneName, Record<WhisperStage, string[]>>>;
 
 export const 心里话库: WhisperLibrary = {
   白芷: {
@@ -93,6 +94,7 @@ export const 心里话库: WhisperLibrary = {
 };
 
 export function getRandomWhisper(npc名: NpcName, 当前场景: SceneName, 阶段: WhisperStage, index = 0): string {
-  const options = 心里话库[npc名][当前场景][阶段];
+  const scene = (当前场景 in 心里话库[npc名] ? 当前场景 : '莲灯前苑') as ShortcutSceneName;
+  const options = 心里话库[npc名][scene][阶段];
   return options[index % options.length];
 }

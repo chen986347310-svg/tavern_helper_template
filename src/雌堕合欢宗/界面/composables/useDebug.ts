@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { readonly, ref } from 'vue';
 import { useDataStore } from '../store';
 
 const NPC_LIST = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
@@ -19,14 +19,33 @@ export function useDebug() {
     visible.value = !visible.value;
   }
 
+  function show() {
+    visible.value = true;
+  }
+
+  function hide() {
+    visible.value = false;
+  }
+
+  function isDebugShortcut(e: KeyboardEvent) {
+    const key = e.key.toLowerCase();
+    return (e.ctrlKey || e.metaKey) && e.shiftKey && (key === 'd' || e.code === 'KeyD');
+  }
+
   function initShortcut() {
     if (initialized) return;
     initialized = true;
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+    const handler = (e: KeyboardEvent) => {
+      if (isDebugShortcut(e)) {
         e.preventDefault();
+        e.stopPropagation();
         toggle();
       }
+    };
+    window.addEventListener('keydown', handler, { capture: true });
+    document.addEventListener('keydown', handler, { capture: true });
+    Object.assign(window, {
+      __HH_DEBUG__: { toggle, show, hide, visible: readonly(visible) },
     });
   }
 
@@ -54,7 +73,7 @@ export function useDebug() {
     store.data.牝奴.牝阴决层数 = 0;
   }
 
-  return { visible, toggle, initShortcut, completeAll, resetAll };
+  return { visible, toggle, show, hide, initShortcut, completeAll, resetAll };
 }
 
 /**

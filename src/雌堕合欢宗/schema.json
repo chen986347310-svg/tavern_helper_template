@@ -28,22 +28,10 @@
         },
         "时辰": {
           "default": "晨时",
-          "type": "string",
-          "enum": [
-            "晨时",
-            "午时",
-            "酉时",
-            "亥时"
-          ]
+          "$ref": "#/$defs/__schema0"
         },
         "当前场景": {
-          "default": "莲灯前苑",
-          "type": "string",
-          "enum": [
-            "莲灯前苑",
-            "醉玉小筑",
-            "绮梦幽阁"
-          ]
+          "$ref": "#/$defs/__schema1"
         },
         "待处理交互": {
           "default": [],
@@ -61,7 +49,8 @@
                   "灵识窃取",
                   "装备道具",
                   "购买物品",
-                  "使用物品"
+                  "使用物品",
+                  "追查风声"
                 ]
               },
               "目标": {
@@ -78,25 +67,129 @@
               },
               "时辰": {
                 "default": "晨时",
-                "type": "string",
-                "enum": [
-                  "晨时",
-                  "午时",
-                  "酉时",
-                  "亥时"
-                ]
+                "$ref": "#/$defs/__schema0"
               },
               "场景": {
-                "default": "莲灯前苑",
-                "type": "string",
-                "enum": [
-                  "莲灯前苑",
-                  "醉玉小筑",
-                  "绮梦幽阁"
-                ]
+                "$ref": "#/$defs/__schema1"
+              },
+              "地点": {
+                "default": "",
+                "type": "string"
+              },
+              "子区域": {
+                "default": "",
+                "type": "string"
+              },
+              "风声ID": {
+                "default": "",
+                "type": "string"
+              },
+              "故事钩子": {
+                "default": "",
+                "type": "string"
+              },
+              "在场NPC": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema2"
+                }
               }
             }
           }
+        },
+        "场景上下文": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "地点": {
+              "default": "莲灯前苑",
+              "type": "string"
+            },
+            "子区域": {
+              "default": "",
+              "type": "string"
+            },
+            "场景来源": {
+              "default": "核心地点",
+              "type": "string",
+              "enum": [
+                "核心地点",
+                "世界书扩展",
+                "AI生成",
+                "临时过渡"
+              ]
+            },
+            "公开度": {
+              "default": "公开",
+              "type": "string",
+              "enum": [
+                "公开",
+                "半私密",
+                "私密",
+                "禁地"
+              ]
+            },
+            "在场NPC": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/__schema2"
+              }
+            },
+            "NPC活动": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "$ref": "#/$defs/__schema2"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "氛围": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "故事钩子": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "特殊事件": {
+              "default": "",
+              "type": "string"
+            }
+          }
+        },
+        "风声列表": {
+          "default": [],
+          "maxItems": 3,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema3"
+          }
+        },
+        "当前追查风声ID": {
+          "default": "",
+          "type": "string"
+        },
+        "心音回响": {
+          "default": [],
+          "maxItems": 12,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema4"
+          }
+        },
+        "当前聚焦心声NPC": {
+          "default": "",
+          "type": "string"
         }
       }
     },
@@ -126,14 +219,7 @@
           },
           "type": "object",
           "propertyNames": {
-            "type": "string",
-            "enum": [
-              "白芷",
-              "苏芸",
-              "纪兰",
-              "沈月秋",
-              "柳素衣"
-            ]
+            "$ref": "#/$defs/__schema2"
           },
           "additionalProperties": {
             "type": "number"
@@ -180,14 +266,7 @@
       },
       "type": "object",
       "propertyNames": {
-        "type": "string",
-        "enum": [
-          "白芷",
-          "苏芸",
-          "纪兰",
-          "沈月秋",
-          "柳素衣"
-        ]
+        "$ref": "#/$defs/__schema2"
       },
       "additionalProperties": {
         "type": "object",
@@ -213,14 +292,19 @@
               "已完成"
             ]
           },
-          "当前场景": {
-            "default": "莲灯前苑",
+          "心声探测态": {
+            "default": "无波动",
             "type": "string",
             "enum": [
-              "莲灯前苑",
-              "醉玉小筑",
-              "绮梦幽阁"
+              "无波动",
+              "可窥探",
+              "已捕获",
+              "反震",
+              "锁闭"
             ]
+          },
+          "当前场景": {
+            "$ref": "#/$defs/__schema1"
           },
           "soul_whisper": {
             "default": {},
@@ -307,6 +391,42 @@
             "沈月秋",
             "柳素衣"
           ]
+        },
+        "已生效效果": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "目标": {
+                "default": "",
+                "type": "string"
+              },
+              "道具": {
+                "default": "",
+                "type": "string"
+              },
+              "来源交互ID": {
+                "default": "",
+                "type": "string"
+              },
+              "生效楼层": {
+                "default": 0,
+                "type": "number"
+              },
+              "效果标签": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "可被AI覆盖": {
+                "default": true,
+                "type": "boolean"
+              }
+            }
+          }
         }
       }
     },
@@ -335,6 +455,161 @@
           }
         }
       }
+    }
+  },
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "晨时",
+        "午时",
+        "酉时",
+        "亥时"
+      ]
+    },
+    "__schema1": {
+      "default": "莲灯前苑",
+      "type": "string"
+    },
+    "__schema2": {
+      "type": "string",
+      "enum": [
+        "白芷",
+        "苏芸",
+        "纪兰",
+        "沈月秋",
+        "柳素衣"
+      ]
+    },
+    "__schema3": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "default": "",
+          "type": "string"
+        },
+        "来源": {
+          "default": "弟子传闻",
+          "type": "string",
+          "enum": [
+            "弟子传闻",
+            "灵气异动",
+            "器物残痕",
+            "NPC行踪",
+            "宗门告示",
+            "梦兆"
+          ]
+        },
+        "地点": {
+          "default": "莲灯前苑",
+          "type": "string"
+        },
+        "子区域": {
+          "default": "",
+          "type": "string"
+        },
+        "相关NPC": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema2"
+          }
+        },
+        "紧急度": {
+          "default": "低",
+          "type": "string",
+          "enum": [
+            "低",
+            "中",
+            "高"
+          ]
+        },
+        "风声文本": {
+          "default": "",
+          "type": "string"
+        },
+        "故事钩子": {
+          "default": "",
+          "type": "string"
+        },
+        "状态": {
+          "default": "未读",
+          "type": "string",
+          "enum": [
+            "未读",
+            "已读",
+            "已追查",
+            "已失效"
+          ]
+        },
+        "过期回合": {
+          "type": "number"
+        },
+        "可信度": {
+          "type": "number"
+        },
+        "是否陷阱": {
+          "type": "boolean"
+        },
+        "反制NPC": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "后续风声ID": {
+          "type": "string"
+        }
+      }
+    },
+    "__schema4": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "default": "",
+          "type": "string"
+        },
+        "npc": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "text": {
+          "default": "",
+          "type": "string"
+        },
+        "stage": {
+          "default": "警戒",
+          "type": "string",
+          "enum": [
+            "警戒",
+            "动摇",
+            "沉沦"
+          ]
+        },
+        "result": {
+          "default": "捕获",
+          "type": "string",
+          "enum": [
+            "捕获",
+            "反震",
+            "锁闭"
+          ]
+        },
+        "scene": {
+          "default": "",
+          "type": "string"
+        },
+        "time": {
+          "default": "晨时",
+          "$ref": "#/$defs/__schema0"
+        },
+        "floor": {
+          "type": "number"
+        },
+        "is_new": {
+          "default": true,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "npc"
+      ]
     }
   }
 }

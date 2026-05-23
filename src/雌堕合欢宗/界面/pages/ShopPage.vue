@@ -92,6 +92,7 @@ import { 牝奴服装列表 } from '../data/outfits';
 import { 特殊场景, 特殊剧情 } from '../data/scenes';
 import { checkItemThreshold } from '../guards';
 import { usePendingAction } from '../composables/usePendingAction';
+import { getItemLifecycle } from '../data/itemLifecycle';
 
 type ShopItem =
   | (typeof 服装列表)[number]
@@ -212,15 +213,17 @@ function addUnique(list: string[], name: string) {
 }
 
 function applyPurchaseResult(name: string) {
-  if (activeCategory.value === 'scene') {
+  const lifecycle = getItemLifecycle(name);
+
+  if (lifecycle === '解锁场景') {
     addUnique(store.data.场景.已解锁, name);
     return;
   }
-  if (activeCategory.value === 'story') {
+  if (lifecycle === '解锁剧情') {
     addUnique(store.data.剧情.已解锁, name);
     return;
   }
-  if (name === '改变阵法') {
+  if (lifecycle === '购买即生效') {
     store.data.系统.已使用阵法 = true;
     return;
   }

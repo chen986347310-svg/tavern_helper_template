@@ -1,7 +1,7 @@
 <template>
   <div
     :class="['npc-strip', statusClass, { expanded: expanded }]" :data-npc="npc名 === '白芷' ? 'baiji' : npc名 === '苏芸' ? 'suyun' : npc名 === '纪兰' ? 'jilan' : npc名 === '沈月秋' ? 'shenyueqiu' : 'liuyuyi'"
-    :style="{ '--npc-color': npcColor, '--npc-color-dark': npcColorDark }"
+    :style="{ '--npc-color': npcColor, '--npc-color-dark': npcColorDark, '--fav-value': favorValue }"
     @click="handleClick"
   >
     <!-- 金印封章 (已攻略状态) -->
@@ -36,18 +36,13 @@
         <span class="status-dot"></span>
         {{ data.状态 }}
       </div>
-      <div v-if="data.状态 === '进行中'" class="strip-favor">
-        <svg class="mini-ring" viewBox="0 0 24 24" aria-hidden="true">
-          <circle class="ring-track" cx="12" cy="12" r="10" />
-          <circle
-            class="ring-value favor"
-            cx="12"
-            cy="12"
-            r="10"
-            :stroke-dasharray="miniRingCircumference"
-            :stroke-dashoffset="miniFavorDashOffset"
-          />
-        </svg>
+      <div
+        v-if="data.状态 === '进行中'"
+        class="strip-favor npc-disk-collapsed"
+        :data-favor-tier="collapsedFavorTier"
+        :aria-label="'灵犀命魂 ' + get灵犀等级(data.好感度)"
+      >
+        <span class="collapsed-soul-aura" aria-hidden="true"></span>
         <span class="favor-value">{{ get灵犀等级(data.好感度) }}</span>
       </div>
     </div>
@@ -55,29 +50,47 @@
     <!-- 展开区域 (进度条 + 装备) -->
     <div :class="['card-expand', { expanded: expanded }]">
       <div class="expand-inner">
-        <div :class="['dual-ring-panel', { 'soul-backlash': backlashVisible }]" aria-hidden="true" @click.stop="handleSoulWhisper">
+        <div
+          :class="['dual-ring-panel', probeStateClass, { 'soul-backlash': backlashVisible, 'destiny-assimilated': isDestinyAssimilated, 'soul-locked': soulLocked, 'npc-disk-unstable': isSoulTideActive }]"
+          :data-effect="isDestinyAssimilated ? 'destiny-assimilated' : undefined"
+          data-ring-style="totem"
+          :data-tide="isSoulTideActive ? 'unstable' : undefined"
+          :data-pending="soulLocked ? 'soul-whisper' : undefined"
+          :data-probe-state="probeState"
+          :data-favor-percent="favorPercent"
+          :data-conquest-percent="conquestPercent"
+          aria-hidden="true"
+          @click.stop="handleSoulWhisper"
+        >
+          <span class="ring-totem-shards" aria-hidden="true"></span>
+          <span class="destiny-taiji-core" aria-hidden="true"></span>
+          <span v-if="isSoulTideActive" class="soul-glyph-fragments" aria-hidden="true">心 魄 念</span>
+          <span v-if="soulLocked" class="soul-thread-line" aria-hidden="true"></span>
           <svg class="dual-ring" viewBox="0 0 64 64">
             <circle class="ring-track outer" cx="32" cy="32" r="26" />
             <circle
-              class="ring-value progress"
+              :class="['ring-value', 'favor', 'outer-ring', { 'ink-burst': favorBurst }]"
               cx="32"
               cy="32"
               r="26"
               :stroke-dasharray="outerRingCircumference"
-              :stroke-dashoffset="progressDashOffset"
+              :stroke-dashoffset="outerFavorDashOffset"
             />
             <circle class="ring-track inner" cx="32" cy="32" r="20" />
             <circle
-              class="ring-value favor"
+              :class="['ring-value', 'progress', 'inner-ring', { 'ink-burst': progressBurst }]"
               cx="32"
               cy="32"
               r="20"
               :stroke-dasharray="innerRingCircumference"
-              :stroke-dashoffset="favorDashOffset"
+              :stroke-dashoffset="innerProgressDashOffset"
             />
           </svg>
           <Transition name="ink-reveal">
-            <span v-if="backlashVisible" class="backlash-hint">心防反震</span>
+            <span v-if="backlashVisible" class="backlash-hint"><span class="backlash-glitch" aria-hidden="true">纟纟露</span><span class="backlash-label">心防反震</span></span>
+          </Transition>
+          <Transition name="ink-reveal">
+            <span v-if="soulLocked" class="soul-pending-mark">灵识窥伺</span>
           </Transition>
         </div>
         <div class="expand-row">
@@ -111,7 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted, ref } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 
 import { get灵犀等级, get道心侵蚀 } from '../composables/useStatusText';
 
@@ -127,6 +140,7 @@ import avatar柳素衣 from '../assets/avatars/柳素衣.png';
 import avatar柳素衣_fallen from '../assets/avatars/柳素衣_fallen.png';
 
 type NpcName = '白芷' | '苏芸' | '纪兰' | '沈月秋' | '柳素衣';
+type SoulProbeState = '无波动' | '可窥探' | '已捕获' | '反震' | '锁闭';
 
 const AVATAR_MAP: Record<NpcName, { normal: string; fallen: string }> = {
   白芷: { normal: avatar白芷, fallen: avatar白芷_fallen },
@@ -146,9 +160,10 @@ const NPC_COLORS: Record<NpcName, string> = {
 
 const props = defineProps<{
   npc名: NpcName;
-  data: { 好感度: number; 攻略值: number; 状态: string; soul_whisper?: { text?: string; stage?: '警戒' | '动摇' | '沉沦'; is_revealed?: boolean } };
+  data: { 好感度: number; 攻略值: number; 状态: string; 心声探测态?: SoulProbeState; soul_whisper?: { text?: string; stage?: '警戒' | '动摇' | '沉沦'; is_revealed?: boolean } };
   装备?: string[];
   expanded?: boolean;
+  soulLocked?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -160,6 +175,25 @@ const emit = defineEmits<{
 const equipOpen = ref(false);
 const imageLoaded = ref(false);
 const imageError = ref(false);
+
+const favorBurst = ref(false);
+const progressBurst = ref(false);
+let favorBurstTimer: ReturnType<typeof setTimeout> | undefined;
+let progressBurstTimer: ReturnType<typeof setTimeout> | undefined;
+
+watch(() => props.data?.好感度, (newVal, oldVal) => {
+  if (newVal === oldVal) return;
+  favorBurst.value = true;
+  if (favorBurstTimer) clearTimeout(favorBurstTimer);
+  favorBurstTimer = setTimeout(() => { favorBurst.value = false; }, 800);
+});
+
+watch(() => props.data?.攻略值, (newVal, oldVal) => {
+  if (newVal === oldVal) return;
+  progressBurst.value = true;
+  if (progressBurstTimer) clearTimeout(progressBurstTimer);
+  progressBurstTimer = setTimeout(() => { progressBurst.value = false; }, 800);
+});
 const backlashVisible = ref(false);
 let backlashTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -182,8 +216,16 @@ const NPC_COLORS_DARK: Record<NpcName, string> = {
 };
 const npcColor = computed(() => NPC_COLORS[props.npc名] || '#d4a017');
 const npcColorDark = computed(() => NPC_COLORS_DARK[props.npc名] || '#8b5e0f');
-
-const miniRingCircumference = '62.83';
+const favorPercent = computed(() => Math.min(Math.max(props.data.好感度 ?? 0, 0), 100));
+const conquestPercent = computed(() => Math.min(Math.max(props.data.攻略值 ?? 0, 0), 100));
+const favorValue = computed(() => String(favorPercent.value));
+const collapsedFavorTier = computed(() => {
+  const value = Number(favorValue.value);
+  if (value <= 0) return 'dormant';
+  if (value < 41) return 'faint';
+  if (value < 81) return 'flowing';
+  return 'resonant';
+});
 const outerRingCircumference = '163.36';
 const innerRingCircumference = '125.66';
 
@@ -191,17 +233,20 @@ function getRingDashOffset(value: number, circumference: number): string {
   const clamped = Math.min(Math.max(value, 0), 100);
   return (circumference * (1 - clamped / 100)).toFixed(2);
 }
-
-const miniFavorDashOffset = computed(() => getRingDashOffset(props.data.好感度, 62.83));
-const favorDashOffset = computed(() => getRingDashOffset(props.data.好感度, 125.66));
-const progressDashOffset = computed(() => getRingDashOffset(props.data.攻略值, 163.36));
+const outerFavorDashOffset = computed(() => getRingDashOffset(favorPercent.value, 163.36));
+const innerProgressDashOffset = computed(() => getRingDashOffset(conquestPercent.value, 125.66));
+const isDestinyAssimilated = computed(() => conquestPercent.value >= 100 || props.data.状态 === '已完成');
 const revealedSoulWhisper = computed(() => {
   const whisper = props.data.soul_whisper;
   if (!whisper?.is_revealed) return '';
   return whisper.text?.trim() ?? '';
 });
 
+const soulLocked = computed(() => props.soulLocked === true);
+const probeState = computed<SoulProbeState>(() => props.data.心声探测态 ?? '无波动');
+const probeStateClass = computed(() => (probeState.value === '无波动' ? '' : `probe-${probeState.value}`));
 const hasBacklashRisk = computed(() => props.data.攻略值 < 40 || props.data.soul_whisper?.stage === '警戒');
+const isSoulTideActive = computed(() => props.data.状态 === '进行中' && !soulLocked.value && !isDestinyAssimilated.value && (probeState.value === '可窥探' || probeState.value === '已捕获'));
 
 const avatarSrc = computed(() => {
   const map = AVATAR_MAP[props.npc名];
@@ -416,43 +461,61 @@ onUnmounted(() => {
   }
 }
 
-/* 横条内好感度条 */
+/* 横条内命魂光晕 */
 .strip-favor {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   flex-shrink: 0;
-  min-width: 80px;
+  min-width: 86px;
+  position: relative;
+  isolation: isolate;
 
-  .mini-ring {
+  .collapsed-soul-aura {
     width: 22px;
     height: 22px;
     flex-shrink: 0;
-    transform: rotate(-90deg);
-    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--npc-color) 24%, transparent));
+    position: relative;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--npc-color) 45%, transparent) 0%, transparent 36%),
+      radial-gradient(circle at 50% 50%, rgba(18, 10, 10, 0.8) 0%, rgba(18, 10, 10, 0.15) 70%, transparent 100%);
+    box-shadow:
+      0 0 calc(var(--fav-value, 0) * 0.18px + 4px) color-mix(in srgb, var(--npc-color) calc(var(--fav-value, 0) * 0.45%), transparent),
+      inset 0 0 10px rgba(0, 0, 0, 0.48);
+    opacity: calc(var(--fav-value, 0) * 0.006 + 0.22);
+    transition: box-shadow 0.6s var(--hh-easing-rescale, cubic-bezier(0.4, 0, 0.2, 1)), opacity 0.6s var(--hh-easing-rescale, cubic-bezier(0.4, 0, 0.2, 1));
+    animation: collapsed-soul-breath 10s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
   }
 
-  .favor-bar {
-    flex: 1;
-    height: 4px;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .favor-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.4s ease;
-    background: var(--hh-bar-fill);
+  .collapsed-soul-aura::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--npc-color) 52%, transparent);
+    filter: blur(2px);
+    opacity: 0.42;
   }
 
   .favor-value {
     font-family: $font-铭文;
     font-size: 11px;
-    color: var(--hh-gold);
-    min-width: 24px;
+    color: color-mix(in srgb, var(--npc-color) 64%, var(--hh-gold));
+    min-width: 44px;
     text-align: right;
+    letter-spacing: 2px;
+    text-shadow: 0 0 calc(var(--fav-value, 0) * 0.08px + 4px) color-mix(in srgb, var(--npc-color) 28%, transparent);
+  }
+
+  &[data-favor-tier='dormant'] .collapsed-soul-aura {
+    opacity: 0.16;
+    filter: grayscale(0.8) brightness(0.65);
+  }
+
+  &[data-favor-tier='resonant'] .collapsed-soul-aura {
+    opacity: 0.92;
+    animation-duration: 7s;
   }
 }
 
@@ -478,10 +541,18 @@ onUnmounted(() => {
     filter: drop-shadow(0 0 8px color-mix(in srgb, var(--npc-color) 35%, transparent));
   }
 
+  &.favor.outer-ring {
+    stroke-width: 2.4;
+  }
+
   &.progress {
     stroke: var(--hh-accent);
     stroke-width: 2.4;
     filter: drop-shadow(0 0 10px var(--hh-glow-color));
+  }
+
+  &.progress.inner-ring {
+    stroke-width: 2.4;
   }
 }
 
@@ -491,23 +562,237 @@ onUnmounted(() => {
   justify-content: center;
   padding: 4px 0 2px;
 
+  .ring-totem-shards {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 72px;
+    height: 72px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.5;
+    background:
+      repeating-conic-gradient(from 8deg, color-mix(in srgb, var(--npc-color) 34%, transparent) 0 5deg, transparent 5deg 15deg),
+      radial-gradient(circle, transparent 58%, color-mix(in srgb, var(--hh-text-highlight) 18%, transparent) 60%, transparent 64%);
+    filter: blur(0.2px) drop-shadow(0 0 8px color-mix(in srgb, var(--npc-color) 22%, transparent));
+    mask-image: radial-gradient(circle, transparent 42%, black 46%, black 66%, transparent 70%);
+    -webkit-mask-image: radial-gradient(circle, transparent 42%, black 46%, black 66%, transparent 70%);
+  }
+
+  .destiny-taiji-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 30px;
+    height: 30px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 25%, color-mix(in srgb, var(--npc-color) 72%, #f7efe2) 0 13%, transparent 14%),
+      radial-gradient(circle at 50% 75%, rgba(156, 44, 49, 0.82) 0 13%, transparent 14%),
+      conic-gradient(from 90deg, color-mix(in srgb, var(--npc-color) 54%, rgba(8, 12, 10, 0.92)) 0 50%, rgba(156, 44, 49, 0.62) 50% 100%);
+    box-shadow:
+      inset 0 0 10px rgba(0, 0, 0, 0.62),
+      0 0 14px color-mix(in srgb, var(--npc-color) 28%, transparent);
+    opacity: 0.78;
+    animation: taiji-core-spin 20s linear infinite;
+  }
+
+  .soul-glyph-fragments {
+    position: absolute;
+    inset: -2px 0 auto;
+    text-align: center;
+    font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+    font-size: 9px;
+    letter-spacing: 6px;
+    color: color-mix(in srgb, var(--npc-color) 60%, transparent);
+    opacity: 0.28;
+    pointer-events: none;
+    animation: soul-glyph-flicker 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  }
+
+  .soul-thread-line {
+    position: absolute;
+    left: 50%;
+    top: 6px;
+    width: 2px;
+    height: 52px;
+    transform: translateX(-50%) rotate(18deg);
+    border-radius: 999px;
+    background: linear-gradient(to bottom, transparent, rgba(156, 44, 49, 0.95), transparent);
+    box-shadow: 0 0 16px rgba(156, 44, 49, 0.55);
+    pointer-events: none;
+    animation: soul-thread-bind 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  }
+
+  &.npc-disk-unstable {
+    animation: tide-pulse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+
+    .dual-ring {
+      animation: ring-glitch 8s linear infinite, soul-ring-breathe 4s ease-in-out infinite;
+    }
+
+    .ring-value {
+      stroke-dasharray: 12 6;
+    }
+  }
+
   &.soul-backlash {
     animation: soul-backlash-shake 0.42s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  &.probe-可窥探 {
+    .ring-totem-shards { opacity: 0.72; }
+    .dual-ring { filter: drop-shadow(0 0 16px color-mix(in srgb, var(--npc-color) 36%, transparent)); }
+  }
+
+  &.probe-已捕获 {
+    .ring-totem-shards {
+      opacity: 0.88;
+      filter: blur(0.1px) drop-shadow(0 0 14px color-mix(in srgb, var(--hh-text-highlight) 32%, transparent));
+    }
+
+    .dual-ring {
+      filter: drop-shadow(0 0 18px color-mix(in srgb, var(--hh-text-highlight) 38%, transparent));
+    }
+  }
+
+  &.probe-反震 {
+    animation: soul-backlash-shake 0.56s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .dual-ring {
+      filter: grayscale(0.2) drop-shadow(0 0 18px rgba(156, 44, 49, 0.45));
+    }
+  }
+
+  &.probe-锁闭 {
+    filter: grayscale(0.72) brightness(0.68);
+
+    .dual-ring {
+      animation: none;
+      opacity: 0.5;
+    }
+
+    .ring-totem-shards { opacity: 0.2; }
+  }
+
+  &.soul-locked {
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 7px;
+      width: 1px;
+      height: 50px;
+      transform: translateX(-50%) rotate(18deg);
+      background: linear-gradient(to bottom, transparent, rgba(156, 44, 49, 0.88), transparent);
+      box-shadow: 0 0 12px rgba(156, 44, 49, 0.5);
+      pointer-events: none;
+      animation: soul-thread-bind 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+    }
+
+    .dual-ring {
+      filter: drop-shadow(0 0 14px rgba(156, 44, 49, 0.38));
+    }
+  }
+
+  &.destiny-assimilated {
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 2px 50%;
+      width: 70px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(156, 44, 49, 0.26) 0%, rgba(156, 44, 49, 0.12) 36%, transparent 72%),
+        conic-gradient(from 120deg, transparent, rgba(156, 44, 49, 0.34), transparent, color-mix(in srgb, var(--npc-color) 24%, transparent), transparent);
+      filter: blur(10px);
+      opacity: 0.82;
+      pointer-events: none;
+      animation: destiny-assimilate-halo 2.4s cubic-bezier(0.23, 1, 0.32, 1) infinite alternate;
+    }
+
+    .dual-ring {
+      animation: destiny-ring-merge 20s linear infinite;
+    }
+
+    .destiny-taiji-core {
+      background:
+        radial-gradient(circle, rgba(156, 44, 49, 0.92) 0 20%, transparent 21%),
+        conic-gradient(from 90deg, rgba(156, 44, 49, 0.78), color-mix(in srgb, var(--npc-color) 28%, rgba(156, 44, 49, 0.82)), rgba(156, 44, 49, 0.78));
+      box-shadow: 0 0 18px rgba(156, 44, 49, 0.5), inset 0 0 12px rgba(0, 0, 0, 0.72);
+    }
+
+    .ring-track {
+      stroke: rgba(156, 44, 49, 0.28);
+      opacity: 0.55;
+    }
+
+    .ring-value.favor.outer-ring,
+    .ring-value.progress.inner-ring {
+      stroke: #9c2c31;
+      filter: drop-shadow(0 0 14px rgba(156, 44, 49, 0.42));
+      animation: destiny-assimilate 1.5s cubic-bezier(0.23, 1, 0.32, 1) infinite alternate;
+    }
+
+    .ring-value.favor.outer-ring {
+      opacity: 0.78;
+      stroke: color-mix(in srgb, #9c2c31 82%, var(--npc-color));
+    }
+  }
 }
 
-.backlash-hint {
+.backlash-hint,
+.soul-pending-mark {
   position: absolute;
   left: 50%;
-  bottom: -10px;
+  bottom: -13px;
   transform: translateX(-50%);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  padding: 2px 8px 3px;
   white-space: nowrap;
   font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
   font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
   letter-spacing: 4px;
-  color: var(--hh-text-highlight);
-  text-shadow: 0 0 16px var(--hh-glow-color);
+  color: #f6dfc5;
+  background:
+    linear-gradient(to right, transparent, rgba(18, 10, 10, 0.86) 18%, rgba(18, 10, 10, 0.92) 82%, transparent),
+    radial-gradient(ellipse at 50% 50%, rgba(156, 44, 49, 0.35), transparent 72%);
+  border: 1px solid color-mix(in srgb, var(--hh-text-highlight, #e0b3b1) 42%, transparent);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.95),
+    0 0 10px var(--hh-glow-color, rgba(224, 179, 177, 0.35)),
+    0 0 18px color-mix(in srgb, var(--npc-color) 40%, transparent);
+  box-shadow: 0 0 14px rgba(156, 44, 49, 0.28);
   pointer-events: none;
+  backdrop-filter: blur(2px);
+  mask-image: linear-gradient(to right, transparent, black 14%, black 86%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 14%, black 86%, transparent);
+}
+
+.soul-pending-mark {
+  bottom: -17px;
+  color: color-mix(in srgb, var(--hh-text-highlight, #e0b3b1) 72%, #fff4e8);
+}
+
+.backlash-hint {
+  color: #ffd8d2;
+  background:
+    linear-gradient(to right, transparent, rgba(28, 6, 6, 0.9) 18%, rgba(46, 10, 10, 0.94) 82%, transparent),
+    radial-gradient(ellipse at 50% 50%, rgba(212, 48, 48, 0.42), transparent 72%);
+  box-shadow: 0 0 18px rgba(212, 48, 48, 0.35);
 }
 
 .dual-ring {
@@ -525,9 +810,49 @@ onUnmounted(() => {
   }
 }
 
+@keyframes taiji-core-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes tide-pulse {
+  from { filter: drop-shadow(0 0 3px color-mix(in srgb, var(--npc-color) 18%, transparent)); }
+  to { filter: drop-shadow(0 0 14px color-mix(in srgb, var(--npc-color) 42%, transparent)); }
+}
+
+@keyframes ring-glitch {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(270deg); }
+}
+
+@keyframes soul-glyph-flicker {
+  from { opacity: 0.12; filter: blur(1px); }
+  to { opacity: 0.38; filter: blur(0); }
+}
+
 @keyframes soul-ring-breathe {
   0%, 100% { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--npc-color) 18%, transparent)); }
   50% { filter: drop-shadow(0 0 16px color-mix(in srgb, var(--npc-color) 30%, transparent)); }
+}
+
+@keyframes destiny-assimilate {
+  from { opacity: 0.82; stroke-width: 2.2; }
+  to { opacity: 1; stroke-width: 2.8; }
+}
+
+@keyframes destiny-assimilate-halo {
+  from { opacity: 0.45; transform: translateX(-50%) scale(0.94); }
+  to { opacity: 0.86; transform: translateX(-50%) scale(1.08); }
+}
+
+@keyframes destiny-ring-merge {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(270deg); }
+}
+
+@keyframes soul-thread-bind {
+  from { opacity: 0.52; transform: translateX(-50%) rotate(14deg) scaleY(0.88); }
+  to { opacity: 1; transform: translateX(-50%) rotate(22deg) scaleY(1.06); }
 }
 
 @keyframes soul-backlash-shake {
@@ -892,5 +1217,86 @@ onUnmounted(() => {
   }
 }
 
+
+/* ── 墨迹扩散：值变更时环上短暂脉冲 ── */
+.ring-value.ink-burst {
+  animation: ink-burst-pulse 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes ink-burst-pulse {
+  0% { filter: drop-shadow(0 0 0 transparent); }
+  30% { filter: drop-shadow(0 0 12px currentColor); }
+  100% { filter: drop-shadow(0 0 0 transparent); }
+}
+
+/* ── 反震红轨道：好感度环倒退空白闪烁暗红 ── */
+.dual-ring-panel.soul-backlash .favor.outer-ring {
+  animation: backlash-red-track 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.42s;
+}
+
+@keyframes backlash-red-track {
+  0% { stroke: var(--npc-color); filter: drop-shadow(0 0 0 transparent); }
+  30% { stroke: rgba(156, 44, 49, 0.7); filter: drop-shadow(0 0 8px rgba(156, 44, 49, 0.5)); }
+  100% { stroke: var(--npc-color); filter: drop-shadow(0 0 0 transparent); }
+}
+
+/* ── 反震乱码古字 → 淡出为锁闭提示 ── */
+.backlash-glitch {
+  display: inline;
+  font-size: 0.85em;
+  color: rgba(156, 44, 49, 0.6);
+  animation: glitch-fade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  margin-right: 2px;
+}
+
+@keyframes glitch-fade {
+  0% { opacity: 1; filter: blur(0); }
+  60% { opacity: 0.5; filter: blur(1px); }
+  100% { opacity: 0; filter: blur(2px); }
+}
+
+.backlash-label {
+  animation: label-reveal 1s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
+}
+
+@keyframes label-reveal {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ── 同化粒子效果：攻略完成时伪元素粒子扩散 ── */
+.dual-ring-panel.destiny-assimilated::before,
+.dual-ring-panel.destiny-assimilated::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dual-ring-panel.destiny-assimilated::before {
+  width: 4px;
+  height: 4px;
+  top: 10%;
+  left: 20%;
+  background: rgba(156, 44, 49, 0.6);
+  animation: assimilate-particle 2.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+
+.dual-ring-panel.destiny-assimilated::after {
+  width: 3px;
+  height: 3px;
+  bottom: 15%;
+  right: 18%;
+  background: rgba(212, 160, 23, 0.5);
+  animation: assimilate-particle 3s cubic-bezier(0.23, 1, 0.32, 1) 0.8s infinite;
+}
+
+@keyframes assimilate-particle {
+  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  20% { opacity: 0.8; transform: translate(-4px, -3px) scale(1.5); }
+  50% { opacity: 0.4; transform: translate(3px, -6px) scale(1); }
+  80% { opacity: 0.6; transform: translate(-2px, 4px) scale(1.2); }
+}
 </style>
 

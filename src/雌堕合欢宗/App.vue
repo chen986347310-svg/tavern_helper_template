@@ -18,11 +18,12 @@
         v-if="currentTab === 'home' && store.data.系统.阶段 === '攻略期'"
         mode="攻略期"
         :npcList="NPC列表"
+        :presentNpcList="presentNpcList"
         :npcStates="store.data.NPC"
         :remainingDays="store.data.系统.剩余天数"
         :gems="store.data.系统.灵石"
         :currentScene="currentScene"
-        @sceneChange="switchScene"
+        :rumorList="store.data.系统.风声列表"
           :时辰="store.data.系统.时辰"
       />
       <SystemBar
@@ -59,10 +60,11 @@ import GalleryPage from './界面/pages/GalleryPage.vue';
 import SystemBar from './界面/components/SystemBar.vue';
 import PageNav from './界面/components/PageNav.vue';
 import DebugPanel from './界面/components/DebugPanel.vue';
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { useNavigation } from './界面/composables/useNavigation';
 import { useGradientCenter } from './界面/composables/useGradientCenter';
 import { useDataStore } from './界面/store';
+import { get场景NPC列表, get在场NPC列表 } from './界面/guards';
 
 // 导入全局样式
 import './界面/styles/_variables.scss';
@@ -74,12 +76,14 @@ useGradientCenter();
 const store = useDataStore();
 
 const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
-type SceneName = '莲灯前苑' | '醉玉小筑' | '绮梦幽阁';
-const currentScene = ref<SceneName>((store.data.系统.当前场景 as SceneName) ?? '莲灯前苑');
+type SceneName = string;
+const currentScene = computed<SceneName>(() => store.data.系统.当前场景 ?? '莲灯前苑');
+const presentNpcList = computed(() => {
+  const context = store.data.系统.场景上下文;
+  const present = get在场NPC列表(context);
+  return present.length > 0 ? present : get场景NPC列表(store.data.NPC, currentScene.value);
+});
 
-function switchScene(scene: SceneName) {
-  currentScene.value = scene;
-}
 </script>
 <style lang="scss" scoped>
 @use './界面/styles/variables' as *;

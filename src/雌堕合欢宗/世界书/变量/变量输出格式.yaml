@@ -44,7 +44,7 @@
     ]
     </JSONPatch>
     </UpdateVariable>
-灵识窃取下一楼层闭环样例:
+旧版灵识窃取下一楼层闭环样例:
   purpose: "用于约束AI在下一楼层承接前端UI交互：先叙事回应，再更新soul_whisper，最后清空待处理交互。"
   input_state_example: |-
     系统:
@@ -110,6 +110,52 @@
     ]
     </JSONPatch>
     </UpdateVariable>
+MVU开放场景路径硬约束:
+  rule:
+    - 系统.当前场景 是开放场景名称字段，允许 AI 写入符合世界观的地点名或过渡场景名，例如 外门广场、药庐、经阁、阴阳池、醉玉小筑。
+    - 莲灯前苑、醉玉小筑、绮梦幽阁只是前端快捷入口与兼容回退，不是世界场景上限。
+    - 系统.场景上下文 用于承载更细的地点、子区域、公开度、在场NPC、NPC活动、氛围、故事钩子。
+    - 若写入开放场景，应同时写 系统.当前场景 与 系统.场景上下文，保证 UI 可显示真实地点。
+    - 禁止把“只能三选一”作为约束；AI 可以创建新场景，但必须贴合合欢宗世界观。
+    - 每次回复必须只输出一个 <UpdateVariable> 块；若需要同时自愈字段、推进场景、调整好感度、清空队列，全部合并进同一个 <JSONPatch> 数组。
+  legal_scene_example: |-
+    <UpdateVariable>
+    <Analysis>Bootstrapped v4 fields and moved the scene to the outer square.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/当前场景", "value": "外门广场" },
+      { "op": "replace", "path": "/系统/时辰", "value": "晨时" },
+      { "op": "replace", "path": "/系统/场景上下文", "value": { "地点": "外门广场", "子区域": "通往醉玉小筑的石阶", "场景来源": "临时过渡", "公开度": "公开", "在场NPC": ["苏芸", "白芷"], "NPC活动": { "苏芸": "主持晨课", "白芷": "参加晨课" }, "氛围": ["晨雾未散", "合欢花香"], "故事钩子": ["醉玉小筑打扫任务"], "特殊事件": "晨课训话" } },
+      { "op": "replace", "path": "/系统/风声列表", "value": [] },
+      { "op": "replace", "path": "/系统/当前追查风声ID", "value": "" },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+
+MVU v4字段自愈硬约束:
+  rule:
+    - JSON Patch 的 实机修正：对于 schema/initvar 已定义的 v4 字段，即使旧快照显示缺失，也优先使用 replace；insert 仅用于动态新增对象键或数组追加。
+    - 若当前变量的 系统 中缺少 时辰、当前场景、待处理交互、场景上下文、风声列表、当前追查风声ID，必须在本次 <JSONPatch> 用 replace 写入完整值，再处理剧情变量。
+    - "insert 仅用于真正的动态新增对象键或数组追加，例如：{ 'op': 'insert', 'path': '/系统/风声列表/-', 'value': {...} }；不要对 schema/initvar 已定义的 v4 字段使用 insert。"
+    - "对已经存在的字段才使用 replace，例如：{ 'op': 'replace', 'path': '/系统/待处理交互', 'value': [] }。"
+    - 若不确定 v4 字段是否存在，优先使用 replace 写入 schema/initvar 已定义字段；不要对这些字段使用 insert。
+    - 工程推荐每次回复输出一个 <UpdateVariable> 块；若连续出现多个 <UpdateVariable>，按出现顺序应用，后块覆盖前块。
+  bootstrap_example: |-
+    <UpdateVariable>
+    <Analysis>Bootstrapped missing v4 scene fields, handled pending interaction, and cleared the queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/时辰", "value": "晨时" },
+      { "op": "replace", "path": "/系统/当前场景", "value": "莲灯前苑" },
+      { "op": "replace", "path": "/系统/场景上下文", "value": { "地点": "莲灯前苑", "子区域": "外门广场", "场景来源": "核心地点", "公开度": "公开", "在场NPC": ["苏芸", "白芷"], "NPC活动": { "苏芸": "主持晨课", "白芷": "参加晨课" }, "氛围": ["压抑", "合欢花香"], "故事钩子": ["苏芸指名要求玩家打扫醉玉小筑"], "特殊事件": "晨课训话" } },
+      { "op": "replace", "path": "/系统/风声列表", "value": [] },
+      { "op": "replace", "path": "/系统/当前追查风声ID", "value": "" },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+
 MVU解析硬约束:
   rule:
     - 任何变量更新必须完整包裹在 <UpdateVariable><Analysis>...</Analysis><JSONPatch>...</JSONPatch></UpdateVariable> 内。
@@ -128,3 +174,125 @@ MVU解析硬约束:
     ]
     </JSONPatch>
     </UpdateVariable>
+
+
+MVU额外模型解析协作协议:
+  purpose: "用于开启 MVU 额外模型解析时，避免正文模型与额外解析模型同时输出变量块。"
+  mode_switch:
+    - 若当前酒馆启用了 MVU 额外模型解析：推荐正文模型只写剧情正文，由额外解析模型输出变量；若正文也输出变量块，额外解析模型块作为最终补全与覆盖层。
+    - 若当前酒馆未启用 MVU 额外模型解析：正文模型必须在回复末尾输出标准 <UpdateVariable>。
+    - 两种模式推荐不要同时写变量块；若实机出现双块，按出现顺序兼容合并，后块为最终裁决。
+  extra_model_rules:
+    - 额外解析模型必须读取正文剧情、当前 MVU 变量、系统.待处理交互，并输出标准 <UpdateVariable>；若存在正文变量块，则负责补全和修正。
+    - 额外解析模型禁止输出英文二次总结块、禁止输出第二个 JSONPatch、禁止把变量更新写成“变量更新情况”摘要。
+    - 实机验证结论：v4 字段已在 schema/initvar 中定义时，额外解析模型应直接使用 replace 更新这些路径；不要再依赖 insert 自愈。
+    - 系统.当前场景、系统.时辰、系统.场景上下文、系统.风声列表、系统.当前追查风声ID、系统.待处理交互 均属于 schema/initvar 已定义字段，优先使用 replace 更新。
+    - 额外解析模型不得重复扣除背包库存；前端已经完成购买、使用、装备、卸下的即时变量写入时，只做剧情承认与长期影响回写。
+  bootstrap_patch_required_paths:
+    - /系统/当前场景
+    - /系统/时辰
+    - /系统/待处理交互
+    - /系统/场景上下文
+    - /系统/风声列表
+    - /系统/当前追查风声ID
+  extra_model_bootstrap_example: |-
+    <UpdateVariable>
+    <Analysis>Bootstrapped missing v4 fields from an old chat snapshot and synchronized the current scene.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/当前场景", "value": "醉玉小筑" },
+      { "op": "replace", "path": "/系统/时辰", "value": "晨时" },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] },
+      { "op": "replace", "path": "/系统/场景上下文", "value": { "地点": "醉玉小筑", "子区域": "前院", "场景来源": "核心地点", "公开度": "半私密", "在场NPC": [], "NPC活动": {}, "氛围": ["寂静", "合欢花香密集"], "故事钩子": ["紧闭的正房门"], "特殊事件": "清扫院落" } },
+      { "op": "replace", "path": "/系统/风声列表", "value": [] },
+      { "op": "replace", "path": "/系统/当前追查风声ID", "value": "" }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+追查风声下一楼层闭环样例:
+  purpose: "用于约束AI承接前端风声追查：先把风声转化为场景遭遇，再更新场景上下文，最后清空待处理交互。"
+  input_state_example: |-
+    系统:
+      时辰: 午时
+      待处理交互:
+        - 类型: 追查风声
+          目标: 白芷
+          道具: ""
+          数量: 1
+          时辰: 午时
+          场景: 醉玉小筑
+          地点: 药庐
+          子区域: 炼丹房
+          风声ID: r1
+          故事钩子: 丹炉彻夜未熄
+          在场NPC: [白芷]
+  reply_requirement:
+    - 正文必须自然描写玩家循风声抵达现场后的遭遇，不要说“读取变量”“处理队列”。
+    - 同一次变量更新应写入 系统.场景上下文，并清空 系统.待处理交互。
+    - 若风声被处理，应同步更新 系统.当前追查风声ID 或 风声列表 状态。
+  output_example: |-
+    <UpdateVariable>
+    <Analysis>Handled rumor pursuit, refreshed scene context, and cleared queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/场景上下文", "value": { "地点": "药庐", "子区域": "炼丹房", "场景来源": "核心地点", "公开度": "半私密", "在场NPC": ["白芷"], "NPC活动": { "白芷": "守着彻夜未熄的丹炉" }, "氛围": ["丹火未熄", "药香发苦"], "故事钩子": ["丹炉彻夜未熄，炉壁内侧还残着一道陌生指痕。"], "特殊事件": "风声追查" } },
+      { "op": "replace", "path": "/系统/当前追查风声ID", "value": "r1" },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+
+MVU双更新块兼容协议:
+  purpose: "用于兼容正文模型与额外变量模型在同一楼层各自输出 UpdateVariable 的实机情况。"
+  priority: 最高
+  rule:
+    - 工程推荐仍是单个 <UpdateVariable>，但实机验收必须兼容同一楼层出现多个 <UpdateVariable>。
+    - 每个 <UpdateVariable> 内必须包含且只包含一个合法 JSONPatch 数组。
+    - 系统按文本出现顺序应用 JSONPatch；同一路径冲突时以后出现的块为准。
+    - 正文模型块可负责剧情承接与基础变量推进；额外变量模型块可负责字段补全、delta 数值、场景上下文精修。
+    - 禁止输出裸 JSONPatch；必须包裹在 <UpdateVariable><Analysis>...</Analysis><JSONPatch>...</JSONPatch></UpdateVariable> 中。
+    - 若 系统.待处理交互 已经在叙事中承接，最后有效变量块必须 replace /系统/待处理交互 为 []。
+  merge_example: |-
+    第一块可写入基础场景：/系统/当前场景 = 药庐。
+    第二块可覆盖完整场景上下文并追加 /NPC/苏芸/好感度 delta +2。
+    最终以前后顺序合并后的最新值为准。
+
+
+被动灵识常照回写样例:
+  purpose: "用于约束AI每个回复楼层自动评估在场NPC心音，而不是等待前端命盘点击生成待处理交互。"
+  core_rule:
+    - 命盘点击只写入或切换 系统.当前聚焦心声NPC，用于前端显示聚焦；它不是剧情动作，也不要求AI把它当成玩家发言。
+    - AI 每楼层应读取 系统.场景上下文.在场NPC，仅对在场核心NPC评估 NPC.${NPC名}.心声探测态。
+    - 若捕获、反震或锁闭，应同步写入 系统.心音回响；NPC离场后不得删除既有心音回响。
+    - 系统.心音回响最多保留最近12条；新条目放在数组末尾或整体replace为裁剪后的数组。
+    - 普通命盘点击不再写入 系统.待处理交互.类型=灵识窃取；旧数据里若仍存在灵识窃取队列，可按旧版兼容样例处理并清空。
+  output_example: |-
+    <UpdateVariable>
+    <Analysis>Updated passive soul sensing for present NPCs and recorded a captured echo.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/NPC/白芷/心声探测态", "value": "已捕获" },
+      { "op": "replace", "path": "/系统/当前聚焦心声NPC", "value": "白芷" },
+      { "op": "replace", "path": "/系统/心音回响", "value": [
+        {
+          "id": "echo_001",
+          "npc": "白芷",
+          "text": "他方才只是看了我一眼，我却觉得道心像被轻轻拨了一下。",
+          "stage": "动摇",
+          "result": "捕获",
+          "scene": "醉玉小筑",
+          "time": "午时",
+          "floor": 0,
+          "is_new": true
+        }
+      ] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+
+心音回响兼容硬约束:
+  rule:
+    - schema/initvar 已定义 系统.心音回响、系统.当前聚焦心声NPC、NPC.${NPC名}.心声探测态，更新这些路径时优先使用 replace。
+    - 系统.当前聚焦心声NPC 是UI聚焦状态，不等同玩家行动；不要仅因它存在就强行触发NPC回应。
+    - 若 系统.待处理交互 中出现旧版 灵识窃取，仍需叙事承接、更新 soul_whisper 或 心音回响，并在同一 JSONPatch 清空队列。
+    - 若正文模型与额外变量模型双写，后块必须保留或合并前块产生的 心音回响，不得无故清空。

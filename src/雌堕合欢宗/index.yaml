@@ -226,6 +226,20 @@
           不可激活其他条目: true
         文件: 世界书/道具系统
 
+      - 名称: 动态场景系统
+        启用: true
+        激活策略:
+          类型: 蓝灯
+        插入位置:
+          类型: 指定深度
+          角色: 系统
+          深度: 0
+          顺序: 14721
+        递归:
+          不可被其他条目激活: true
+          不可激活其他条目: true
+        文件: 世界书/动态场景系统
+
   - 文件夹: NPC
     条目:
       - 名称: 玩家设定
@@ -408,10 +422,10 @@
         启用: true
         类型: 脚本
         内容: |-
-          import 'https://testingcf.jsdelivr.net/gh/StageDog/tavern_helper_template/dist/雌堕合欢宗/脚本/变量结构/index.js';
+          import 'http://localhost:5500/dist/var_structure.js';
 
       - 名称: 后端校验
         启用: true
         类型: 脚本
         内容: |-
-          import 'https://testingcf.jsdelivr.net/gh/StageDog/tavern_helper_template/dist/雌堕合欢宗/脚本/后端校验/index.js';
+          import 'http://localhost:5500/dist/backend_validate.js';

@@ -98,40 +98,46 @@ describe('useDebug', () => {
     expect(a.visible).toBe(b.visible);
   });
 
-  it('initShortcut 幂等: 多次调用只注册一次监听', () => {
-    const spy = vi.spyOn(document, 'addEventListener');
+  it('initShortcut 幂等: 多次调用只注册一组窗口与文档捕获监听', () => {
+    const documentSpy = vi.spyOn(document, 'addEventListener');
+    const windowSpy = vi.spyOn(window, 'addEventListener');
     const { initShortcut } = useDebug();
     initShortcut();
     initShortcut();
     initShortcut();
-    const keydownCalls = spy.mock.calls.filter(c => c[0] === 'keydown');
-    expect(keydownCalls).toHaveLength(1);
-    spy.mockRestore();
+    const documentKeydownCalls = documentSpy.mock.calls.filter(c => c[0] === 'keydown');
+    const windowKeydownCalls = windowSpy.mock.calls.filter(c => c[0] === 'keydown');
+    expect(documentKeydownCalls).toHaveLength(1);
+    expect(windowKeydownCalls).toHaveLength(1);
+    documentSpy.mockRestore();
+    windowSpy.mockRestore();
   });
 
-  it('Ctrl+Shift+D 触发 toggle', () => {
+  it('Ctrl+Shift+D / KeyD 触发 toggle 并暴露 window 调试句柄', () => {
     const { visible, initShortcut } = useDebug();
-    // 捕获注册的 keydown handler, 直接构造带修饰键的事件调用
     const handler = vi.fn();
-    const origAdd = document.addEventListener.bind(document);
-    vi.spyOn(document, 'addEventListener').mockImplementation((type, cb, opts) => {
+    const origAdd = window.addEventListener.bind(window);
+    vi.spyOn(window, 'addEventListener').mockImplementation((type, cb, opts) => {
       if (type === 'keydown') {
         handler.mockImplementation(cb as any);
       }
       return origAdd(type, cb, opts);
     });
     initShortcut();
-    // 直接用 handler 调用, 手动构造含修饰键的事件
-    const makeEvent = () => {
+    const makeEvent = (key: string, code = 'KeyD') => {
       const e = new KeyboardEvent('keydown');
       vi.spyOn(e, 'ctrlKey', 'get').mockReturnValue(true);
       vi.spyOn(e, 'shiftKey', 'get').mockReturnValue(true);
-      vi.spyOn(e, 'key', 'get').mockReturnValue('D');
+      vi.spyOn(e, 'key', 'get').mockReturnValue(key);
+      vi.spyOn(e, 'code', 'get').mockReturnValue(code);
+      vi.spyOn(e, 'preventDefault').mockImplementation(() => undefined);
+      vi.spyOn(e, 'stopPropagation').mockImplementation(() => undefined);
       return e;
     };
-    handler(makeEvent());
+    handler(makeEvent('d'));
     expect(visible.value).toBe(true);
-    handler(makeEvent());
+    expect((window as any).__HH_DEBUG__).toBeTruthy();
+    handler(makeEvent('Unidentified', 'KeyD'));
     expect(visible.value).toBe(false);
   });
 });

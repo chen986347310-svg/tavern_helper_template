@@ -1,40 +1,37 @@
 <template>
   <div
-    class="system-bar"
+    :class="['system-bar', { 'system-bar--rumor': hasActiveRumor }]"
     role="toolbar"
     :aria-label="mode === '攻略期' ? '攻略进度状态栏' : '牝奴堕落状态栏'"
+    :data-rumor-active="hasActiveRumor ? 'true' : 'false'"
   >
     <!-- 攻略期模式 -->
     <div v-if="mode === '攻略期'" class="bar-left" role="group" aria-label="弟子攻略状态">
-      <div
-        v-for="npc in npcList"
-        :key="npc"
-        :class="['taiji-icon', npcStates[npc]?.状态 === '已完成' ? 'taiji--conquered' : 'taiji--unconquered']"
-        role="img"
-        :aria-label="npc + (npcStates[npc]?.状态 === '已完成' ? ' 已攻略' : ' 未攻略')"
+      <TransitionGroup
+        name="ink-fade"
+        tag="div"
+        class="npc-active-group npc-active-group--converge"
+        data-transition="ink-fade"
+        aria-label="当前在场命魂"
       >
-        <svg class="taiji-svg" viewBox="0 0 40 40" aria-hidden="true">
-          <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
-          <path d="M20 2 A18 18 0 0 1 20 38 A9 9 0 0 1 20 20 A9 9 0 0 0 20 2" fill="currentColor" opacity="0.7"/>
-          <path d="M20 38 A18 18 0 0 1 20 2 A9 9 0 0 1 20 20 A9 9 0 0 0 20 38" fill="currentColor" opacity="0.35"/>
-          <circle cx="20" cy="11" r="2.5" fill="currentColor" opacity="0.5"/>
-          <circle cx="20" cy="29" r="2.5" fill="currentColor" opacity="0.8"/>
-        </svg>
-        <span class="taiji-name">{{ npc }}</span>
-      </div>
-      <div v-if="currentScene" class="scene-switcher" role="group" aria-label="场景切换">
-        <button
-          v-for="scene in 场景列表"
-          :key="scene.name"
-          :class="['scene-btn', { active: currentScene === scene.name }]"
-          type="button"
-          :aria-label="'切换到' + scene.name"
-          @click="$emit('sceneChange', scene.name)"
+        <div
+          v-for="npc in displayedNpcList"
+          :key="npc"
+          :class="['taiji-icon', npcStates[npc]?.状态 === '已完成' ? 'taiji--conquered' : 'taiji--unconquered']"
+          role="img"
+          :aria-label="npc + (npcStates[npc]?.状态 === '已完成' ? ' 已攻略' : ' 未攻略')"
+          :style="soulStyle(npc)"
         >
-          <span class="scene-glyph">{{ scene.glyph }}</span>
-          <span class="scene-name">{{ scene.name }}</span>
-        </button>
-      </div>
+          <svg class="taiji-svg" viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+            <path d="M20 2 A18 18 0 0 1 20 38 A9 9 0 0 1 20 20 A9 9 0 0 0 20 2" fill="currentColor" opacity="0.7"/>
+            <path d="M20 38 A18 18 0 0 1 20 2 A9 9 0 0 1 20 20 A9 9 0 0 0 20 38" fill="currentColor" opacity="0.35"/>
+            <circle cx="20" cy="11" r="2.5" fill="currentColor" opacity="0.5"/>
+            <circle cx="20" cy="29" r="2.5" fill="currentColor" opacity="0.8"/>
+          </svg>
+          <span class="taiji-name">{{ npc }}</span>
+        </div>
+      </TransitionGroup>
     </div>
 
     <!-- 牝奴期模式 -->
@@ -99,6 +96,7 @@
       </template>
     </div>
 
+
     <!-- 日/夜切换 -->
     <button class="theme-toggle" @click="toggleTheme" :aria-label="theme === 'dark' ? '切换白昼模式' : '切换暗夜模式'">
       <svg v-if="theme === 'dark'" class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -109,29 +107,53 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
       </svg>
     </button>
+
   </div>
 </template>
 
 <script setup lang="ts">
 type NpcName = '白芷' | '苏芸' | '纪兰' | '沈月秋' | '柳素衣';
-type SceneName = '莲灯前苑' | '醉玉小筑' | '绮梦幽阁';
+type SceneName = string;
 type TimeName = '晨时' | '午时' | '酉时' | '亥时';
+type Rumor = { id?: string; 地点: string; 风声文本: string; 状态?: string };
 
 type SystemBarProps =
-  | { mode: '攻略期'; npcList: NpcName[]; npcStates: Record<NpcName, { 状态: string }>; remainingDays?: number; gems?: number; currentScene?: SceneName; 时辰?: TimeName; 牝阴决层数?: number; 堕落度?: number }
-  | { mode: '牝奴期'; 堕落度: number; 牝阴决层数?: number; npcList?: NpcName[]; npcStates?: Record<NpcName, { 状态: string }>; remainingDays?: number; gems?: number; currentScene?: SceneName; 时辰?: TimeName };
+  | { mode: '攻略期'; npcList: readonly NpcName[]; presentNpcList?: readonly NpcName[]; npcStates: Record<NpcName, { 状态: string; 好感度?: number }>; remainingDays?: number; gems?: number; currentScene?: SceneName; 时辰?: TimeName; 牝阴决层数?: number; 堕落度?: number; rumorList?: readonly Rumor[] }
+  | { mode: '牝奴期'; 堕落度: number; 牝阴决层数?: number; npcList?: readonly NpcName[]; presentNpcList?: readonly NpcName[]; npcStates?: Record<NpcName, { 状态: string; 好感度?: number }>; remainingDays?: number; gems?: number; currentScene?: SceneName; 时辰?: TimeName; rumorList?: readonly Rumor[] };
 
 const props = defineProps<SystemBarProps>();
 
-defineEmits<{
-  sceneChange: [scene: SceneName];
-}>();
+const NPC_SOUL_COLORS: Record<NpcName, string> = {
+  白芷: '#a8c4e0',
+  苏芸: '#e0a860',
+  纪兰: '#b088d4',
+  沈月秋: '#d46048',
+  柳素衣: '#e8e0d0',
+};
 
-const 场景列表: Array<{ name: SceneName; glyph: string }> = [
-  { name: '莲灯前苑', glyph: '苑' },
-  { name: '醉玉小筑', glyph: '玉' },
-  { name: '绮梦幽阁', glyph: '阁' },
-];
+const NPC_SOUL_RGB: Record<NpcName, string> = {
+  白芷: '168, 196, 224',
+  苏芸: '224, 168, 96',
+  纪兰: '176, 136, 212',
+  沈月秋: '212, 96, 72',
+  柳素衣: '232, 224, 208',
+};
+
+function soulStyle(npc: NpcName) {
+  const favorability = props.mode === '攻略期' ? Math.min(Math.max(props.npcStates[npc]?.好感度 ?? 0, 0), 100) : 0;
+  return {
+    '--soul-color': NPC_SOUL_COLORS[npc],
+    '--soul-color-rgb': NPC_SOUL_RGB[npc],
+    '--fav-value': String(favorability),
+  };
+}
+
+
+
+const displayedNpcList = computed(() => props.mode === '攻略期' ? (props.presentNpcList ?? props.npcList) : []);
+const activeRumors = computed(() => (props.mode === '攻略期' ? (props.rumorList ?? []) : []).filter(rumor => rumor.状态 !== '已失效').slice(0, 3));
+const hasActiveRumor = computed(() => activeRumors.value.length > 0);
+
 
 const circumference = 2 * Math.PI * 34;
 
@@ -213,34 +235,51 @@ const { theme, toggleTheme } = useTheme();
   align-items: center;
 }
 
-.scene-switcher {
+
+.npc-active-group {
   display: flex;
   justify-content: center;
-  gap: 4px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  position: relative;
 }
 
-.scene-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  border: none;
-  background: radial-gradient(ellipse at 50% 50%, var(--hh-bg-card), transparent 70%);
-  color: var(--theme-text-muted);
-  cursor: pointer;
-  padding: 4px 7px;
-  font-family: $font-铭文;
-  letter-spacing: 2px;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+.npc-active-group--converge {
+  flex: 1 1 auto;
+  justify-content: center;
+  align-content: center;
+  isolation: isolate;
+  mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+  transition: gap 0.55s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  .scene-name { font-size: 10px; }
-  .scene-glyph { opacity: 0.75; }
+.ink-fade-enter-active {
+  transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), filter 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
 
-  &.active {
-    color: var(--theme-text-primary);
-    text-shadow: 0 0 12px var(--hh-glow-color);
-    background: radial-gradient(ellipse at 50% 65%, var(--hh-glow-color), transparent 72%);
-  }
+.ink-fade-leave-active {
+  transition: opacity 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19), transform 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19), filter 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ink-fade-move {
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ink-fade-enter-from {
+  opacity: 0;
+  filter: blur(8px) saturate(0.65);
+  transform: translateY(8px) scale(0.95);
+}
+
+.ink-fade-leave-to {
+  opacity: 0;
+  filter: blur(6px) saturate(0.55);
+  transform: translateY(-4px) scale(0.92);
 }
 /* ── 攻略期太极图标 ── */
 .taiji-icon {
@@ -252,6 +291,11 @@ const { theme, toggleTheme } = useTheme();
   min-height: 38px;
   padding: 4px 2px;
   justify-content: center;
+  position: relative;
+  border: none;
+  border-radius: 0;
+  box-shadow: 0 0 calc(var(--fav-value, 0) * 0.2px + 5px) rgba(var(--soul-color-rgb, 168, 196, 224), calc(var(--fav-value, 0) * 0.0035 + 0.1));
+  animation: soul-breath 10s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
 
   .taiji-svg {
     width: 24px;
@@ -273,16 +317,21 @@ const { theme, toggleTheme } = useTheme();
   }
 
   &.taiji--unconquered .taiji-svg {
-    color: $taiji-未攻略色;
+    color: var(--soul-color, $taiji-未攻略色);
     filter: drop-shadow(0 0 15px rgba(74, 122, 155, 0.3));
     animation: taiji-breathe 3s ease-in-out infinite;
   }
 
   &.taiji--conquered .taiji-svg {
-    color: $taiji-已攻略色;
+    color: var(--soul-color, $taiji-已攻略色);
     filter: drop-shadow(0 0 15px rgba(212, 96, 138, 0.3));
     animation: taiji-breathe 3s ease-in-out infinite;
   }
+}
+
+@keyframes soul-breath {
+  0% { opacity: 0.82; }
+  100% { opacity: 1; }
 }
 
 @keyframes taiji-breathe {
@@ -382,6 +431,28 @@ const { theme, toggleTheme } = useTheme();
 }
 
 
+/* ── 风声涟漪 ── */
+.system-bar--rumor {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -4px 34px;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 50%, rgba(224, 168, 96, 0.12), transparent 64%);
+    mask-image: linear-gradient(to right, transparent, black 18%, black 82%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 18%, black 82%, transparent);
+    animation: rumor-ripple 4.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+}
+
+
+@keyframes rumor-ripple {
+  0%, 100% { opacity: 0.16; transform: scaleX(0.96); filter: blur(1px); }
+  50% { opacity: 0.42; transform: scaleX(1.03); filter: blur(2px); }
+}
+
+
 /* ── 日/夜切换按钮 ── */
 .theme-toggle {
   display: flex;
@@ -429,4 +500,6 @@ const { theme, toggleTheme } = useTheme();
   50% { filter: drop-shadow(0 0 20px var(--hh-glow-color)); }
   100% { filter: drop-shadow(0 0 6px var(--hh-glow-color)); }
 }
+
+
 </style>

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   get反噬倍率,
   get场景NPC列表,
+  get在场NPC列表,
   get窃听成功率,
   get窃听阶段,
   perform灵识窃取,

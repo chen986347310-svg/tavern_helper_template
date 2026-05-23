@@ -49,7 +49,23 @@
           </button>
         </div>
 
-        <div v-else class="use-panel">
+        <div v-else-if="isTargetConsumableItem(selectedItem)" class="target-use-panel">
+          <div v-if="consumableTargets.length > 0" class="equip-targets">
+            <button
+              v-for="target in consumableTargets"
+              :key="target"
+              :class="['target-btn', { 'cannot-equip': !canUseOnTarget(target) }]"
+              :title="!canUseOnTarget(target) ? `${target}灵犀未至` : ''"
+              @click="useItemOnTarget(target)"
+            >
+              <span class="btn-dot"></span>
+              {{ target }}
+            </button>
+          </div>
+          <div v-else class="target-empty">此刻无人可承此丹</div>
+        </div>
+
+        <div v-else-if="isSelfConsumableItem(selectedItem)" class="use-panel">
           <button type="button" class="use-btn" @click="useItem">启用法效</button>
         </div>
       </div>
@@ -91,10 +107,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useDataStore } from '../store';
-import { checkItemThreshold } from '../guards';
-import { canEquip牝奴道具 } from '../guards';
+import { checkItemThreshold, canEquip牝奴道具, get在场NPC列表 } from '../guards';
 import { usePendingAction } from '../composables/usePendingAction';
-import { 永久丹药, 特殊道具 } from '../data/items';
+import { isConsumableLifecycle, isEquippableLifecycle, itemRequiresTarget } from '../data/itemLifecycle';
 
 const store = useDataStore();
 const data = store.data;
@@ -103,12 +118,11 @@ const { 记录装备道具, 记录卸下道具, 记录使用物品 } = usePendin
 const selectedItem = ref<string | null>(null);
 const countAnimating = ref(false);
 const equipTargets = ['玩家', '白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'];
-const 消耗品名称 = new Set([...永久丹药, ...特殊道具].map(item => item.名称));
-const 即时生效特殊物品 = new Set(['改变阵法']);
-
 const ownedItems = computed(() => {
   return Object.fromEntries(Object.entries(data.道具.拥有).filter(([, count]) => count > 0));
 });
+
+const consumableTargets = computed(() => get在场NPC列表(data.系统.场景上下文));
 
 watch(() => data.道具.拥有, () => {
   countAnimating.value = true;
@@ -120,12 +134,19 @@ function selectItem(name: string) {
 }
 
 function isConsumableItem(name: string | null): boolean {
-  if (!name) return false;
-  return 消耗品名称.has(name) && !即时生效特殊物品.has(name);
+  return !!name && isConsumableLifecycle(name);
+}
+
+function isTargetConsumableItem(name: string | null): boolean {
+  return !!name && itemRequiresTarget(name);
+}
+
+function isSelfConsumableItem(name: string | null): boolean {
+  return !!name && isConsumableLifecycle(name) && !itemRequiresTarget(name);
 }
 
 function isEquippableItem(name: string | null): boolean {
-  return !!name && !isConsumableItem(name);
+  return !!name && isEquippableLifecycle(name);
 }
 
 function isEquipped(target: string): boolean {
@@ -161,12 +182,30 @@ function restoreOwnedItem(name: string) {
 
 function useItem() {
   if (!selectedItem.value) return;
-  if (!isConsumableItem(selectedItem.value)) return;
+  if (!isSelfConsumableItem(selectedItem.value)) return;
   if ((data.道具.拥有[selectedItem.value] ?? 0) <= 0) return;
 
   const itemName = selectedItem.value;
   consumeOwnedItem(itemName);
   记录使用物品(itemName, '玩家');
+  selectedItem.value = null;
+}
+
+function canUseOnTarget(target: string): boolean {
+  if (!selectedItem.value) return false;
+  if (!isTargetConsumableItem(selectedItem.value)) return false;
+  if ((data.道具.拥有[selectedItem.value] ?? 0) <= 0) return false;
+  const npc好感度 = data.NPC[target as keyof typeof data.NPC]?.好感度 ?? 0;
+  return checkItemThreshold(npc好感度, selectedItem.value);
+}
+
+function useItemOnTarget(target: string) {
+  if (!selectedItem.value) return;
+  if (!canUseOnTarget(target)) return;
+
+  const itemName = selectedItem.value;
+  consumeOwnedItem(itemName);
+  记录使用物品(itemName, target);
   selectedItem.value = null;
 }
 
@@ -366,6 +405,22 @@ function toggleEquip(target: string) {
   }
 }
 
+
+.target-use-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.target-empty {
+  padding: 10px 14px;
+  text-align: center;
+  font-family: $font-铭文;
+  font-size: 12px;
+  color: var(--hh-text-muted);
+  letter-spacing: 4px;
+  background: radial-gradient(ellipse at 50% 50%, var(--hh-bg-card), transparent 72%);
+}
 .use-panel {
   display: flex;
   justify-content: center;

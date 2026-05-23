@@ -1,5 +1,6 @@
-﻿import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { validateVariables } from './validate';
+import { Schema } from '../../schema';
 import { calculate攻略值增量 } from '../../界面/guards';
 
 const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
@@ -696,5 +697,45 @@ describe('Scenario: dirty data type coercion', () => {
     (new_data.系统 as any).灵石 = '50';
     validateVariables(new_data, old_data);
     expect(new_data.系统.灵石).toBe(50);
+  });
+});
+
+// ══════════════════════════════════════════
+// Schema defaults: 开放场景 / 风声 / 道具效果
+// ══════════════════════════════════════════
+describe('Schema defaults: 开放场景与风声字段', () => {
+  it('缺省时提供安全默认值', () => {
+    const result = Schema.parse({});
+    expect(result.系统.场景上下文.地点).toBe('莲灯前苑');
+    expect(result.系统.场景上下文.在场NPC).toEqual([]);
+    expect(result.系统.风声列表).toEqual([]);
+    expect(result.系统.当前追查风声ID).toBe('');
+    expect(result.道具.已生效效果).toEqual([]);
+  });
+
+  it('风声列表最多保留三条，超出时校验失败以避免首页信息过载', () => {
+    const fourRumors = Array.from({ length: 4 }, (_, index) => ({ id: `r${index}` }));
+    expect(() => Schema.parse({ 系统: { 风声列表: fourRumors } })).toThrow();
+  });
+});
+describe('v4 system migration defaults', () => {
+  it('旧聊天快照自动补齐 v4 系统字段', () => {
+    const old_data = makeData();
+    const new_data = makeData();
+    delete (new_data.系统 as any).时辰;
+    delete (new_data.系统 as any).当前场景;
+    delete (new_data.系统 as any).待处理交互;
+    delete (new_data.系统 as any).场景上下文;
+    delete (new_data.系统 as any).风声列表;
+    delete (new_data.系统 as any).当前追查风声ID;
+
+    validateVariables(new_data, old_data);
+
+    expect(new_data.系统.时辰).toBe('晨时');
+    expect(new_data.系统.当前场景).toBe('莲灯前苑');
+    expect(new_data.系统.待处理交互).toEqual([]);
+    expect(new_data.系统.场景上下文).toMatchObject({ 地点: '莲灯前苑', 在场NPC: [] });
+    expect(new_data.系统.风声列表).toEqual([]);
+    expect(new_data.系统.当前追查风声ID).toBe('');
   });
 });

@@ -5,7 +5,7 @@ import { createPinia } from 'pinia';
 import { reactive } from 'vue';
 
 const mockData = reactive({
-    系统: { 阶段: '攻略期', 剩余天数: 30, 灵石: 10000, 已使用阵法: false, 时辰: '午时', 当前场景: '醉玉小筑', 待处理交互: [] as any[] },
+    系统: { 阶段: '攻略期', 剩余天数: 30, 灵石: 10000, 已使用阵法: false, 时辰: '午时', 当前场景: '醉玉小筑', 待处理交互: [] as any[], 场景上下文: { 在场NPC: [] as string[] } },
     牝奴: {
       堕落度: 0,
       牝阴决层数: 0,
@@ -62,6 +62,7 @@ describe('BackpackPage', () => {
     mockData.系统.时辰 = '午时';
     mockData.系统.当前场景 = '醉玉小筑';
     mockData.系统.待处理交互 = [];
+    mockData.系统.场景上下文 = { 在场NPC: [] };
   });
 
   // --- 空状态 ---
@@ -284,6 +285,45 @@ describe('BackpackPage', () => {
     });
   });
 
+
+  it('永久丹药显示在场NPC目标而不是直接启用法效', async () => {
+    mockData.道具.拥有 = { 体香丹: 1 };
+    mockData.系统.场景上下文 = { 在场NPC: ['白芷', '纪兰'] };
+    const wrapper = mountBackpack();
+    await wrapper.find('.item-row').trigger('click');
+
+    expect(wrapper.find('.use-btn').exists()).toBe(false);
+    expect(wrapper.findAll('.target-btn').map(btn => btn.text())).toEqual(['白芷', '纪兰']);
+  });
+
+  it('永久丹药选择目标后扣库存并写入目标待处理交互', async () => {
+    mockData.道具.拥有 = { 体香丹: 1 };
+    mockData.系统.场景上下文 = { 在场NPC: ['白芷'] };
+    const wrapper = mountBackpack();
+    await wrapper.find('.item-row').trigger('click');
+    await wrapper.find('.target-btn').trigger('click');
+
+    expect(mockData.道具.拥有['体香丹']).toBeUndefined();
+    expect(mockData.系统.待处理交互).toContainEqual({
+      类型: '使用物品',
+      目标: '白芷',
+      道具: '体香丹',
+      数量: 1,
+      时辰: '午时',
+      场景: '醉玉小筑',
+    });
+  });
+
+  it('永久丹药无在场NPC时不显示目标按钮也不扣库存', async () => {
+    mockData.道具.拥有 = { 体香丹: 1 };
+    mockData.系统.场景上下文 = { 在场NPC: [] };
+    const wrapper = mountBackpack();
+    await wrapper.find('.item-row').trigger('click');
+
+    expect(wrapper.findAll('.target-btn')).toHaveLength(0);
+    expect(wrapper.find('.target-empty').text()).toContain('此刻无人可承此丹');
+    expect(mockData.道具.拥有['体香丹']).toBe(1);
+  });
   it('消耗品不能被装备到NPC', async () => {
     mockData.道具.拥有 = { 时间延长: 1 };
     const wrapper = mountBackpack();
