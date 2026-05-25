@@ -31,7 +31,11 @@
         mode="牝奴期"
         :堕落度="store.data.牝奴.堕落度"
         :牝阴决层数="store.data.牝奴.牝阴决层数"
-          :时辰="store.data.系统.时辰"
+        :当前日课="store.data.牝奴.当前日课"
+        :当前命令="store.data.牝奴.当前命令"
+        :命令强度="store.data.牝奴.命令强度"
+        :rumorList="store.data.系统.风声列表"
+        :时辰="store.data.系统.时辰"
       />
       <div class="content-area">
         <Transition name="fade" mode="out-in">

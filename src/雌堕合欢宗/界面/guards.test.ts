@@ -14,6 +14,7 @@ import {
   getCurrentNpc,
   shouldEnterPhase2,
   initializePhase2,
+  canUpgrade情欲控制,
 } from './guards';
 
 // --- 测试辅助 ---
@@ -98,6 +99,18 @@ describe('checkItemThreshold', () => {
     expect(checkItemThreshold(0, '体香丹')).toBe(true);
     expect(checkItemThreshold(0, '开裆裤')).toBe(true);
     expect(checkItemThreshold(0, '杂役服')).toBe(true);
+  });
+
+  it('新增临时与永久丹药遵守好感度门槛', () => {
+    expect(checkItemThreshold(0, '温息丹')).toBe(true);
+    expect(checkItemThreshold(49, '焚息丹')).toBe(false);
+    expect(checkItemThreshold(50, '焚息丹')).toBe(true);
+    expect(checkItemThreshold(69, '催乳丹')).toBe(false);
+    expect(checkItemThreshold(70, '催乳丹')).toBe(true);
+  });
+
+  it('仙奴丹不靠普通好感度直接开放', () => {
+    expect(checkItemThreshold(100, '玉户听命丹')).toBe(false);
   });
 
   it('好感度不足时返回false', () => {
@@ -232,12 +245,12 @@ describe('calculate攻略值增量', () => {
 // --- calculate灵石获取 ---
 
 describe('calculate灵石获取', () => {
-  it('公式: NPC境界系数 * 攻略值增量', () => {
-    expect(calculate灵石获取('白芷', 10)).toBe(100);
-    expect(calculate灵石获取('苏芸', 10)).toBe(200);
-    expect(calculate灵石获取('纪兰', 10)).toBe(400);
-    expect(calculate灵石获取('沈月秋', 10)).toBe(600);
-    expect(calculate灵石获取('柳素衣', 10)).toBe(1000);
+  it('公式: NPC境界系数 * 攻略值增量 * 灵石收益倍率', () => {
+    expect(calculate灵石获取('白芷', 10)).toBe(400);
+    expect(calculate灵石获取('苏芸', 10)).toBe(800);
+    expect(calculate灵石获取('纪兰', 10)).toBe(1600);
+    expect(calculate灵石获取('沈月秋', 10)).toBe(2400);
+    expect(calculate灵石获取('柳素衣', 10)).toBe(4000);
   });
 });
 
@@ -273,6 +286,21 @@ describe('canEnterPhase2', () => {
   it('剩余天数>0时不可进入', () => {
     expect(canEnterPhase2(1)).toBe(false);
     expect(canEnterPhase2(30)).toBe(false);
+  });
+
+  it('保持 shouldEnterPhase2 的兼容别名行为', () => {
+    expect(canEnterPhase2(0)).toBe(shouldEnterPhase2(0));
+    expect(canEnterPhase2(1)).toBe(shouldEnterPhase2(1));
+  });
+});
+
+// --- canUpgrade情欲控制 ---
+
+describe('canUpgrade情欲控制', () => {
+  it('牝奴期且堕落度达标时可升级情欲控制', () => {
+    expect(canUpgrade情欲控制('牝奴期', 1, 30)).toBe(true);
+    expect(canUpgrade情欲控制('牝奴期', 2, 60)).toBe(true);
+    expect(canUpgrade情欲控制('攻略期', 1, 99)).toBe(false);
   });
 });
 
@@ -389,5 +417,46 @@ describe('initializePhase2', () => {
     data.道具.拥有 = {};
     initializePhase2(data);
     expect(data.道具.装备['玩家']).toEqual([]);
+  });
+
+  it('初始化牝奴期运行字段与入场调教记录', () => {
+    const data = createMockData({
+      系统: {
+        阶段: '攻略期',
+        剩余天数: 0,
+        灵石: 5000,
+        已使用阵法: false,
+        时辰: '酉时',
+        当前场景: '阴阳池',
+        时间状态: {
+          当前日: 7,
+          时段进度: 2,
+          最近耗时: '',
+          最近结算原因: '',
+          最近事件类型: '',
+          是否过夜: false,
+        },
+      } as any,
+    });
+
+    initializePhase2(data);
+
+    expect(data.牝奴).toMatchObject({
+      入场日: 7,
+      当前日课: '阴阳池验身',
+      当前支配者: '沈月秋',
+      当前命令: '跪候牝印点名',
+      命令强度: 45,
+      今日调教次数: 0,
+      待执行日课: ['验身', '登记', '牝印唤醒'],
+      最近调教结算: '牝奴期入场：阴阳池验身，牝印开始接管日课。',
+    });
+    expect(data.牝奴.调教记录).toHaveLength(1);
+    expect(data.牝奴.调教记录[0]).toMatchObject({
+      时辰: '酉时',
+      支配者: '沈月秋',
+      摘要: '牝奴期入场：阴阳池验身，牝印开始接管日课。',
+      羞名等级: '微闻',
+    });
   });
 });

@@ -26,16 +26,25 @@ const NPC境界系数: Record<NPC名, number> = {
   柳素衣: 100,
 };
 
+const 灵石收益倍率 = 4;
+
 /** 攻略链顺序 */
 const 攻略链: NPC名[] = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'];
 
 /** 好感度门槛映射 — 道具名必须与 items.ts / outfits.ts 完全一致 */
 const 好感度门槛: Record<number, string[]> = {
-  0: ['铃铛项圈', '眼罩', '体香丹', '开裆裤', '杂役服'],
+  0: ['铃铛项圈', '眼罩', '羞玉坠', '听命耳坠', '温息丹', '凝香丸', '体香丹', '开裆裤', '杂役服'],
   30: [
     '口塞',
+    '含香舌扣',
     '束缚绳',
     '乳夹链',
+    '醉眸丹',
+    '柔骨散',
+    '听令丸',
+    '玉肌丹',
+    '柔腰丹',
+    '润声丹',
     '透视纱衣',
     '透视肚兜',
     '开胸襦裙',
@@ -49,8 +58,13 @@ const 好感度门槛: Record<number, string[]> = {
   50: [
     '阴蒂环',
     '贞操带',
+    '乳热丹',
+    '焚息丹',
+    '缄潮丹',
     '媚体丹',
     '固敏丹',
+    '含情丹',
+    '镜羞丹',
     '透视罗裙',
     '开背长裙',
     '绑带装',
@@ -58,9 +72,10 @@ const 好感度门槛: Record<number, string[]> = {
     '纱幔装',
     '阴道球',
     '尾巴塞',
+    '牵膝玉扣',
   ],
-  70: ['淫纹', '催乳丹', '催情丹', '龟甲缚衣', '吊带束缚裙', '金属链衣', '金属胸罩', '淫纹绘衣', '符文肚兜', '花瓣衣'],
-  90: ['塑形丹', '掌门礼服'],
+  70: ['淫纹', '子宫听潮坠', '乳泉引', '显情丹', '梦潮丸', '乱脉丹', '催乳丹', '催情丹', '羞阈丹', '龟甲缚衣', '吊带束缚裙', '金属链衣', '金属胸罩', '淫纹绘衣', '符文肚兜', '花瓣衣'],
+  90: ['命铃锁喉环', '照心缚魂索', '莲印禁契钉', '掌心牵丝戒', '归主玉牌', '合欢锁魂铃', '照欲丹', '塑形丹', '掌门礼服'],
 };
 
 /**
@@ -98,10 +113,10 @@ export function calculate攻略值增量(基础值: number, 好感度: number): 
 
 /**
  * 计算灵石获取量
- * 公式：NPC境界系数 × 攻略值增量
+ * 公式：NPC境界系数 × 攻略值增量 × 灵石收益倍率
  */
 export function calculate灵石获取(NPC名: NPC名, 攻略值增量: number): number {
-  return NPC境界系数[NPC名] * 攻略值增量;
+  return NPC境界系数[NPC名] * 攻略值增量 * 灵石收益倍率;
 }
 
 /**
@@ -188,7 +203,23 @@ export function shouldEnterPhase2(剩余天数: number): boolean {
  * 检查是否可以进入Phase 2（别名，保持向后兼容）
  */
 export function canEnterPhase2(剩余天数: number): boolean {
-  return 剩余天数 <= 0;
+  return shouldEnterPhase2(剩余天数);
+}
+
+function getP2入场日课(data: Schema): { 日课: string; 支配者: NPC名 | ''; 待执行日课: string[] } {
+  const scene = data.系统.当前场景 || data.系统.场景上下文?.地点 || '';
+  const time = data.系统.时辰;
+
+  if (scene.includes('阴阳池') || time === '酉时') {
+    return { 日课: '阴阳池验身', 支配者: '沈月秋', 待执行日课: ['验身', '登记', '牝印唤醒'] };
+  }
+  if (time === '晨时') {
+    return { 日课: '晨课点名', 支配者: '纪兰', 待执行日课: ['点名', '验身', '牝印唤醒'] };
+  }
+  if (time === '午时') {
+    return { 日课: '执事登记', 支配者: '纪兰', 待执行日课: ['登记', '问契', '服从复核'] };
+  }
+  return { 日课: '寝前复命', 支配者: '柳素衣', 待执行日课: ['复命', '牝印复核', '寝役候命'] };
 }
 
 /**
@@ -200,6 +231,34 @@ export function canEnterPhase2(剩余天数: number): boolean {
 export function initializePhase2(data: Schema): void {
   data.系统.阶段 = '牝奴期';
   data.系统.灵石 = 0;
+
+  const p2Entry = getP2入场日课(data);
+  const currentDay = data.系统.时间状态?.当前日 ?? 1;
+  const currentTime = data.系统.时辰 ?? '晨时';
+  const entrySummary = `牝奴期入场：${p2Entry.日课}，牝印开始接管日课。`;
+
+  data.牝奴.入场日 = data.牝奴.入场日 || currentDay;
+  data.牝奴.当前日课 = data.牝奴.当前日课 && data.牝奴.当前日课 !== '候命' ? data.牝奴.当前日课 : p2Entry.日课;
+  data.牝奴.当前支配者 = data.牝奴.当前支配者 || p2Entry.支配者;
+  data.牝奴.当前命令 = data.牝奴.当前命令 || '跪候牝印点名';
+  data.牝奴.命令强度 = Math.max(data.牝奴.命令强度 ?? 0, 45);
+  data.牝奴.今日调教次数 ??= 0;
+  data.牝奴.待执行日课 = data.牝奴.待执行日课?.length ? data.牝奴.待执行日课 : p2Entry.待执行日课;
+  data.牝奴.最近调教结算 = data.牝奴.最近调教结算 || entrySummary;
+  data.牝奴.调教记录 = [
+    ...((data.牝奴.调教记录 ?? []).slice(-9)),
+    {
+      id: `p2_entry_${currentDay}_${currentTime}`,
+      时辰: currentTime,
+      支配者: p2Entry.支配者,
+      摘要: entrySummary,
+      羞名等级: '微闻',
+    },
+  ];
+  if (p2Entry.支配者) {
+    data.牝奴.上次支配者 = p2Entry.支配者;
+    data.牝奴.支配次数[p2Entry.支配者] = data.牝奴.支配次数[p2Entry.支配者] ?? 0;
+  }
 
   // 收集所有已拥有的装备型道具（排除消耗品和特殊道具）
   const 拥有列表 = Object.entries(data.道具.拥有)
@@ -271,13 +330,13 @@ export function get情欲控制阶段(阶段: number): string {
 
 /**
  * 检查情欲控制阶段是否可以升级
- * 必须在牠奴期，且墎落度达到对应门槛
+ * 必须在牝奴期，且堕落度达到对应门槛
  */
-export function canUpgrade情欲控制(当前阶段: '攻略期' | '牠奴期', 当前情欲控制阶段: number, 墎落度: number): boolean {
-  if (当前阶段 !== '牠奴期') return false;
+export function canUpgrade情欲控制(当前阶段: '攻略期' | '牝奴期', 当前情欲控制阶段: number, 堕落度: number): boolean {
+  if (当前阶段 !== '牝奴期') return false;
   if (当前情欲控制阶段 >= 3) return false;
-  // 阶2需要墎落度>=30，阶3需要墎落度>=60
-  if (当前情欲控制阶段 === 1 && 墎落度 >= 30) return true;
-  if (当前情欲控制阶段 === 2 && 墎落度 >= 60) return true;
+  // 阶2需要堕落度>=30，阶3需要堕落度>=60
+  if (当前情欲控制阶段 === 1 && 堕落度 >= 30) return true;
+  if (当前情欲控制阶段 === 2 && 堕落度 >= 60) return true;
   return false;
 }

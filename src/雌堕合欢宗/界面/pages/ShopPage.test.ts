@@ -3,6 +3,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { createPinia } from 'pinia';
 import { reactive } from 'vue';
+import { readFileSync } from 'node:fs';
+
+const ShopPageSource = readFileSync('src/雌堕合欢宗/界面/pages/ShopPage.vue', 'utf-8');
 
 // Mock the store
 const mockData = reactive({
@@ -14,6 +17,8 @@ const mockData = reactive({
       时辰: '午时',
       当前场景: '醉玉小筑',
       待处理交互: [] as any[],
+      风声列表: [] as any[],
+      场景上下文: { 在场NPC: [] as string[] },
     },
     牝奴: {
       堕落度: 0,
@@ -41,7 +46,7 @@ const mockData = reactive({
       },
     },
     场景: { 已解锁: [] },
-    剧情: { 已解锁: [] },
+    剧情: { 已解锁: [], 线索状态: {} as Record<string, any> },
   })
 
 vi.mock('../store', () => ({
@@ -59,10 +64,14 @@ describe('ShopPage', () => {
   beforeEach(() => {
     mockData.系统.灵石 = 10000;
     mockData.NPC.白芷.好感度 = 50;
+    mockData.NPC.白芷.攻略值 = 30;
+    mockData.NPC.白芷.状态 = '进行中';
     mockData.NPC.柳素衣.攻略值 = 0;
     mockData.道具.拥有 = {};
     mockData.场景.已解锁 = [];
     mockData.剧情.已解锁 = [];
+    mockData.剧情.线索状态 = {};
+    mockData.系统.风声列表 = [];
     mockData.系统.已使用阵法 = false;
     mockData.系统.待处理交互 = [];
   });
@@ -109,6 +118,116 @@ describe('ShopPage', () => {
     expect(firstCard.find('.price-num').text()).toBeTruthy();
   });
 
+  it('服装商城显示 v3 显示名但购买仍写入逻辑名', async () => {
+    mockData.系统.灵石 = 100000;
+    mockData.NPC.白芷.好感度 = 100;
+    const wrapper = mountShop();
+    const card = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '湿雾贴身裙');
+    expect(card).toBeTruthy();
+
+    await card!.trigger('click');
+    expect(wrapper.find('.modal-title').text()).toBe('湿雾贴身裙');
+    expect(wrapper.find('.modal-hint').text()).toContain('雾绡遇热贴身');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.道具.拥有['透视罗裙']).toBe(1);
+    expect(mockData.道具.拥有['湿雾贴身裙']).toBeUndefined();
+  });
+
+  it('攻略期服装分类不显示牝奴服', () => {
+    mockData.系统.阶段 = '攻略期';
+    const wrapper = mountShop();
+    expect(wrapper.text()).not.toContain('牝印初染衣');
+  });
+
+  it('牝奴期牝奴分类显示牝奴服显示名', async () => {
+    mockData.系统.阶段 = '牝奴期';
+    const wrapper = mountShop();
+    const biNuTab = wrapper.findAll('.tab-btn').find(t => t.find('.tab-text').text() === '牝奴');
+    expect(biNuTab).toBeTruthy();
+
+    await biNuTab!.trigger('click');
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('牝印初染衣');
+  });
+
+  it('命契专属服未完成时不显示，完成后在命契层显示', async () => {
+    mockData.系统.灵石 = 100000;
+    mockData.NPC.白芷.状态 = '进行中';
+    mockData.NPC.白芷.攻略值 = 99;
+    const wrapper = mountShop();
+    expect(wrapper.text()).not.toContain('晨露缚心仙奴衣');
+
+    mockData.NPC.白芷.状态 = '已完成';
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('晨露缚心仙奴衣');
+  });
+
+  it('服装分类按楼层分组显示', () => {
+    mockData.系统.灵石 = 100000;
+    mockData.NPC.白芷.状态 = '已完成';
+    mockData.NPC.白芷.攻略值 = 100;
+    const wrapper = mountShop();
+
+    const floorTitles = wrapper.findAll('.floor-title').map(title => title.text());
+    expect(floorTitles).toEqual(['凡衣层', '微露层', '诱形层', '缚心层', '命契层']);
+    expect(wrapper.find('[data-floor="凡衣层"]').text()).toContain('素麻外门衣');
+    expect(wrapper.find('[data-floor="命契层"]').text()).toContain('晨露缚心仙奴衣');
+  });
+
+  it('禁器分类按器阶分组显示含蓄名但购买仍写逻辑名', async () => {
+    mockData.系统.灵石 = 100000;
+    mockData.NPC.白芷.好感度 = 100;
+    const wrapper = mountShop();
+
+    await wrapper.findAll('.tab-btn')[1].trigger('click');
+    await flushPromises();
+
+    const floorTitles = wrapper.findAll('.floor-title').map(title => title.text());
+    expect(floorTitles).toEqual(['启羞器阶', '缚身器阶', '化器器阶', '命契器阶']);
+    expect(wrapper.find('[data-floor="启羞器阶"]').text()).toContain('听铃颈环');
+    expect(wrapper.find('[data-floor="化器器阶"]').text()).toContain('命门欲环');
+
+    const collarCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '听铃颈环');
+    expect(collarCard).toBeTruthy();
+    await collarCard!.trigger('click');
+    expect(wrapper.find('.modal-title').text()).toBe('听铃颈环');
+    expect(wrapper.find('.modal-meta').text()).toContain('启羞器阶');
+    expect(wrapper.find('.modal-meta').text()).toContain('颈项');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.道具.拥有['铃铛项圈']).toBe(1);
+    expect(mockData.道具.拥有['听铃颈环']).toBeUndefined();
+  });
+
+  it('丹药分类按临时、永久、仙奴分组显示显示名但购买仍写逻辑名', async () => {
+    mockData.系统.灵石 = 100000;
+    mockData.NPC.白芷.好感度 = 100;
+    mockData.NPC.白芷.状态 = '已完成';
+    const wrapper = mountShop();
+
+    await wrapper.findAll('.tab-btn')[2].trigger('click');
+    await flushPromises();
+
+    const floorTitles = wrapper.findAll('.floor-title').map(title => title.text());
+    expect(floorTitles).toEqual(['临时丹药', '永久丹药', '仙奴丹']);
+    expect(wrapper.find('[data-floor="永久丹药"]').text()).toContain('引香丹');
+    expect(wrapper.find('[data-floor="仙奴丹"]').text()).toContain('玉户丹');
+
+    const pillCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '引香丹');
+    expect(pillCard).toBeTruthy();
+    await pillCard!.trigger('click');
+    expect(wrapper.find('.modal-title').text()).toBe('引香丹');
+    expect(wrapper.find('.modal-meta').text()).toContain('永久丹药');
+    expect(wrapper.find('.modal-meta').text()).toContain('体态/社交');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.道具.拥有['体香丹']).toBe(1);
+    expect(mockData.道具.拥有['引香丹']).toBeUndefined();
+  });
+
   // --- canBuy 逻辑 ---
   it('灵石不足时物品卡片显示disabled', async () => {
     mockData.系统.灵石 = 100; // 不够买任何东西
@@ -121,12 +240,12 @@ describe('ShopPage', () => {
     mockData.系统.灵石 = 100000;
     mockData.NPC.白芷.好感度 = 100;
     const wrapper = mountShop();
-    // 切换到 NSFW 分类查看铃铛项圈 (价格500, 门槛0)
+    // 切换到禁器分类查看铃铛项圈 (价格500, 门槛0)
     await wrapper.findAll('.tab-btn')[1].trigger('click');
     await flushPromises();
-    // 找铃铛项圈
+    // 找铃铛项圈显示名
     const cards = wrapper.findAll('.item-card');
-    const bellCard = cards.find(c => c.find('.item-name').text() === '铃铛项圈');
+    const bellCard = cards.find(c => c.find('.item-name').text() === '听铃颈环');
     expect(bellCard).toBeTruthy();
     expect(bellCard!.classes()).not.toContain('disabled');
   });
@@ -139,6 +258,11 @@ describe('ShopPage', () => {
     await firstCard.trigger('click');
     expect(wrapper.find('.detail-overlay').exists()).toBe(true);
     expect(wrapper.find('.modal-title').text()).toBeTruthy();
+  });
+
+  it('服装详情楼层与AI短提示使用弹窗主题色，不能落回默认黑字', () => {
+    expect(ShopPageSource).toMatch(/\.modal-meta\s*\{[\s\S]*?color:\s*var\(--hh-gold\)/);
+    expect(ShopPageSource).toMatch(/\.modal-hint\s*\{[\s\S]*?color:\s*var\(--hh-text-secondary\)/);
   });
 
   it('点击遮罩关闭弹窗', async () => {
@@ -174,9 +298,9 @@ describe('ShopPage', () => {
     // 切换到 NSFW 分类
     await wrapper.findAll('.tab-btn')[1].trigger('click');
     await flushPromises();
-    // 找铃铛项圈
+    // 找铃铛项圈显示名
     const cards = wrapper.findAll('.item-card');
-    const bellCard = cards.find(c => c.find('.item-name').text() === '铃铛项圈');
+    const bellCard = cards.find(c => c.find('.item-name').text() === '听铃颈环');
     if (bellCard) {
       await bellCard.trigger('click');
       await flushPromises();
@@ -195,22 +319,25 @@ describe('ShopPage', () => {
     await wrapper.findAll('.tab-btn')[1].trigger('click');
     await flushPromises();
 
-    const bellCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '铃铛项圈');
+    const bellCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '听铃颈环');
     expect(bellCard).toBeTruthy();
     await bellCard!.trigger('click');
     await flushPromises();
     await wrapper.find('.buy-btn').trigger('click');
 
-    expect(mockData.系统.待处理交互).toEqual([
-      {
-        类型: '购买物品',
-        目标: '玩家',
-        道具: '铃铛项圈',
-        数量: 1,
-        时辰: '午时',
-        场景: '醉玉小筑',
-      },
-    ]);
+    expect(mockData.系统.待处理交互).toHaveLength(1);
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
+      类型: '购买物品',
+      目标: '玩家',
+      道具: '铃铛项圈',
+      道具显示名: '听铃颈环',
+      器阶: '启羞器阶',
+      作用部位: '颈项',
+      数量: 1,
+      时辰: '午时',
+      场景: '醉玉小筑',
+    });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('铃声');
   });
 
   it('灵石不足时不写入待处理交互', async () => {
@@ -234,7 +361,7 @@ describe('ShopPage', () => {
     await wrapper.findAll('.tab-btn')[1].trigger('click');
     await flushPromises();
     const cards = wrapper.findAll('.item-card');
-    const bellCard = cards.find(c => c.find('.item-name').text() === '铃铛项圈');
+    const bellCard = cards.find(c => c.find('.item-name').text() === '听铃颈环');
     if (bellCard) {
       await bellCard.trigger('click');
       await flushPromises();
@@ -265,34 +392,124 @@ describe('ShopPage', () => {
       });
     }
   });
-  it('购买特殊场景后加入场景解锁列表且不进入背包', async () => {
+  it('场景商城显示通行令名，购买后解锁真实地点且不进入背包', async () => {
     mockData.系统.灵石 = 100000;
     const wrapper = mountShop();
     await wrapper.findAll('.tab-btn')[3].trigger('click');
     await flushPromises();
 
-    const sceneCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '阴阳池');
+    expect(wrapper.findAll('.item-card')).toHaveLength(8);
+    const sceneCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '合契浴令');
     expect(sceneCard).toBeTruthy();
     await sceneCard!.trigger('click');
+    expect(wrapper.find('.modal-title').text()).toBe('合契浴令');
+    expect(wrapper.find('.modal-hint').text()).toContain('水汽');
     await wrapper.find('.buy-btn').trigger('click');
 
     expect(mockData.场景.已解锁).toContain('阴阳池');
+    expect(mockData.场景.已解锁).not.toContain('合契浴令');
     expect(mockData.道具.拥有['阴阳池']).toBeUndefined();
+    expect(mockData.剧情.线索状态['阴阳池']).toMatchObject({
+      类型: '场景令牌',
+      状态: '可追查',
+      风声ID: 'scene_yinyang_pool_1',
+    });
+    expect(mockData.系统.风声列表[0]).toMatchObject({
+      id: 'scene_yinyang_pool_1',
+      来源: '场景令牌',
+      地点: '阴阳池',
+      状态: '未读',
+    });
   });
 
-  it('购买特殊剧情后加入剧情解锁列表且不进入背包', async () => {
+  it('剧情商城显示剧情信物名，购买后解锁剧情线且不进入背包', async () => {
     mockData.系统.灵石 = 100000;
     const wrapper = mountShop();
     await wrapper.findAll('.tab-btn')[4].trigger('click');
     await flushPromises();
 
-    const storyCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '白芷');
+    expect(wrapper.findAll('.item-card')).toHaveLength(5);
+    const storyCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '断鸢玉扣');
     expect(storyCard).toBeTruthy();
     await storyCard!.trigger('click');
+    expect(wrapper.find('.modal-title').text()).toBe('断鸢玉扣');
+    expect(wrapper.find('.modal-hint').text()).toContain('旧誓');
+    expect(wrapper.text()).toContain('白芷');
+    expect(wrapper.text()).toContain('旧誓');
     await wrapper.find('.buy-btn').trigger('click');
 
-    expect(mockData.剧情.已解锁).toContain('白芷');
-    expect(mockData.道具.拥有['白芷']).toBeUndefined();
+    expect(mockData.剧情.已解锁).toContain('白芷旧誓线');
+    expect(mockData.剧情.已解锁).not.toContain('白芷');
+    expect(mockData.道具.拥有['白芷旧誓线']).toBeUndefined();
+    expect(mockData.剧情.线索状态['白芷旧誓线']).toMatchObject({
+      类型: '剧情钥匙',
+      状态: '可追查',
+      风声ID: 'story_baizhi_old_oath_1',
+      关联NPC: '白芷',
+    });
+    expect(mockData.系统.风声列表[0]).toMatchObject({
+      id: 'story_baizhi_old_oath_1',
+      来源: '剧情钥匙',
+      地点: '听风廊',
+      相关NPC: ['白芷'],
+      状态: '未读',
+    });
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
+      类型: '购买物品',
+      目标: '玩家',
+      道具: '白芷旧誓线',
+      道具显示名: '断鸢玉扣',
+      剧情线: '白芷旧誓线',
+      关联NPC: '白芷',
+      秘密主题: '旧誓/依赖/被保护欲',
+      入口类型: '剧情钥匙',
+      线索ID: 'story_baizhi_old_oath_1',
+    });
+  });
+
+  it('已解锁剧情钥匙不可重复购买和重复入队', async () => {
+    mockData.系统.灵石 = 100000;
+    mockData.剧情.已解锁 = ['白芷旧誓线'];
+    mockData.剧情.线索状态 = {
+      白芷旧誓线: { 类型: '剧情钥匙', 状态: '可追查', 风声ID: 'story_baizhi_old_oath_1', 关联名称: '白芷旧誓线', 触发次数: 0 },
+    };
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[4].trigger('click');
+    await flushPromises();
+
+    const storyCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '断鸢玉扣');
+    expect(storyCard).toBeTruthy();
+    expect(storyCard!.classes()).toContain('disabled');
+    await storyCard!.trigger('click');
+    await flushPromises();
+
+    expect(wrapper.find('.buy-btn').attributes('disabled')).toBeDefined();
+    expect(wrapper.find('.buy-btn').text()).toContain('因果已入簿');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.系统.灵石).toBe(100000);
+    expect(mockData.系统.待处理交互).toEqual([]);
+  });
+
+  it('已解锁场景令牌不可重复购买和重复入队', async () => {
+    mockData.系统.灵石 = 100000;
+    mockData.场景.已解锁 = ['阴阳池'];
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[3].trigger('click');
+    await flushPromises();
+
+    const sceneCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '合契浴令');
+    expect(sceneCard).toBeTruthy();
+    expect(sceneCard!.classes()).toContain('disabled');
+    await sceneCard!.trigger('click');
+    await flushPromises();
+
+    expect(wrapper.find('.buy-btn').attributes('disabled')).toBeDefined();
+    expect(wrapper.find('.buy-btn').text()).toContain('场景已开');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.系统.灵石).toBe(100000);
+    expect(mockData.系统.待处理交互).toEqual([]);
   });
 
   it('购买改变阵法后立即标记阵法已使用且不进入背包', async () => {
@@ -324,6 +541,68 @@ describe('ShopPage', () => {
 
     expect(mockData.道具.拥有['时间延长']).toBe(1);
     expect(mockData.系统.剩余天数).toBe(30);
+  });
+
+  it('购买欲海遮蔽符进入背包作为自用消耗品，并写入事件元数据', async () => {
+    mockData.系统.灵石 = 100000;
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[5].trigger('click');
+    await flushPromises();
+
+    const card = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '欲海遮蔽符');
+    expect(card).toBeTruthy();
+    await card!.trigger('click');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.道具.拥有['欲海遮蔽符']).toBe(1);
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
+      类型: '购买物品',
+      目标: '玩家',
+      道具: '欲海遮蔽符',
+    });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('气息');
+  });
+
+  it('购买欲海回声立即触发事件种子，不进背包', async () => {
+    mockData.系统.灵石 = 100000;
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[5].trigger('click');
+    await flushPromises();
+
+    const card = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '欲海回声');
+    expect(card).toBeTruthy();
+    await card!.trigger('click');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.道具.拥有['欲海回声']).toBeUndefined();
+    expect(mockData.系统.风声列表).toEqual([]);
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
+      类型: '购买物品',
+      目标: '玩家',
+      道具: '欲海回声',
+    });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('青云道人');
+  });
+
+  it('购买投欲钥立即触发事件种子，不进背包也不写已使用阵法', async () => {
+    mockData.系统.灵石 = 200000;
+    const wrapper = mountShop();
+    await wrapper.findAll('.tab-btn')[5].trigger('click');
+    await flushPromises();
+
+    const card = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '投欲钥');
+    expect(card).toBeTruthy();
+    await card!.trigger('click');
+    await wrapper.find('.buy-btn').trigger('click');
+
+    expect(mockData.道具.拥有['投欲钥']).toBeUndefined();
+    expect(mockData.系统.已使用阵法).toBe(false);
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
+      类型: '购买物品',
+      目标: '玩家',
+      道具: '投欲钥',
+    });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('欲海核心');
   });
 
 });

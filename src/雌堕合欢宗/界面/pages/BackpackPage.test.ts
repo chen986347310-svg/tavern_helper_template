@@ -58,7 +58,11 @@ describe('BackpackPage', () => {
       柳素衣: [],
     };
     mockData.NPC.白芷.好感度 = 50;
+    mockData.NPC.白芷.攻略值 = 30;
+    mockData.NPC.白芷.状态 = '进行中';
     mockData.NPC.苏芸.好感度 = 0;
+    mockData.NPC.苏芸.攻略值 = 0;
+    mockData.NPC.苏芸.状态 = '未开始';
     mockData.系统.时辰 = '午时';
     mockData.系统.当前场景 = '醉玉小筑';
     mockData.系统.待处理交互 = [];
@@ -84,8 +88,51 @@ describe('BackpackPage', () => {
     mockData.道具.拥有 = { 铃铛项圈: 3 };
     const wrapper = mountBackpack();
     const row = wrapper.find('.item-row');
-    expect(row.find('.item-name').text()).toBe('铃铛项圈');
+    expect(row.find('.item-name').text()).toBe('听铃颈环');
     expect(row.find('.item-count').text()).toBe('x3');
+  });
+
+  it('背包库存显示 v3 显示名但装备仍写逻辑名', async () => {
+    mockData.道具.拥有 = { 透视罗裙: 1 };
+    mockData.NPC.白芷.好感度 = 100;
+    const wrapper = mountBackpack();
+
+    expect(wrapper.find('.item-name').text()).toBe('湿雾贴身裙');
+    await wrapper.find('.item-row').trigger('click');
+    await wrapper.findAll('.target-btn')[1].trigger('click');
+
+    expect(mockData.道具.装备['白芷']).toEqual(['透视罗裙']);
+  });
+
+  it('牝奴服只显示玩家目标并拒绝装备给 NPC', async () => {
+    mockData.系统.阶段 = '牝奴期';
+    mockData.道具.拥有 = { 牝奴链甲: 1 };
+    const wrapper = mountBackpack();
+    await wrapper.find('.item-row').trigger('click');
+
+    expect(wrapper.findAll('.target-btn').map(btn => btn.text())).toEqual(['玩家']);
+    await wrapper.find('.target-btn').trigger('click');
+
+    expect(mockData.道具.装备['玩家']).toEqual(['牝奴链甲']);
+    expect(mockData.道具.装备['白芷']).toEqual([]);
+  });
+
+  it('命契专属服只显示对应 NPC 目标，卸下后归还库存', async () => {
+    mockData.道具.拥有 = { 白芷仙奴服: 1 };
+    mockData.NPC.白芷.状态 = '已完成';
+    mockData.NPC.白芷.攻略值 = 100;
+    const wrapper = mountBackpack();
+    await wrapper.find('.item-row').trigger('click');
+
+    expect(wrapper.findAll('.target-btn').map(btn => btn.text())).toEqual(['白芷']);
+    await wrapper.find('.target-btn').trigger('click');
+    expect(mockData.道具.装备['白芷']).toEqual(['白芷仙奴服']);
+    expect(mockData.道具.拥有['白芷仙奴服']).toBeUndefined();
+
+    await wrapper.find('.equipped-item').trigger('click');
+    await wrapper.find('.target-btn').trigger('click');
+    expect(mockData.道具.装备['白芷']).toEqual([]);
+    expect(mockData.道具.拥有['白芷仙奴服']).toBe(1);
   });
 
   it('数量为0的道具不再显示在背包列表', () => {
@@ -93,8 +140,8 @@ describe('BackpackPage', () => {
     const wrapper = mountBackpack();
     const rows = wrapper.findAll('.item-row');
     expect(rows).toHaveLength(1);
-    expect(rows[0].find('.item-name').text()).toBe('铃铛项圈');
-    expect(wrapper.text()).not.toContain('眼罩');
+    expect(rows[0].find('.item-name').text()).toBe('听铃颈环');
+    expect(wrapper.text()).not.toContain('遮灵绡眼');
   });
 
   // --- 选择道具 ---
@@ -240,11 +287,21 @@ describe('BackpackPage', () => {
     expect(firstRow.find('.equipped-items').text()).toBe('虚位');
   });
 
-  it('有装备时显示道具名', () => {
+  it('有装备时显示道具显示名', () => {
     mockData.道具.装备['白芷'] = ['口塞', '束缚绳'];
     const wrapper = mountBackpack();
     const baiRow = wrapper.findAll('.equip-row')[1]; // 白芷是第二个
-    expect(baiRow.find('.equipped-items').text()).toBe('口塞、束缚绳');
+    expect(baiRow.find('.equipped-items').text()).toBe('缄声玉枚、缚影玄绳');
+  });
+
+  it('当前装备区域显示显示名但点击仍选择逻辑名', async () => {
+    mockData.道具.装备['白芷'] = ['透视罗裙'];
+    const wrapper = mountBackpack();
+    const baiRow = wrapper.findAll('.equip-row')[1];
+    expect(baiRow.find('.equipped-items').text()).toBe('湿雾贴身裙');
+
+    await baiRow.find('.equipped-item').trigger('click');
+    expect(wrapper.find('.equip-section').text()).toContain('湿雾贴身裙');
   });
 
 
@@ -275,7 +332,7 @@ describe('BackpackPage', () => {
     await wrapper.find('.item-row').trigger('click');
     await wrapper.find('.use-btn').trigger('click');
 
-    expect(mockData.系统.待处理交互).toContainEqual({
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
       类型: '使用物品',
       目标: '玩家',
       道具: '时间延长',
@@ -283,6 +340,7 @@ describe('BackpackPage', () => {
       时辰: '午时',
       场景: '醉玉小筑',
     });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('天数');
   });
 
 
@@ -304,14 +362,18 @@ describe('BackpackPage', () => {
     await wrapper.find('.target-btn').trigger('click');
 
     expect(mockData.道具.拥有['体香丹']).toBeUndefined();
-    expect(mockData.系统.待处理交互).toContainEqual({
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
       类型: '使用物品',
       目标: '白芷',
       道具: '体香丹',
       数量: 1,
       时辰: '午时',
       场景: '醉玉小筑',
+      道具显示名: '引香丹',
+      丹药分类: '永久丹药',
+      作用线: '体态/社交',
     });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('体香');
   });
 
   it('永久丹药无在场NPC时不显示目标按钮也不扣库存', async () => {

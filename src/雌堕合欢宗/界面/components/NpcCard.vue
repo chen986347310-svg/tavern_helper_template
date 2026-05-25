@@ -90,7 +90,7 @@
             <span v-if="backlashVisible" class="backlash-hint"><span class="backlash-glitch" aria-hidden="true">纟纟露</span><span class="backlash-label">心防反震</span></span>
           </Transition>
           <Transition name="ink-reveal">
-            <span v-if="soulLocked" class="soul-pending-mark">灵识窥伺</span>
+            <span v-if="soulLocked && !backlashVisible" class="soul-pending-mark">灵识窥伺</span>
           </Transition>
         </div>
         <div class="expand-row">
@@ -113,7 +113,7 @@
           </button>
           <div :class="['equip-list', { open: equipOpen }]">
             <div class="equip-inner">
-              <span v-for="item in 装备" :key="item" class="equip-item">{{ item }}</span>
+              <span v-for="item in displayEquipment" :key="item" class="equip-item">{{ getItemDisplayName(item) }}</span>
             </div>
           </div>
         </div>
@@ -127,6 +127,7 @@
 import { computed, onUnmounted, ref, watch } from 'vue';
 
 import { get灵犀等级, get道心侵蚀 } from '../composables/useStatusText';
+import { getItemDisplayName, sortEquipmentForDisplay } from '../data/itemDisplay';
 
 import avatar白芷 from '../assets/avatars/白芷.png';
 import avatar白芷_fallen from '../assets/avatars/白芷_fallen.png';
@@ -252,6 +253,8 @@ const avatarSrc = computed(() => {
   const map = AVATAR_MAP[props.npc名];
   return props.data.状态 === '已完成' ? map.fallen : map.normal;
 });
+
+const displayEquipment = computed(() => sortEquipmentForDisplay(props.装备 ?? []));
 
 function handleClick() {
   if (props.data.状态 === '未开始') return;
@@ -641,7 +644,14 @@ onUnmounted(() => {
   }
 
   &.soul-backlash {
-    animation: soul-backlash-shake 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+    .ring-totem-shards,
+    .destiny-taiji-core {
+      animation: disk-backlash-shake 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dual-ring {
+      animation: ring-backlash-shake 0.42s cubic-bezier(0.4, 0, 0.2, 1), soul-ring-breathe 4s ease-in-out infinite;
+    }
   }
 
   &.probe-可窥探 {
@@ -661,7 +671,14 @@ onUnmounted(() => {
   }
 
   &.probe-反震 {
-    animation: soul-backlash-shake 0.56s cubic-bezier(0.4, 0, 0.2, 1);
+    .ring-totem-shards,
+    .destiny-taiji-core {
+      animation: disk-backlash-shake 0.56s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dual-ring {
+      animation: ring-backlash-shake 0.56s cubic-bezier(0.4, 0, 0.2, 1), soul-ring-breathe 4s ease-in-out infinite;
+    }
 
     .dual-ring {
       filter: grayscale(0.2) drop-shadow(0 0 18px rgba(156, 44, 49, 0.45));
@@ -788,11 +805,26 @@ onUnmounted(() => {
 }
 
 .backlash-hint {
+  min-width: 72px;
   color: #ffd8d2;
   background:
     linear-gradient(to right, transparent, rgba(28, 6, 6, 0.9) 18%, rgba(46, 10, 10, 0.94) 82%, transparent),
     radial-gradient(ellipse at 50% 50%, rgba(212, 48, 48, 0.42), transparent 72%);
   box-shadow: 0 0 18px rgba(212, 48, 48, 0.35);
+}
+
+.backlash-glitch {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.backlash-label {
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 
 .dual-ring {
@@ -825,6 +857,20 @@ onUnmounted(() => {
   to { transform: rotate(270deg); }
 }
 
+@keyframes ring-backlash-shake {
+  0%, 100% { transform: rotate(-90deg); }
+  20% { transform: rotate(-94deg); }
+  45% { transform: rotate(-86deg); }
+  70% { transform: rotate(-92deg); }
+}
+
+@keyframes disk-backlash-shake {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0); filter: hue-rotate(0deg); }
+  20% { transform: translate(-50%, -50%) translateX(-3px); filter: hue-rotate(-18deg); }
+  45% { transform: translate(-50%, -50%) translateX(3px); filter: hue-rotate(18deg); }
+  70% { transform: translate(-50%, -50%) translateX(-2px); filter: hue-rotate(-10deg); }
+}
+
 @keyframes soul-glyph-flicker {
   from { opacity: 0.12; filter: blur(1px); }
   to { opacity: 0.38; filter: blur(0); }
@@ -853,13 +899,6 @@ onUnmounted(() => {
 @keyframes soul-thread-bind {
   from { opacity: 0.52; transform: translateX(-50%) rotate(14deg) scaleY(0.88); }
   to { opacity: 1; transform: translateX(-50%) rotate(22deg) scaleY(1.06); }
-}
-
-@keyframes soul-backlash-shake {
-  0%, 100% { transform: translateX(0); filter: hue-rotate(0deg); }
-  20% { transform: translateX(-3px); filter: hue-rotate(-18deg); }
-  45% { transform: translateX(3px); filter: hue-rotate(18deg); }
-  70% { transform: translateX(-2px); filter: hue-rotate(-10deg); }
 }
 
 /* 展开区域 */
@@ -1299,4 +1338,3 @@ onUnmounted(() => {
   80% { opacity: 0.6; transform: translate(-2px, 4px) scale(1.2); }
 }
 </style>
-

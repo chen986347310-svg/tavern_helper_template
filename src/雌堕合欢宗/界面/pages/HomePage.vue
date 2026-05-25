@@ -150,6 +150,13 @@ const sceneTags = computed(() => {
 });
 const sceneEmptyText = computed(() => sceneContext.value.故事钩子?.find(Boolean) ?? currentSceneConfig.value.emptyText);
 
+function updateNarrativeEntryStatus(rumorId: string, status: '可追查' | '追查中') {
+  const storyState = (data.剧情 as any).线索状态;
+  if (!storyState) return;
+  const entry = Object.values(storyState).find((item: any) => item?.风声ID === rumorId) as { 状态?: string } | undefined;
+  if (entry) entry.状态 = status;
+}
+
 watch(visibleNpcs, npcs => {
   if (expandedNpc.value && !npcs.includes(expandedNpc.value)) {
     expandedNpc.value = null;
@@ -184,11 +191,13 @@ function recordRumor(rumor: Rumor) {
   if (pendingRumorId.value === rumor.id) {
     pendingRumorId.value = '';
     data.系统.待处理交互 = (data.系统.待处理交互 ?? []).filter((action: { 风声ID?: string }) => action.风声ID !== rumor.id);
+    updateNarrativeEntryStatus(rumor.id, '可追查');
     return;
   }
 
   pendingRumorId.value = rumor.id;
   data.系统.待处理交互 = (data.系统.待处理交互 ?? []).filter((action: { 类型?: string }) => action.类型 !== '追查风声');
+  updateNarrativeEntryStatus(rumor.id, '追查中');
   记录追查风声(rumor);
 }
 </script>
@@ -206,24 +215,46 @@ function recordRumor(rumor: Rumor) {
 .scene-context-container {
   position: relative;
   min-height: 100%;
-  transition: filter 1.2s cubic-bezier(0.25, 0.8, 0.25, 1), background 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  isolation: isolate;
+  transition: background 1.2s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -8px -10px;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    background: transparent;
+    transition: opacity 1.2s cubic-bezier(0.25, 0.8, 0.25, 1), background 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
 
   &[data-exposure='公开'] {
-    filter: sepia(20%) saturate(110%) contrast(95%) drop-shadow(0 0 10px rgba(224, 168, 96, 0.05));
+    background: radial-gradient(ellipse at top, rgba(224, 168, 96, 0.045), transparent 62%);
   }
 
   &[data-exposure='半私密'] {
-    filter: sepia(10%) hue-rotate(15deg) saturate(100%);
+    background: radial-gradient(ellipse at 50% 0%, rgba(191, 161, 122, 0.055), transparent 66%);
   }
 
   &[data-exposure='私密'] {
-    filter: hue-rotate(45deg) saturate(85%) brightness(75%) contrast(105%);
-    background: radial-gradient(circle at center, transparent 40%, rgba(16, 12, 24, 0.38) 100%);
+    background: radial-gradient(circle at center, transparent 42%, rgba(16, 12, 24, 0.38) 100%);
   }
 
   &[data-exposure='禁地'] {
-    filter: hue-rotate(120deg) saturate(130%) brightness(60%);
-    animation: pulse-forbidden 4s ease-in-out infinite alternate;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(44, 18, 58, 0.16), transparent 48%),
+      radial-gradient(ellipse at bottom, rgba(8, 32, 24, 0.24), transparent 72%);
+    box-shadow: inset 0 0 44px rgba(8, 24, 18, 0.28);
+  }
+
+  &[data-exposure='禁地']::before {
+    opacity: 1;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(156, 44, 49, 0.09), transparent 34%),
+      radial-gradient(circle at 82% 72%, rgba(64, 96, 78, 0.12), transparent 38%),
+      linear-gradient(135deg, rgba(8, 12, 10, 0.34), rgba(44, 18, 58, 0.16), rgba(8, 12, 10, 0.28));
+    animation: forbidden-veil 4.8s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
   }
 }
 
@@ -486,9 +517,9 @@ function recordRumor(rumor: Rumor) {
   }
 }
 
-@keyframes pulse-forbidden {
-  0% { filter: hue-rotate(120deg) saturate(120%) brightness(55%); }
-  100% { filter: hue-rotate(125deg) saturate(140%) brightness(65%); }
+@keyframes forbidden-veil {
+  0% { opacity: 0.72; transform: scale(0.995); }
+  100% { opacity: 1; transform: scale(1.01); }
 }
 
 @keyframes pending-note-drift {

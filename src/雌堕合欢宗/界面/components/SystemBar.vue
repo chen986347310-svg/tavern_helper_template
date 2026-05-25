@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['system-bar', { 'system-bar--rumor': hasActiveRumor }]"
+    :class="['system-bar', { 'system-bar--rumor': hasActiveRumor, 'system-bar--p2': mode === '牝奴期' }]"
     role="toolbar"
     :aria-label="mode === '攻略期' ? '攻略进度状态栏' : '牝奴堕落状态栏'"
     :data-rumor-active="hasActiveRumor ? 'true' : 'false'"
@@ -69,6 +69,7 @@
         >
           <path d="M8 1C8 1 12 5 12 8C12 11 10 14 8 15C6 14 4 11 4 8C4 5 8 1 8 1Z" fill="currentColor"/>
         </svg>
+        <span class="p2-stigma-glyph" aria-hidden="true">印</span>
         <span class="blossom-value">{{ 堕落度 }}%</span>
       </div>
     </div>
@@ -89,9 +90,21 @@
         </div>
       </template>
       <template v-else>
+        <div class="stat-item stat-time">
+          <span class="stat-glyph">辰</span>
+          <span class="stat-value time-value" :aria-label="'当前时辰 ' + (时辰 ?? '晨时')">{{ 时辰 ?? '晨时' }}</span>
+        </div>
         <div class="stat-item">
           <span class="stat-glyph">决</span>
           <span class="stat-value" :aria-label="'牝阴决 ' + (牝阴决层数 ?? 0) + ' 层'">{{ 牝阴决层数 ?? 0 }}/9</span>
+        </div>
+        <div class="stat-item p2-routine-stat">
+          <span class="stat-glyph">课</span>
+          <span class="stat-value" :aria-label="'当前日课 ' + (当前日课 || '候命')">{{ 当前日课 || '候命' }}</span>
+        </div>
+        <div v-if="当前命令" class="stat-item p2-command-stat" :data-command-intensity="命令强度 ?? 0">
+          <span class="stat-glyph">令</span>
+          <span class="stat-value" :aria-label="'当前命令 ' + 当前命令">{{ 当前命令 }}</span>
         </div>
       </template>
     </div>
@@ -115,11 +128,11 @@
 type NpcName = '白芷' | '苏芸' | '纪兰' | '沈月秋' | '柳素衣';
 type SceneName = string;
 type TimeName = '晨时' | '午时' | '酉时' | '亥时';
-type Rumor = { id?: string; 地点: string; 风声文本: string; 状态?: string };
+type Rumor = { id?: string; 地点: string; 风声文本: string; 状态?: string; 来源?: string; 羞名等级?: string };
 
 type SystemBarProps =
   | { mode: '攻略期'; npcList: readonly NpcName[]; presentNpcList?: readonly NpcName[]; npcStates: Record<NpcName, { 状态: string; 好感度?: number }>; remainingDays?: number; gems?: number; currentScene?: SceneName; 时辰?: TimeName; 牝阴决层数?: number; 堕落度?: number; rumorList?: readonly Rumor[] }
-  | { mode: '牝奴期'; 堕落度: number; 牝阴决层数?: number; npcList?: readonly NpcName[]; presentNpcList?: readonly NpcName[]; npcStates?: Record<NpcName, { 状态: string; 好感度?: number }>; remainingDays?: number; gems?: number; currentScene?: SceneName; 时辰?: TimeName; rumorList?: readonly Rumor[] };
+  | { mode: '牝奴期'; 堕落度: number; 牝阴决层数?: number; 当前日课?: string; 当前命令?: string; 命令强度?: number; npcList?: readonly NpcName[]; presentNpcList?: readonly NpcName[]; npcStates?: Record<NpcName, { 状态: string; 好感度?: number }>; remainingDays?: number; gems?: number; currentScene?: SceneName; 时辰?: TimeName; rumorList?: readonly Rumor[] };
 
 const props = defineProps<SystemBarProps>();
 
@@ -151,7 +164,7 @@ function soulStyle(npc: NpcName) {
 
 
 const displayedNpcList = computed(() => props.mode === '攻略期' ? (props.presentNpcList ?? props.npcList) : []);
-const activeRumors = computed(() => (props.mode === '攻略期' ? (props.rumorList ?? []) : []).filter(rumor => rumor.状态 !== '已失效').slice(0, 3));
+const activeRumors = computed(() => (props.rumorList ?? []).filter(rumor => rumor.状态 !== '已失效').slice(0, 3));
 const hasActiveRumor = computed(() => activeRumors.value.length > 0);
 
 
@@ -387,6 +400,20 @@ const { theme, toggleTheme } = useTheme();
   @include inscription-engrave;
 }
 
+.p2-stigma-glyph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-铭文;
+  font-size: 24px;
+  color: var(--hh-accent);
+  opacity: 0.16;
+  filter: drop-shadow(0 0 8px var(--hh-glow-color));
+  pointer-events: none;
+}
+
 /* ── 右侧数值 ── */
 .bar-stats {
   display: flex;
@@ -427,6 +454,44 @@ const { theme, toggleTheme } = useTheme();
     font-size: 12px;
     font-weight: 700;
     color: var(--theme-gold);
+  }
+}
+
+.system-bar--p2 {
+  .bar-left--blossom {
+    filter: drop-shadow(0 0 8px var(--hh-glow-color));
+  }
+
+  .blossom-ring-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .blossom-petal.lit {
+    color: var(--hh-accent);
+    filter: drop-shadow(0 0 12px var(--hh-glow-color));
+  }
+
+  .bar-stats {
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .p2-routine-stat,
+  .p2-command-stat {
+    min-width: 0;
+
+    .stat-value {
+      max-width: 72px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .p2-command-stat .stat-value {
+    color: var(--hh-accent);
+    text-shadow: 0 0 8px var(--hh-glow-color);
   }
 }
 

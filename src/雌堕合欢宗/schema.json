@@ -33,6 +33,73 @@
         "当前场景": {
           "$ref": "#/$defs/__schema1"
         },
+        "时间状态": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "当前日": {
+              "default": 1,
+              "type": "number"
+            },
+            "时段进度": {
+              "default": 0,
+              "type": "number"
+            },
+            "最近耗时": {
+              "default": "",
+              "type": "string"
+            },
+            "最近结算原因": {
+              "default": "",
+              "type": "string"
+            },
+            "最近事件类型": {
+              "default": "",
+              "type": "string"
+            },
+            "是否过夜": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        },
+        "欲海状态": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "搜寻进度": {
+              "default": 0,
+              "type": "number"
+            },
+            "警戒等级": {
+              "default": "平静",
+              "type": "string",
+              "enum": [
+                "平静",
+                "微动",
+                "警觉",
+                "锁定",
+                "已改写"
+              ]
+            },
+            "遮蔽剩余时段": {
+              "default": 0,
+              "type": "number"
+            },
+            "遮蔽来源": {
+              "default": "",
+              "type": "string"
+            },
+            "最近暴露原因": {
+              "default": "",
+              "type": "string"
+            },
+            "已被定位": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        },
         "待处理交互": {
           "default": [],
           "type": "array",
@@ -94,6 +161,56 @@
                 "items": {
                   "$ref": "#/$defs/__schema2"
                 }
+              },
+              "道具显示名": {
+                "default": "",
+                "type": "string"
+              },
+              "器阶": {
+                "default": "",
+                "type": "string"
+              },
+              "作用部位": {
+                "default": "",
+                "type": "string"
+              },
+              "丹药分类": {
+                "default": "",
+                "type": "string"
+              },
+              "作用线": {
+                "default": "",
+                "type": "string"
+              },
+              "剧情线": {
+                "default": "",
+                "type": "string"
+              },
+              "关联NPC": {
+                "default": "",
+                "type": "string"
+              },
+              "秘密主题": {
+                "default": "",
+                "type": "string"
+              },
+              "入口类型": {
+                "default": "",
+                "type": "string",
+                "enum": [
+                  "",
+                  "剧情钥匙",
+                  "场景令牌",
+                  "特殊事件"
+                ]
+              },
+              "线索ID": {
+                "default": "",
+                "type": "string"
+              },
+              "AI短提示": {
+                "default": "",
+                "type": "string"
               }
             }
           }
@@ -122,13 +239,7 @@
             },
             "公开度": {
               "default": "公开",
-              "type": "string",
-              "enum": [
-                "公开",
-                "半私密",
-                "私密",
-                "禁地"
-              ]
+              "$ref": "#/$defs/__schema3"
             },
             "在场NPC": {
               "default": [],
@@ -172,7 +283,7 @@
           "maxItems": 3,
           "type": "array",
           "items": {
-            "$ref": "#/$defs/__schema3"
+            "$ref": "#/$defs/__schema4"
           }
         },
         "当前追查风声ID": {
@@ -184,7 +295,7 @@
           "maxItems": 12,
           "type": "array",
           "items": {
-            "$ref": "#/$defs/__schema4"
+            "$ref": "#/$defs/__schema7"
           }
         },
         "当前聚焦心声NPC": {
@@ -204,6 +315,66 @@
         "牝阴决层数": {
           "default": 0,
           "type": "number"
+        },
+        "入场日": {
+          "default": 0,
+          "type": "number"
+        },
+        "当前日课": {
+          "default": "候命",
+          "type": "string"
+        },
+        "当前支配者": {
+          "default": "",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/__schema2"
+            },
+            {
+              "type": "string",
+              "const": ""
+            }
+          ]
+        },
+        "当前命令": {
+          "default": "",
+          "type": "string"
+        },
+        "命令强度": {
+          "default": 0,
+          "type": "number"
+        },
+        "今日调教次数": {
+          "default": 0,
+          "type": "number"
+        },
+        "待执行日课": {
+          "default": [],
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema8"
+          }
+        },
+        "最近调教结算": {
+          "default": "",
+          "type": "string"
+        },
+        "羞名标签": {
+          "default": [],
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema9"
+          }
+        },
+        "调教记录": {
+          "default": [],
+          "maxItems": 10,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema10"
+          }
         },
         "上次支配者": {
           "default": "",
@@ -453,6 +624,72 @@
           "items": {
             "type": "string"
           }
+        },
+        "线索状态": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "类型": {
+                "default": "剧情钥匙",
+                "type": "string",
+                "enum": [
+                  "剧情钥匙",
+                  "场景令牌",
+                  "特殊事件"
+                ]
+              },
+              "状态": {
+                "default": "可追查",
+                "type": "string",
+                "enum": [
+                  "可追查",
+                  "追查中",
+                  "已触发",
+                  "已失效"
+                ]
+              },
+              "风声ID": {
+                "default": "",
+                "type": "string"
+              },
+              "关联名称": {
+                "default": "",
+                "type": "string"
+              },
+              "关联NPC": {
+                "default": "",
+                "type": "string"
+              },
+              "推荐场景": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "触发次数": {
+                "default": 0,
+                "type": "number"
+              },
+              "最近场景": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "事件记录": {
+          "default": [],
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema11"
+          }
         }
       }
     }
@@ -482,6 +719,15 @@
       ]
     },
     "__schema3": {
+      "type": "string",
+      "enum": [
+        "公开",
+        "半私密",
+        "私密",
+        "禁地"
+      ]
+    },
+    "__schema4": {
       "type": "object",
       "properties": {
         "id": {
@@ -497,7 +743,16 @@
             "器物残痕",
             "NPC行踪",
             "宗门告示",
-            "梦兆"
+            "梦兆",
+            "剧情钥匙",
+            "场景令牌",
+            "特殊事件",
+            "牝奴日课",
+            "牝印命令",
+            "调教余波",
+            "宗门闲谈",
+            "公开示众",
+            "支配者传唤"
           ]
         },
         "地点": {
@@ -556,10 +811,42 @@
         },
         "后续风声ID": {
           "type": "string"
+        },
+        "凝视来源": {
+          "type": "string"
+        },
+        "羞名等级": {
+          "$ref": "#/$defs/__schema5"
+        },
+        "羞名标签": {
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema6"
+          }
+        },
+        "反噬日课": {
+          "type": "string"
+        },
+        "是否可承接": {
+          "type": "boolean"
         }
       }
     },
-    "__schema4": {
+    "__schema5": {
+      "type": "string",
+      "enum": [
+        "微闻",
+        "传开",
+        "挂牌",
+        "示众",
+        "烙名"
+      ]
+    },
+    "__schema6": {
+      "type": "string"
+    },
+    "__schema7": {
       "type": "object",
       "properties": {
         "id": {
@@ -610,6 +897,88 @@
       "required": [
         "npc"
       ]
+    },
+    "__schema8": {
+      "type": "string"
+    },
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema10": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "default": "",
+          "type": "string"
+        },
+        "时辰": {
+          "default": "晨时",
+          "$ref": "#/$defs/__schema0"
+        },
+        "支配者": {
+          "default": "",
+          "type": "string"
+        },
+        "摘要": {
+          "default": "",
+          "type": "string"
+        },
+        "羞名等级": {
+          "default": "微闻",
+          "$ref": "#/$defs/__schema5"
+        }
+      }
+    },
+    "__schema11": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "default": "",
+          "type": "string"
+        },
+        "类型": {
+          "default": "",
+          "type": "string"
+        },
+        "摘要": {
+          "default": "",
+          "type": "string"
+        },
+        "日": {
+          "default": 1,
+          "type": "number"
+        },
+        "时辰": {
+          "default": "晨时",
+          "$ref": "#/$defs/__schema0"
+        },
+        "地点": {
+          "default": "莲灯前苑",
+          "type": "string"
+        },
+        "涉及NPC": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/__schema2"
+          }
+        },
+        "公开度": {
+          "default": "公开",
+          "$ref": "#/$defs/__schema3"
+        },
+        "后果标签": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "已生成风声": {
+          "default": false,
+          "type": "boolean"
+        }
+      }
     }
   }
 }

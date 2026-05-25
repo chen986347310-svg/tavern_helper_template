@@ -1,17 +1,62 @@
 <template>
   <div class="phase2-page">
-    <!-- 牝奴期状态栏 -->
+    <div class="phase2-console">
+      <StigmaCore
+        :corruption="data.牝奴.堕落度"
+        :yinjue-layer="data.牝奴.牝阴决层数"
+        :command="data.牝奴.当前命令"
+        :intensity="data.牝奴.命令强度"
+      />
+      <DailyRoutinePanel
+        :routine="data.牝奴.当前日课"
+        :count="data.牝奴.今日调教次数"
+        :settlement="data.牝奴.最近调教结算"
+      />
+      <DominatorPanel
+        :current="data.牝奴.当前支配者"
+        :last="data.牝奴.上次支配者"
+        :counts="data.牝奴.支配次数"
+      />
+      <WhisperPanel :rumors="p2Rumors" @chase-rumor="queueShameRumor" />
+      <BrandTagsPanel :tags="data.牝奴.羞名标签" />
+    </div>
+
     <!-- 淫纹视觉 -->
     <div class="yinwen-section" v-if="data.牝奴.堕落度 >= 50">
-      <div class="yinwen-marks">
-        <span
-          v-for="i in yinwenCount"
-          :key="i"
-          class="yinwen-mark"
-          :style="{ color: yinwenColor, animationDelay: i * 0.2 + 's' }"
-        >纹</span>
-      </div>
-      <div class="yinwen-label">淫纹 x{{ yinwenCount }}</div>
+      <svg class="yinwen-sigil" :data-yinwen-count="yinwenCount" viewBox="0 0 200 150" aria-hidden="true">
+        <g :class="['yinwen-piece', 'yinwen-piece--core', { active: isYinwenSegmentActive('core') }]">
+          <path d="M100 64 C96 58 87 57 87 63 C87 70 100 77 100 77 C100 77 113 70 113 63 C113 57 104 58 100 64Z" />
+          <path d="M100 62 C98 59.5 93 59 93 63 C93 67 100 71 100 71 C100 71 107 67 107 63 C107 59 102 59.5 100 62" />
+        </g>
+        <g :class="['yinwen-piece', 'yinwen-piece--left', { active: isYinwenSegmentActive('left') }]">
+          <path d="M100 36 C88 40 79 50 79 61 C79 73 87 80 98 82" />
+          <path d="M81 46 C67 36 51 32 39 38" />
+          <circle cx="36" cy="38" r="3.5" />
+          <path d="M39 38 C27 48 19 62 19 76" />
+          <path d="M79 63 C63 67 49 77 41 91" />
+        </g>
+        <g :class="['yinwen-piece', 'yinwen-piece--right', { active: isYinwenSegmentActive('right') }]">
+          <path d="M100 36 C112 40 121 50 121 61 C121 73 113 80 102 82" />
+          <path d="M119 46 C133 36 149 32 161 38" />
+          <circle cx="164" cy="38" r="3.5" />
+          <path d="M161 38 C173 48 181 62 181 76" />
+          <path d="M121 63 C137 67 151 77 159 91" />
+        </g>
+        <g :class="['yinwen-piece', 'yinwen-piece--crown', { active: isYinwenSegmentActive('crown') }]">
+          <path d="M39 38 C41 26 49 16 61 12" />
+          <path d="M161 38 C159 26 151 16 139 12" />
+          <path d="M61 12 C77 6 92 4 100 4 C108 4 123 6 139 12" />
+          <path d="M73 14 C85 9 95 7 100 7 C105 7 115 9 127 14" />
+        </g>
+        <g :class="['yinwen-piece', 'yinwen-piece--root', { active: isYinwenSegmentActive('root') }]">
+          <path d="M98 82 C97 92 95 102 93 112" />
+          <path d="M102 82 C103 92 105 102 107 112" />
+          <path d="M93 112 C85 122 79 130 75 138" />
+          <path d="M107 112 C115 122 121 130 125 138" />
+          <path d="M75 138 C87 144 100 148 100 148 C100 148 113 144 125 138" />
+        </g>
+      </svg>
+      <div class="yinwen-label">{{ yinwenLabel }}</div>
     </div>
 
     <!-- 堕落阶段描述 -->
@@ -30,17 +75,10 @@
         <span class="transform-title">身躯改塑</span>
       </div>
       <div class="transform-grid">
-        <div :class="['transform-item', { done: data.牝奴.改造进度.泌乳 }]">
-          <span class="item-icon">{{ data.牝奴.改造进度.泌乳 ? '✦' : '✧' }}</span>
-          <span class="item-label">泌乳</span>
-        </div>
-        <div :class="['transform-item', { done: data.牝奴.改造进度.肛门 }]">
-          <span class="item-icon">{{ data.牝奴.改造进度.肛门 ? '✦' : '✧' }}</span>
-          <span class="item-label">肛门</span>
-        </div>
-        <div :class="['transform-item', { done: data.牝奴.改造进度.憋尿 }]">
-          <span class="item-icon">{{ data.牝奴.改造进度.憋尿 ? '✦' : '✧' }}</span>
-          <span class="item-label">憋尿</span>
+        <div v-for="mark in transformMarks" :key="mark.key" :class="['transform-item', { done: mark.done }]">
+          <span class="item-icon" aria-hidden="true">{{ mark.done ? mark.doneGlyph : mark.glyph }}</span>
+          <span class="item-label">{{ mark.label }}</span>
+          <span class="item-trace">{{ mark.done ? mark.doneText : mark.pendingText }}</span>
         </div>
       </div>
     </div>
@@ -62,19 +100,24 @@
       <button class="item-toggle" @click="itemOpen = !itemOpen">
         <span class="item-glyph">器</span>
         <span>拘束法器</span>
+        <span class="item-count">{{ itemCountText }}</span>
         <span class="item-arrow">{{ itemOpen ? '▴' : '▾' }}</span>
       </button>
       <div :class="['item-list', { open: itemOpen }]">
         <div class="item-inner">
           <div v-if="equippedItems.length === 0" class="item-empty">
-            <div class="tray-row">
-              <span class="tray-slot"></span>
-              <span class="tray-slot"></span>
-              <span class="tray-slot"></span>
+            <div class="chain-tray" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
             <span class="tray-text">虚位以待</span>
           </div>
-          <div v-for="item in equippedItems" :key="item" class="item-row">{{ item }}</div>
+          <div v-for="item in equippedItems" :key="item" class="item-row">
+            <span class="item-row-lock" aria-hidden="true">锁</span>
+            <span>{{ getItemDisplayName(item) }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -85,11 +128,27 @@
 import { ref, computed } from 'vue';
 import { useDataStore } from '../store';
 import { get堕落度阶段 } from '../guards';
+import BrandTagsPanel from '../components/phase2/BrandTagsPanel.vue';
+import DailyRoutinePanel from '../components/phase2/DailyRoutinePanel.vue';
+import DominatorPanel from '../components/phase2/DominatorPanel.vue';
+import StigmaCore from '../components/phase2/StigmaCore.vue';
+import WhisperPanel, { type P2WhisperRumor } from '../components/phase2/WhisperPanel.vue';
+import { getItemDisplayName } from '../data/itemDisplay';
 
 const store = useDataStore();
 const data = store.data;
 
 const itemOpen = ref(false);
+
+const P2_RUMOR_SOURCES = ['牝奴日课', '牝印命令', '调教余波', '宗门闲谈', '公开示众', '支配者传唤'];
+
+const TRANSFORM_MARK_CONFIG = [
+  { key: '泌乳', label: '乳泉', glyph: '乳', doneGlyph: '沁', pendingText: '未启', doneText: '已醒' },
+  { key: '肛门', label: '后庭', glyph: '门', doneGlyph: '缚', pendingText: '未驯', doneText: '已驯' },
+  { key: '憋尿', label: '禁溺', glyph: '禁', doneGlyph: '潮', pendingText: '未锁', doneText: '已锁' },
+] as const;
+
+const YINWEN_SEGMENT_KEYS = ['core', 'left', 'right', 'crown', 'root'] as const;
 
 const stageName = computed(() => get堕落度阶段(data.牝奴.堕落度));
 
@@ -112,38 +171,127 @@ const yinwenCount = computed(() => {
   return 0;
 });
 
-const yinwenColor = computed(() => {
-  const d = data.牝奴.堕落度;
-  if (d >= 90) return '#8b0000';
-  if (d >= 70) return '#c84040';
-  if (d >= 60) return '#d46048';
-  return '#b088d4';
+function isYinwenSegmentActive(key: (typeof YINWEN_SEGMENT_KEYS)[number]) {
+  return YINWEN_SEGMENT_KEYS.indexOf(key) < yinwenCount.value;
+}
+
+const yinwenLabel = computed(() => {
+  if (yinwenCount.value >= 5) return '淫纹满绽';
+  if (yinwenCount.value >= 4) return '淫纹成阵';
+  if (yinwenCount.value >= 3) return '淫纹游身';
+  return '淫纹初醒';
 });
+
+const transformMarks = computed(() =>
+  TRANSFORM_MARK_CONFIG.map(mark => ({
+    ...mark,
+    done: Boolean(data.牝奴.改造进度?.[mark.key]),
+  })),
+);
 
 const equippedItems = computed(() => {
   return data.道具.装备['玩家'] || [];
 });
+
+const itemCountText = computed(() => (equippedItems.value.length > 0 ? `已佩 ${equippedItems.value.length}` : '未佩'));
+
+const p2Rumors = computed(() =>
+  ((data.系统.风声列表 ?? []) as P2WhisperRumor[])
+    .filter(rumor => P2_RUMOR_SOURCES.includes(rumor.来源 ?? '') && rumor.状态 !== '已失效')
+    .slice(0, 3),
+);
+
+function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩子?: string; 羞名等级?: string }) {
+  const sceneContext = data.系统.场景上下文;
+  data.系统.待处理交互 ??= [];
+  data.系统.当前追查风声ID = rumor.id || '';
+  data.系统.待处理交互.push({
+    类型: '追查风声',
+    目标: '玩家',
+    道具: '',
+    数量: 1,
+    时辰: data.系统.时辰,
+    场景: data.系统.当前场景,
+    地点: rumor.地点 || sceneContext?.地点 || data.系统.当前场景,
+    子区域: rumor.子区域 || sceneContext?.子区域 || '',
+    风声ID: rumor.id || '',
+    故事钩子: rumor.故事钩子 || rumor.风声文本 || '',
+    在场NPC: sceneContext?.在场NPC ?? [],
+    道具显示名: '',
+    器阶: '',
+    作用部位: '',
+    丹药分类: '',
+    作用线: '',
+    剧情线: '牝奴羞名',
+    关联NPC: data.牝奴.当前支配者 || data.牝奴.上次支配者 || '',
+    秘密主题: rumor.羞名等级 || '微闻',
+    入口类型: '特殊事件',
+    线索ID: rumor.id || '',
+    AI短提示: `P2羞名风声：请把${rumor.羞名等级 || '微闻'}承接为传唤、日课异动、公开凝视或支配事件。`,
+  } as any);
+}
 </script>
 <style lang="scss" scoped>
 @use '../styles/variables' as *;
 @use '../styles/mixins' as *;
 
 .phase2-page {
-  padding: 12px 0;
+  --p2-void: var(--hh-bg-main, #0f0a14);
+  --p2-blood: var(--hh-accent, #9c2c31);
+  --p2-red: color-mix(in srgb, var(--hh-accent, #d44d54) 78%, #fff0eb);
+  --p2-gold: var(--hh-gold, #a38353);
+  --p2-jade: var(--hh-text-primary, #e6e1da);
+  padding: 10px 0 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  color: var(--p2-jade);
+}
+
+.phase2-console {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding: 8px 8px 10px;
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(ellipse at 50% 0, color-mix(in srgb, var(--hh-accent, #9c2c31) 14%, transparent), transparent 58%),
+    linear-gradient(180deg, color-mix(in srgb, var(--hh-bg-surface, #0f0a14) 92%, transparent), color-mix(in srgb, var(--hh-accent, #9c2c31) 8%, transparent)),
+    var(--hh-bg-surface);
+  box-shadow: inset 0 0 22px color-mix(in srgb, var(--hh-glow-color, rgba(156, 44, 49, 0.35)) 30%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.phase2-console::before,
+.phase2-console::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hh-divider-alpha, rgba(191, 161, 122, 0.25)), transparent);
+}
+
+.phase2-console::before { top: 0; }
+.phase2-console::after { bottom: 0; }
+
+.phase2-console > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* 堕落阶段卡片 */
 .stage-card {
   border: none;
-  border-radius: $radius-md;
-  padding: 12px 14px;
+  border-radius: 0;
+  padding: 10px 14px;
   background:
-    radial-gradient(ellipse at 50% 50%, var(--hh-accent-glow) 0%, transparent 70%),
-    var(--hh-bg-surface);
+    radial-gradient(ellipse at 18% 50%, var(--hh-accent-glow) 0%, transparent 70%),
+    color-mix(in srgb, var(--hh-bg-surface) 68%, transparent);
   position: relative;
+  opacity: 0.86;
 }
 
 .stage-header {
@@ -183,9 +331,10 @@ const equippedItems = computed(() => {
 /* 身躯改塑 */
 .transform-section {
   border: none;
-  border-radius: $radius-md;
-  padding: 12px 14px;
-  background: var(--hh-bg-surface);
+  border-radius: 0;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--hh-bg-surface) 62%, transparent);
+  opacity: 0.82;
 }
 
 .transform-header {
@@ -217,46 +366,71 @@ const equippedItems = computed(() => {
 }
 
 .transform-grid {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
 }
 
 .transform-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  grid-template-areas:
+    'icon label'
+    'icon trace';
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border: none;
-  border-radius: $radius-sm;
+  column-gap: 8px;
+  row-gap: 2px;
+  min-height: 48px;
+  padding: 7px 8px;
+  border: 1px solid color-mix(in srgb, var(--hh-divider-alpha, rgba(191, 161, 122, 0.22)) 70%, transparent);
+  border-radius: 0;
   transition: all 0.4s ease;
-  background: transparent;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--hh-bg-main, #0f0a14) 34%, transparent), transparent),
+    color-mix(in srgb, var(--hh-bg-surface, #170d10) 48%, transparent);
 
-  .item-bud {
-    font-size: 14px;
+  .item-icon {
+    grid-area: icon;
+    width: 23px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--hh-gold, #a38353) 26%, transparent);
     color: var(--hh-text-muted);
-    opacity: 0.3;
+    font-family: $font-铭文;
+    font-size: 12px;
+    opacity: 0.68;
     transition: all 0.4s ease;
-    filter: drop-shadow(0 0 4px transparent);
-
-    &.bloomed {
-      opacity: 1;
-      color: var(--hh-accent);
-      filter: drop-shadow(0 0 8px var(--hh-glow-color));
-      animation: bud-bloom 2s ease-in-out infinite;
-    }
   }
 
   .item-label {
+    grid-area: label;
     font-size: 12px;
     color: var(--hh-text-secondary);
-    letter-spacing: 4px;
+    letter-spacing: 3px;
     transition: color 0.4s ease;
   }
 
+  .item-trace {
+    grid-area: trace;
+    font-size: 10px;
+    color: var(--hh-text-muted);
+    letter-spacing: 2px;
+  }
+
   &.done {
-    background: var(--hh-accent-glow);
-    box-shadow: 0 0 16px var(--hh-glow-color);
+    border-color: color-mix(in srgb, var(--hh-accent, #9c2c31) 34%, transparent);
+    background:
+      radial-gradient(ellipse at 0 50%, color-mix(in srgb, var(--hh-accent, #9c2c31) 18%, transparent), transparent 72%),
+      color-mix(in srgb, var(--hh-bg-surface, #170d10) 54%, transparent);
+
+    .item-icon {
+      opacity: 1;
+      color: var(--hh-accent);
+      border-color: color-mix(in srgb, var(--hh-accent, #9c2c31) 52%, transparent);
+      filter: drop-shadow(0 0 8px var(--hh-glow-color));
+      animation: bud-bloom 2s ease-in-out infinite;
+    }
 
     .item-label {
       color: var(--hh-accent);
@@ -272,9 +446,10 @@ const equippedItems = computed(() => {
 /* 牝阴决 */
 .yinjue-section {
   border: none;
-  border-radius: $radius-md;
-  padding: 12px 14px;
-  background: var(--hh-bg-surface);
+  border-radius: 0;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--hh-bg-surface) 62%, transparent);
+  opacity: 0.84;
 }
 
 .yinjue-header {
@@ -360,9 +535,10 @@ const equippedItems = computed(() => {
 /* 拘束法器 */
 .item-section {
   border: none;
-  border-radius: $radius-md;
+  border-radius: 0;
   overflow: hidden;
-  background: var(--hh-bg-surface);
+  background: color-mix(in srgb, var(--hh-bg-surface) 58%, transparent);
+  opacity: 0.78;
 }
 
 .item-toggle {
@@ -380,7 +556,7 @@ const equippedItems = computed(() => {
   transition: all 0.25s ease;
 
   &:hover {
-    background: var(--hh-gold-glow);
+    background: linear-gradient(90deg, transparent, var(--hh-gold-glow), transparent);
   }
 
   .item-glyph {
@@ -401,6 +577,17 @@ const equippedItems = computed(() => {
   }
 }
 
+.item-count {
+  margin-left: auto;
+  color: var(--hh-text-muted);
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.item-toggle .item-count + .item-arrow {
+  margin-left: 4px;
+}
+
 .item-list {
   @include expand-panel;
 }
@@ -416,28 +603,21 @@ const equippedItems = computed(() => {
   gap: 8px;
   padding: 16px 0;
 
-  .tray-row {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
+  .chain-tray {
+    width: min(220px, 82%);
+    height: 18px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+    align-items: center;
+    opacity: 0.58;
   }
 
-  .tray-slot {
-    width: 48px;
-    height: 36px;
-    border: 1px dashed var(--hh-divider-alpha);
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.15);
-    position: relative;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 6px;
-      border: 1px solid var(--hh-gold-glow);
-      border-radius: 2px;
-      opacity: 0.3;
-    }
+  .chain-tray span {
+    height: 7px;
+    border: 1px solid color-mix(in srgb, var(--hh-gold, #a38353) 28%, transparent);
+    transform: skewX(-18deg);
+    background: color-mix(in srgb, var(--hh-bg-main, #0f0a14) 44%, transparent);
   }
 
   .tray-text {
@@ -450,7 +630,10 @@ const equippedItems = computed(() => {
 }
 
 .item-row {
-  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
   font-size: 12px;
   color: var(--hh-text-secondary);
   border-bottom: 1px solid var(--hh-gold-glow);
@@ -460,28 +643,76 @@ const equippedItems = computed(() => {
   }
 }
 
-/* 淫纹视觉 */
+.item-row-lock {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--hh-gold, #a38353) 34%, transparent);
+  color: var(--hh-gold, #a38353);
+  font-family: $font-铭文;
+  font-size: 10px;
+}
+
+/* 淫纹视觉 — 子宫心印：从内到外的经脉符文生长 */
 .yinwen-section {
   border: none;
-  border-radius: $radius-md;
-  padding: 10px 14px;
+  border-radius: 0;
+  padding: 14px 14px 10px;
   text-align: center;
-  background: radial-gradient(ellipse at 50% 50%, var(--hh-accent-glow) 0%, transparent 70%), var(--hh-bg-surface);
+  background: radial-gradient(ellipse at 50% 42%, var(--hh-accent-glow) 0%, transparent 60%), color-mix(in srgb, var(--hh-bg-surface) 64%, transparent);
 }
 
-.yinwen-marks {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 6px;
+.yinwen-sigil {
+  width: min(240px, 80%);
+  height: auto;
+  margin: 0 auto 6px;
+  display: block;
+  overflow: visible;
 }
 
-.yinwen-mark {
-  font-family: $font-铭文;
-  font-size: 18px;
-  font-weight: 700;
-  text-shadow: 0 0 8px currentColor;
-  animation: yinwen-glow 2s ease-in-out infinite;
+/* 通用：所有符文层默认为幽灵线条 — 可见全貌但未激活 */
+.yinwen-piece {
+  fill: none;
+  stroke: color-mix(in srgb, var(--hh-text-muted, #6b5d52) 30%, transparent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.7s ease, stroke 0.7s ease, filter 0.7s ease;
+}
+
+.yinwen-piece path,
+.yinwen-piece circle {
+  vector-effect: non-scaling-stroke;
+}
+
+.yinwen-piece circle {
+  fill: none;
+}
+
+/* 层级粗细：内粗外细，经脉能量从子宫向外消散 */
+.yinwen-piece--core  { stroke-width: 2.2; opacity: 0.22; }
+.yinwen-piece--left  { stroke-width: 1.7; opacity: 0.18; }
+.yinwen-piece--right { stroke-width: 1.7; opacity: 0.18; }
+.yinwen-piece--crown { stroke-width: 1.3; opacity: 0.13; }
+.yinwen-piece--root  { stroke-width: 1.1; opacity: 0.13; }
+
+/* 激活态：符文点燃，从心印向外依次发光 */
+.yinwen-piece.active {
+  opacity: 1;
+  stroke: color-mix(in srgb, var(--hh-accent, #ff3f92) 88%, var(--hh-gold, #a38353));
+  filter: drop-shadow(0 0 6px var(--hh-glow-color, rgba(255, 63, 146, 0.4)));
+  animation: yinwen-glow 3s ease-in-out infinite;
+}
+
+/* 心印激活：额外脉冲光晕 */
+.yinwen-piece--core.active {
+  stroke-width: 2.4;
+  filter: drop-shadow(0 0 10px var(--hh-glow-color, rgba(255, 63, 146, 0.5)));
+}
+
+/* 心印外层爱心获得极淡粉色填充 */
+.yinwen-piece--core.active path:first-child {
+  fill: color-mix(in srgb, var(--hh-accent, #ff3f92) 12%, transparent);
 }
 
 .yinwen-label {
@@ -491,7 +722,7 @@ const equippedItems = computed(() => {
 }
 
 @keyframes yinwen-glow {
-  0%, 100% { opacity: 0.7; text-shadow: 0 0 6px currentColor; }
-  50% { opacity: 1; text-shadow: 0 0 14px currentColor; }
+  0%, 100% { opacity: 0.8; filter: drop-shadow(0 0 5px var(--hh-glow-color)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 14px var(--hh-glow-color)); }
 }
 </style>

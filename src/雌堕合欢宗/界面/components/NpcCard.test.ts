@@ -2,7 +2,10 @@
 import { describe, it, expect } from 'vitest';
 import { flushPromises } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
+import { readFileSync } from 'node:fs';
 import NpcCard from './NpcCard.vue';
+
+const NpcCardSource = readFileSync('src/雌堕合欢宗/界面/components/NpcCard.vue', 'utf-8');
 
 function requireAttribute(value: string | undefined, name: string): string {
   expect(value, `${name} attribute should exist`).toBeTypeOf('string');
@@ -187,7 +190,15 @@ describe('NpcCard', () => {
     });
     const items = wrapper.findAll('.equip-item');
     expect(items).toHaveLength(2);
-    expect(items[0].text()).toBe('铃铛项圈');
+    expect(items.map(item => item.text())).toEqual(['听铃颈环', '遮灵绡眼']);
+  });
+
+  it('装备列表使用 v3 显示名并将命契专属服优先展示', () => {
+    const wrapper = mount(NpcCard, {
+      props: { npc名: '白芷', data: createNpcData({ 状态: '已完成' }), 装备: ['透视罗裙', '白芷仙奴服'], expanded: true },
+    });
+    const items = wrapper.findAll('.equip-item');
+    expect(items.map(item => item.text())).toEqual(['晨露缚心仙奴衣', '湿雾贴身裙']);
   });
 
   it('无装备时显示暂无装备', () => {
@@ -338,7 +349,36 @@ describe('NpcCard', () => {
     const backlashHint = wrapper.find('.backlash-hint');
     expect(backlashHint.text()).toContain('心防反震');
     expect(backlashHint.classes()).toContain('backlash-hint');
+    expect(wrapper.find('.soul-pending-mark').exists()).toBe(false);
     expect(wrapper.emitted('soulWhisper')).toHaveLength(1);
+  });
+
+  it('灵识锁定目标触发反震时只显示反震提示，避免双层文字背景', async () => {
+    const wrapper = mount(NpcCard, {
+      props: {
+        npc名: '白芷',
+        data: createNpcData({
+          好感度: 35,
+          攻略值: 20,
+          状态: '进行中',
+          soul_whisper: { text: '', stage: '警戒', is_revealed: false },
+        }),
+        expanded: true,
+        soulLocked: true,
+      },
+    });
+
+    expect(wrapper.find('.soul-pending-mark').exists()).toBe(true);
+
+    await wrapper.find('.dual-ring-panel').trigger('click');
+
+    expect(wrapper.find('.backlash-hint').text()).toContain('心防反震');
+    expect(wrapper.find('.soul-pending-mark').exists()).toBe(false);
+  });
+
+  it('反震乱码作为装饰层，不挤压心防反震居中文案', () => {
+    expect(NpcCardSource).toMatch(/\.backlash-glitch\s*\{[\s\S]*?position:\s*absolute/);
+    expect(NpcCardSource).toMatch(/\.backlash-label\s*\{[\s\S]*?text-align:\s*center/);
   });
 
   it('未开始目标点击命轮不显示反噬也不记录灵识事件', async () => {

@@ -23,7 +23,7 @@ const mockData = reactive({
     },
     道具: { 拥有: {}, 装备: { 玩家: [], 白芷: [], 苏芸: [], 纪兰: [], 沈月秋: [], 柳素衣: [] } },
     场景: { 已解锁: [] },
-    剧情: { 已解锁: [] },
+    剧情: { 已解锁: [], 线索状态: {} as Record<string, any> },
   })
 
 vi.mock('../store', () => ({
@@ -48,6 +48,7 @@ describe('HomePage', () => {
     mockData.系统.心音回响 = [];
     mockData.系统.当前聚焦心声NPC = '';
     mockData.系统.场景上下文 = { 在场NPC: [] };
+    mockData.剧情.线索状态 = {};
     // 重置 NPC 状态
     mockData.NPC.白芷 = { 好感度: 50, 攻略值: 30, 粘滞计数: 1, 状态: '进行中', 当前场景: '醉玉小筑' };
     mockData.NPC.苏芸 = { 好感度: 0, 攻略值: 0, 粘滞计数: 0, 状态: '未开始', 当前场景: '醉玉小筑' };
@@ -224,9 +225,40 @@ describe('HomePage', () => {
     expect(wrapper.find('.rumor-card').classes()).not.toContain('is-pending');
     expect(mockData.系统.待处理交互).toEqual([]);
   });
+
+  it('追查剧情钥匙风声时同步线索状态，取消追查时恢复可追查', async () => {
+    mockData.剧情.线索状态 = {
+      白芷旧誓线: {
+        类型: '剧情钥匙',
+        状态: '可追查',
+        风声ID: 'story_baizhi_old_oath_1',
+        关联名称: '白芷旧誓线',
+        关联NPC: '白芷',
+        推荐场景: ['听风廊'],
+        触发次数: 0,
+      },
+    };
+    mockData.系统.风声列表 = [
+      { id: 'story_baizhi_old_oath_1', 来源: '剧情钥匙', 地点: '听风廊', 子区域: '廊下风铃', 相关NPC: ['白芷'], 风声文本: '旧誓灵纹仍在发热。', 故事钩子: '白芷旧誓被重新牵动', 状态: '未读' },
+    ];
+    const wrapper = mount(HomePage, { props: { currentScene: '醉玉小筑' }, global: { plugins: [createPinia()] } });
+
+    await wrapper.find('.rumor-card').trigger('click');
+    await flushPromises();
+
+    expect(mockData.剧情.线索状态.白芷旧誓线.状态).toBe('追查中');
+    expect(mockData.系统.待处理交互[0]).toMatchObject({ 风声ID: 'story_baizhi_old_oath_1' });
+
+    await wrapper.find('.rumor-card').trigger('click');
+    await flushPromises();
+
+    expect(mockData.剧情.线索状态.白芷旧誓线.状态).toBe('可追查');
+    expect(mockData.系统.待处理交互).toEqual([]);
+  });
   it('点击命轮区只聚焦心音，不写入灵识窃取待处理交互', async () => {
     const generateSpy = vi.fn();
     (globalThis as any).generate = generateSpy;
+    mockData.NPC.白芷.攻略值 = 45;
     const wrapper = mount(HomePage, { props: { currentScene: '醉玉小筑' }, global: { plugins: [createPinia()] } });
 
     await wrapper.find('.dual-ring-panel').trigger('click');
@@ -275,5 +307,13 @@ describe('HomePage', () => {
     expect(HomePageSource).toMatch(/\.soul-echo-note\s*\{[\s\S]*?color:\s*#9c2c31;[\s\S]*?color:\s*var\(--hh-accent,\s*#9c2c31\)/);
     expect(HomePageSource).toMatch(/\.soul-echo-card\s*\{[\s\S]*?color:\s*#d9b48f;[\s\S]*?color:\s*var\(--hh-text-primary,\s*#d9b48f\)/);
     expect(HomePageSource).toMatch(/\.soul-echo-text\s*\{[\s\S]*?color:\s*#d9b48f;[\s\S]*?color:\s*var\(--hh-text-primary,\s*#d9b48f\)/);
+  });
+
+  it('禁地公开度使用遮罩氛围，不对整页做 hue-rotate 染色', () => {
+    expect(HomePageSource).toMatch(/&::before\s*\{[\s\S]*?pointer-events:\s*none/);
+    expect(HomePageSource).toMatch(/&\[data-exposure='禁地'\]\s*\{[\s\S]*?background:[\s\S]*?radial-gradient/);
+    expect(HomePageSource).toMatch(/&\[data-exposure='禁地'\]::before\s*\{[\s\S]*?forbidden-veil/);
+    expect(HomePageSource).not.toMatch(/&\[data-exposure='禁地'\]\s*\{[\s\S]*?filter:\s*hue-rotate/);
+    expect(HomePageSource).not.toMatch(/@keyframes pulse-forbidden\s*\{[\s\S]*?hue-rotate/);
   });
 });

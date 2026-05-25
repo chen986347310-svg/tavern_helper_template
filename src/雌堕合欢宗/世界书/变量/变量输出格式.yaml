@@ -33,13 +33,74 @@
 待处理交互清空格式:
   rule:
     - if 系统.待处理交互 is not empty and the reply has narrated those interactions, the same JSONPatch must clear it
+    - the same JSONPatch must also write 系统.时间状态; clearing the queue without time settlement is invalid
+    - if the interaction touches NSFW, desire sea, 欲海遮蔽符, 投欲钥, or 改变阵法, the same JSONPatch must write 系统.欲海状态
+    - if the interaction creates lasting consequence, append one record to 剧情.事件记录
     - preferred patch is exactly: { "op": "replace", "path": "/系统/待处理交互", "value": [] }
     - do not clear 系统.待处理交互 before narrating the interaction result
   example: |-
     <UpdateVariable>
-    <Analysis>Handled pending UI interactions and cleared queue.</Analysis>
+    <Analysis>Handled pending UI interactions, settled world time, recorded consequences, and cleared queue.</Analysis>
     <JSONPatch>
     [
+      { "op": "replace", "path": "/系统/时间状态", "value": { "当前日": 1, "时段进度": 1, "最近耗时": "一个时辰", "最近结算原因": "追查风声推进一个时段", "最近事件类型": "追查风声", "是否过夜": false } },
+      { "op": "insert", "path": "/剧情/事件记录/-", "value": { "id": "event_1_午时_追查风声", "类型": "追查风声", "摘要": "玩家循风声进入听风廊追查旧誓余波。", "日": 1, "时辰": "午时", "地点": "听风廊", "涉及NPC": ["白芷"], "公开度": "半私密", "后果标签": ["风声追查"], "已生成风声": false } },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+
+世界运行核心输出格式:
+  purpose: "用于约束AI在承接待处理交互后，同步写入时间状态、欲海状态与事件后果账本。"
+  required_fields:
+    系统.时间状态:
+      - 当前日
+      - 时段进度
+      - 最近耗时
+      - 最近结算原因
+      - 最近事件类型
+      - 是否过夜
+    系统.欲海状态:
+      - 搜寻进度
+      - 警戒等级
+      - 遮蔽剩余时段
+      - 遮蔽来源
+      - 最近暴露原因
+      - 已被定位
+    剧情.事件记录:
+      - id
+      - 类型
+      - 摘要
+      - 日
+      - 时辰
+      - 地点
+      - 涉及NPC
+      - 公开度
+      - 后果标签
+      - 已生成风声
+  rule:
+    - 有 系统.待处理交互 时，正文承接后必须在同一个 <JSONPatch> 中 replace /系统/时间状态。
+    - 若涉及 NSFW、欲海遮蔽、投欲钥、改变阵法或欲海暴露，必须 replace /系统/欲海状态。
+    - 若事件会影响后续风声、心音、NPC反应或P2日课，必须 insert 到 /剧情/事件记录/-；事件记录最多保留最近20条，必要时 replace 整个 /剧情/事件记录。
+    - 禁止只清空队列不写时间结算。
+  time_extension_example: |-
+    <UpdateVariable>
+    <Analysis>Applied time extension, updated remaining days and time state, then cleared queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/剩余天数", "value": 31 },
+      { "op": "replace", "path": "/系统/时间状态", "value": { "当前日": 1, "时段进度": 1, "最近耗时": "不耗时", "最近结算原因": "时间延长生效，剩余天数增加", "最近事件类型": "时间延长", "是否过夜": false } },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+  desire_shield_example: |-
+    <UpdateVariable>
+    <Analysis>Applied desire sea shielding, wrote desire sea status, and cleared queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/时间状态", "value": { "当前日": 1, "时段进度": 1, "最近耗时": "一刻钟内", "最近结算原因": "欲海遮蔽符启用，不推进时辰", "最近事件类型": "欲海遮蔽符", "是否过夜": false } },
+      { "op": "replace", "path": "/系统/欲海状态", "value": { "搜寻进度": 0, "警戒等级": "平静", "遮蔽剩余时段": 4, "遮蔽来源": "欲海遮蔽符", "最近暴露原因": "欲海遮蔽符生效", "已被定位": false } },
       { "op": "replace", "path": "/系统/待处理交互", "value": [] }
     ]
     </JSONPatch>
@@ -106,6 +167,81 @@
     <JSONPatch>
     [
       { "op": "replace", "path": "/系统/剩余天数", "value": 30 },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+服装装备下一楼层闭环样例:
+  purpose: "用于约束AI承接前端服装装备：先写衣装在场景中的自然影响，再清空待处理交互。"
+  input_state_example: |-
+    系统:
+      待处理交互:
+        - 类型: 装备道具
+          目标: 白芷
+          道具: 透视罗裙
+          道具显示名: 湿雾贴身裙
+          AI短提示: 雾绡遇热贴身，行动时显出身体轮廓。
+  reply_requirement:
+    - 正文使用显示名或自然描述，不机械复述逻辑名。
+    - 不要重复写入 道具.装备；前端已经装备。
+    - 同一次 JSONPatch 必须清空 系统.待处理交互。
+  output_example: |-
+    <UpdateVariable>
+    <Analysis>Handled pending outfit equip and cleared the queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+禁器装备下一楼层闭环样例:
+  purpose: "用于约束AI承接禁器装备：使用器阶、作用部位和AI短提示写羞耻触发，不重复装备变量。"
+  input_state_example: |-
+    系统:
+      待处理交互:
+        - 类型: 装备道具
+          目标: 白芷
+          道具: 铃铛项圈
+          道具显示名: 听铃颈环
+          器阶: 启羞器阶
+          作用部位: 颈项
+          AI短提示: 细铃贴在颈侧，越想端住仪态，铃声越会替她泄露动作。
+  reply_requirement:
+    - 正文必须写佩戴后的当前场景反应，例如铃声、颈侧、旁人视线或遮掩动作。
+    - 不要重复插入 道具.装备；前端已经装备。
+    - 同一次 JSONPatch 必须清空 系统.待处理交互。
+  output_example: |-
+    <UpdateVariable>
+    <Analysis>Handled pending contraband equip and cleared the queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+丹药使用下一楼层闭环样例:
+  purpose: "用于约束AI承接丹药使用：使用显示名、分类、作用线和AI短提示写药性反应，按需写长期效果，并清空队列。"
+  input_state_example: |-
+    系统:
+      待处理交互:
+        - 类型: 使用物品
+          目标: 白芷
+          道具: 体香丹
+          道具显示名: 引香丹
+          丹药分类: 永久丹药
+          作用线: 体态/社交
+          AI短提示: 体香长期标记她的变化。
+  reply_requirement:
+    - 正文必须先写服丹后的气息、身体或心神变化，不要说“读取变量”。
+    - 不要重复扣除 道具.拥有；前端已经扣库存。
+    - 若写长期效果，可 insert 到 /道具/已生效效果/-。
+    - 同一次 JSONPatch 必须清空 系统.待处理交互。
+  output_example: |-
+    <UpdateVariable>
+    <Analysis>Handled pending pill use, recorded lasting scent effect, and cleared the queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "insert", "path": "/道具/已生效效果/-", "value": { "目标": "白芷", "道具": "体香丹", "来源交互ID": "", "生效楼层": 0, "效果标签": ["体香", "社交外显"], "可被AI覆盖": true } },
       { "op": "replace", "path": "/系统/待处理交互", "value": [] }
     ]
     </JSONPatch>
@@ -230,6 +366,7 @@ MVU额外模型解析协作协议:
     - 正文必须自然描写玩家循风声抵达现场后的遭遇，不要说“读取变量”“处理队列”。
     - 同一次变量更新应写入 系统.场景上下文，并清空 系统.待处理交互。
     - 若风声被处理，应同步更新 系统.当前追查风声ID 或 风声列表 状态。
+    - 若风声来源为 剧情钥匙 或 场景令牌，应同步更新 剧情.线索状态 中风声ID匹配的条目；已推进正文则改为 已触发，并将该活跃风声移除或标记 已失效。
   output_example: |-
     <UpdateVariable>
     <Analysis>Handled rumor pursuit, refreshed scene context, and cleared queue.</Analysis>
@@ -237,6 +374,51 @@ MVU额外模型解析协作协议:
     [
       { "op": "replace", "path": "/系统/场景上下文", "value": { "地点": "药庐", "子区域": "炼丹房", "场景来源": "核心地点", "公开度": "半私密", "在场NPC": ["白芷"], "NPC活动": { "白芷": "守着彻夜未熄的丹炉" }, "氛围": ["丹火未熄", "药香发苦"], "故事钩子": ["丹炉彻夜未熄，炉壁内侧还残着一道陌生指痕。"], "特殊事件": "风声追查" } },
       { "op": "replace", "path": "/系统/当前追查风声ID", "value": "r1" },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
+
+剧情钥匙风声追查闭环样例:
+  purpose: "用于约束AI承接剧情钥匙生成的入口风声：推进剧情线、更新线索状态、清理活跃风声，并清空待处理交互。"
+  input_state_example: |-
+    系统:
+      待处理交互:
+        - 类型: 追查风声
+          目标: 白芷
+          风声ID: story_baizhi_old_oath_1
+          地点: 听风廊
+          子区域: 廊下风铃
+          故事钩子: 白芷旧誓被重新牵动
+      风声列表:
+        - id: story_baizhi_old_oath_1
+          来源: 剧情钥匙
+          地点: 听风廊
+          风声文本: 听风廊有人拾到一枚裂开的玉扣，扣内旧誓灵纹仍在发热。
+          状态: 未读
+    剧情:
+      线索状态:
+        白芷旧誓线:
+          类型: 剧情钥匙
+          状态: 追查中
+          风声ID: story_baizhi_old_oath_1
+          关联名称: 白芷旧誓线
+          关联NPC: 白芷
+          触发次数: 0
+  reply_requirement:
+    - 正文必须自然推进白芷旧誓线，不要一次性讲完全部真相。
+    - 同一次变量更新应把对应线索状态改为 已触发，并从活跃风声中移除或失效该风声。
+    - 同一次变量更新必须清空 系统.待处理交互。
+  output_example: |-
+    <UpdateVariable>
+    <Analysis>Handled story-key rumor pursuit, advanced the clue state, expired the active rumor, and cleared the queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/剧情/线索状态/白芷旧誓线/状态", "value": "已触发" },
+      { "op": "replace", "path": "/剧情/线索状态/白芷旧誓线/触发次数", "value": 1 },
+      { "op": "replace", "path": "/剧情/线索状态/白芷旧誓线/最近场景", "value": "听风廊" },
+      { "op": "replace", "path": "/系统/风声列表", "value": [] },
+      { "op": "replace", "path": "/系统/当前追查风声ID", "value": "story_baizhi_old_oath_1" },
       { "op": "replace", "path": "/系统/待处理交互", "value": [] }
     ]
     </JSONPatch>

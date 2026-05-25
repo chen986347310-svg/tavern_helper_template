@@ -25,6 +25,12 @@ const mockData = reactive({
       风声ID?: string;
       故事钩子?: string;
       在场NPC?: string[];
+      道具显示名?: string;
+      器阶?: string;
+      作用部位?: string;
+      丹药分类?: string;
+      作用线?: string;
+      AI短提示?: string;
     }>,
   },
 });
@@ -58,7 +64,7 @@ describe('usePendingAction', () => {
 
     记录购买物品('改变阵法');
 
-    expect(mockData.系统.待处理交互[0]).toEqual({
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
       类型: '购买物品',
       目标: '玩家',
       道具: '改变阵法',
@@ -66,6 +72,7 @@ describe('usePendingAction', () => {
       时辰: '午时',
       场景: '醉玉小筑',
     });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('GOOD END');
   });
 
   it('记录装备与卸下道具保留目标对象', () => {
@@ -76,6 +83,31 @@ describe('usePendingAction', () => {
 
     expect(mockData.系统.待处理交互.map(action => action.类型)).toEqual(['装备道具', '卸下']);
     expect(mockData.系统.待处理交互.map(action => action.目标)).toEqual(['白芷', '白芷']);
+  });
+
+  it('记录禁器装备与卸下时携带显示名、器阶、作用部位和AI短提示', () => {
+    const { 记录装备道具, 记录卸下道具 } = usePendingAction();
+
+    记录装备道具('阴蒂环', '白芷');
+    记录卸下道具('阴蒂环', '白芷');
+
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
+      类型: '装备道具',
+      目标: '白芷',
+      道具: '阴蒂环',
+      道具显示名: '命门欲环',
+      器阶: '化器器阶',
+      作用部位: '阴蒂',
+    });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('欲环');
+    expect(mockData.系统.待处理交互[1]).toMatchObject({
+      类型: '卸下',
+      目标: '白芷',
+      道具: '阴蒂环',
+      道具显示名: '命门欲环',
+      器阶: '化器器阶',
+      作用部位: '阴蒂',
+    });
   });
 
   it('记录灵识窃取只入队等待下一楼层AI处理', () => {
@@ -104,7 +136,7 @@ describe('usePendingAction', () => {
 
     记录使用物品('时间延长');
 
-    expect(mockData.系统.待处理交互[0]).toEqual({
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
       类型: '使用物品',
       目标: '玩家',
       道具: '时间延长',
@@ -112,8 +144,25 @@ describe('usePendingAction', () => {
       时辰: '午时',
       场景: '醉玉小筑',
     });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('天数');
     expect(generateSpy).not.toHaveBeenCalled();
     delete (globalThis as any).generate;
+  });
+
+  it('记录丹药使用时携带显示名、分类、作用线和AI短提示', () => {
+    const { 记录使用物品 } = usePendingAction();
+
+    记录使用物品('体香丹', '白芷');
+
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
+      类型: '使用物品',
+      目标: '白芷',
+      道具: '体香丹',
+      道具显示名: '引香丹',
+      丹药分类: '永久丹药',
+      作用线: '体态/社交',
+    });
+    expect(mockData.系统.待处理交互[0].AI短提示).toContain('体香');
   });
 
 
@@ -156,9 +205,34 @@ describe('usePendingAction', () => {
       expect(schema).toContain(`'${type}'`);
       expect(variableList).toContain(type);
     });
+    ['道具显示名', '器阶', '作用部位', '丹药分类', '作用线', 'AI短提示'].forEach(field => {
+      expect(schema).toContain(field);
+      expect(variableList).toContain(field);
+    });
     expect(updateRules).toContain('使用物品:');
     expect(outputFormat).toContain('使用物品下一楼层闭环样例');
+    expect(updateRules).toContain('道具AI承接闭环');
+    expect(updateRules).toContain('道具显示名');
+    expect(updateRules).toContain('丹药分类');
+    expect(updateRules).toContain('作用线');
+    expect(updateRules).toContain('道具.已生效效果');
+    expect(outputFormat).toContain('丹药使用下一楼层闭环样例');
+    expect(outputFormat).toContain('禁器装备下一楼层闭环样例');
+    expect(outputFormat).toContain('服装装备下一楼层闭环样例');
   });
+
+  it('变量列表声明道具已生效效果结构', () => {
+    const variableList = readFileSync(join(process.cwd(), 'src/雌堕合欢宗/世界书/变量/变量列表.yaml'), 'utf8');
+
+    expect(variableList).toContain('已生效效果');
+    expect(variableList).toContain('目标: string');
+    expect(variableList).toContain('道具: string');
+    expect(variableList).toContain('来源交互ID: string');
+    expect(variableList).toContain('生效楼层: number');
+    expect(variableList).toContain('效果标签: string[]');
+    expect(variableList).toContain('可被AI覆盖: boolean');
+  });
+
   it('变量输出格式必须强制使用 UpdateVariable 包裹心音回流补丁', () => {
     const root = process.cwd();
     const outputFormat = readFileSync(join(root, 'src/雌堕合欢宗/世界书/变量/变量输出格式.yaml'), 'utf8');
@@ -170,5 +244,49 @@ describe('usePendingAction', () => {
     expect(outputFormat).toContain('/NPC/白芷/soul_whisper/is_revealed');
     expect(outputFormat).toContain('/系统/待处理交互');
     expect(outputFormat).toContain('严禁只输出“变量更新情况”标题、YAML 摘要或裸 JSON Patch 数组');
+  });
+
+  it('世界运行核心字段在变量更新规则与输出格式中有强制闭环', () => {
+    const root = process.cwd();
+    const updateRules = readFileSync(join(root, 'src/雌堕合欢宗/世界书/变量/变量更新规则.yaml'), 'utf8');
+    const outputFormat = readFileSync(join(root, 'src/雌堕合欢宗/世界书/变量/变量输出格式.yaml'), 'utf8');
+
+    ['系统.时间状态', '系统.欲海状态', '剧情.事件记录'].forEach(field => {
+      expect(updateRules).toContain(field);
+      expect(outputFormat).toContain(field);
+    });
+    ['最近耗时', '最近结算原因', '最近事件类型', '是否过夜'].forEach(field => {
+      expect(updateRules).toContain(field);
+      expect(outputFormat).toContain(field);
+    });
+    ['搜寻进度', '警戒等级', '遮蔽剩余时段', '遮蔽来源'].forEach(field => {
+      expect(updateRules).toContain(field);
+      expect(outputFormat).toContain(field);
+    });
+    expect(updateRules).toContain('禁止只清空队列不写时间结算');
+    expect(outputFormat).toContain('/系统/时间状态');
+    expect(outputFormat).toContain('/系统/欲海状态');
+    expect(outputFormat).toContain('/剧情/事件记录/-');
+  });
+
+  it('世界运行规则资料库按绿灯挂载，避免长规则蓝灯常驻', () => {
+    const root = process.cwd();
+    const indexYaml = readFileSync(join(root, 'src/雌堕合欢宗/index.yaml'), 'utf8');
+    const runtimeRules = readFileSync(join(root, 'src/雌堕合欢宗/世界书/世界运行规则.yaml'), 'utf8');
+    const dynamicScene = readFileSync(join(root, 'src/雌堕合欢宗/世界书/动态场景系统.yaml'), 'utf8');
+
+    expect(indexYaml).toContain('名称: 世界运行规则');
+    expect(indexYaml).toContain('文件: 世界书/世界运行规则');
+    expect(indexYaml).toContain('时间结算');
+    expect(indexYaml).toContain('欲海状态');
+    expect(indexYaml).toContain('事件记录');
+    expect(runtimeRules).toContain('状态: 绿灯');
+    expect(runtimeRules).toContain('耗时参考');
+    expect(runtimeRules).toContain('NPC日程资料');
+    expect(runtimeRules).toContain('事件后果账本');
+    expect(dynamicScene).toContain('世界运行规则');
+    expect(dynamicScene).toContain('短摘要');
+    expect(dynamicScene).not.toContain('完整耗时表');
+    expect(dynamicScene).not.toContain('NPC日程资料');
   });
 });

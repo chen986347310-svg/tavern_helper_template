@@ -16,7 +16,7 @@
           :class="['item-row', { selected: selectedItem === String(name), 'is-empty': count === 0 }]"
           @click="selectItem(String(name))"
         >
-          <span class="item-name">{{ name }}</span>
+          <span class="item-name">{{ getItemDisplayName(String(name)) }}</span>
           <span :class="['item-count', { 'count-up': countAnimating && count > 0 }]">x{{ count }}</span>
         </div>
         <div v-if="Object.keys(ownedItems).length === 0" class="empty-state">
@@ -32,13 +32,13 @@
         <div class="section-header">
           <div class="header-line"></div>
           <span class="header-glyph">佩</span>
-          <span class="header-text">安置「{{ selectedItem }}」</span>
+          <span class="header-text">安置「{{ getItemDisplayName(selectedItem) }}」</span>
           <div class="header-line"></div>
         </div>
 
         <div v-if="isEquippableItem(selectedItem)" class="equip-targets">
           <button
-            v-for="target in equipTargets"
+            v-for="target in availableEquipTargets"
             :key="target"
             :class="['target-btn', { equipped: isEquipped(target), 'cannot-equip': !canEquipTo(target) }]"
             :title="!canEquipTo(target) ? `${target}灵犀未至` : ''"
@@ -93,7 +93,7 @@
                 class="equipped-item"
                 @click="selectItem(item)"
               >
-                {{ item }}{{ index < data.道具.装备[target].length - 1 ? '、' : '' }}
+                {{ getItemDisplayName(item) }}{{ index < data.道具.装备[target].length - 1 ? '、' : '' }}
               </button>
             </template>
             <span v-else>虚位</span>
@@ -110,6 +110,7 @@ import { useDataStore } from '../store';
 import { checkItemThreshold, canEquip牝奴道具, get在场NPC列表 } from '../guards';
 import { usePendingAction } from '../composables/usePendingAction';
 import { isConsumableLifecycle, isEquippableLifecycle, itemRequiresTarget } from '../data/itemLifecycle';
+import { getExclusiveOutfitNpc, getItemDisplayName, isExclusiveOutfitUnlocked, isPlayerOnlyOutfit } from '../data/itemDisplay';
 
 const store = useDataStore();
 const data = store.data;
@@ -123,6 +124,14 @@ const ownedItems = computed(() => {
 });
 
 const consumableTargets = computed(() => get在场NPC列表(data.系统.场景上下文));
+
+const availableEquipTargets = computed(() => {
+  if (!selectedItem.value) return equipTargets;
+  if (isPlayerOnlyOutfit(selectedItem.value)) return ['玩家'];
+  const exclusiveNpc = getExclusiveOutfitNpc(selectedItem.value);
+  if (exclusiveNpc) return [exclusiveNpc];
+  return equipTargets;
+});
 
 watch(() => data.道具.拥有, () => {
   countAnimating.value = true;
@@ -157,8 +166,13 @@ function isEquipped(target: string): boolean {
 function canEquipTo(target: string): boolean {
   if (!selectedItem.value) return true;
   if (!isEquippableItem(selectedItem.value)) return false;
+  if (isPlayerOnlyOutfit(selectedItem.value) && target !== '玩家') return false;
+  const exclusiveNpc = getExclusiveOutfitNpc(selectedItem.value);
+  if (exclusiveNpc && target !== exclusiveNpc) return false;
+  if (!isExclusiveOutfitUnlocked(selectedItem.value, data.NPC)) return false;
   if (isEquipped(target)) return true;
   if ((data.道具.拥有[selectedItem.value] ?? 0) <= 0) return false;
+  if (exclusiveNpc) return true;
   if (target === '玩家') return true;
   if (!canEquip牝奴道具(data.系统.阶段, selectedItem.value)) {
     return false;
@@ -226,14 +240,30 @@ function toggleEquip(target: string) {
   }
 
   if ((data.道具.拥有[selectedItem.value] ?? 0) <= 0) {
-    if (typeof toastr !== 'undefined') toastr.warning(`囊中已无「${selectedItem.value}」，不可再供此器`);
+    if (typeof toastr !== 'undefined') toastr.warning(`囊中已无「${getItemDisplayName(selectedItem.value)}」，不可再供此器`);
     return;
   }
 
-  if (target !== '玩家') {
+  if (isPlayerOnlyOutfit(selectedItem.value) && target !== '玩家') {
+    if (typeof toastr !== 'undefined') toastr.warning('牝奴衣只认本身气血');
+    return;
+  }
+
+  const exclusiveNpc = getExclusiveOutfitNpc(selectedItem.value);
+  if (exclusiveNpc && target !== exclusiveNpc) {
+    if (typeof toastr !== 'undefined') toastr.warning('命契不合，此衣不认其主');
+    return;
+  }
+
+  if (!isExclusiveOutfitUnlocked(selectedItem.value, data.NPC)) {
+    if (typeof toastr !== 'undefined') toastr.warning('命契未成，此衣尚未显化');
+    return;
+  }
+
+  if (target !== '玩家' && !exclusiveNpc) {
     const npc好感度 = data.NPC[target as keyof typeof data.NPC]?.好感度 ?? 0;
     if (!checkItemThreshold(npc好感度, selectedItem.value)) {
-      if (typeof toastr !== 'undefined') toastr.warning(`${target}灵犀未至，禁制未开「${selectedItem.value}」`);
+      if (typeof toastr !== 'undefined') toastr.warning(`${target}灵犀未至，禁制未开「${getItemDisplayName(selectedItem.value)}」`);
       return;
     }
   }
@@ -246,6 +276,7 @@ function toggleEquip(target: string) {
   data.道具.装备[target].push(selectedItem.value);
   consumeOwnedItem(selectedItem.value);
   记录装备道具(selectedItem.value, target);
+  selectedItem.value = null;
 }
 </script>
 

@@ -24,8 +24,38 @@
       </button>
     </div>
 
+    <!-- 服装楼层 -->
+    <div v-if="isFloorGroupedCategory" class="floor-list">
+      <section v-for="group in groupedCurrentItems" :key="group.floor" class="floor-section" :data-floor="group.floor">
+        <div class="floor-header">
+          <div class="floor-line"></div>
+          <span class="floor-title">{{ group.floor }}</span>
+          <div class="floor-line"></div>
+        </div>
+        <div class="item-grid">
+          <div
+            v-for="item in group.items"
+            :key="item.名称"
+            :class="['item-card', { disabled: !canBuy(item) }]"
+            @click="showDetail(item)"
+          >
+            <div class="card-top">
+              <div class="item-name">{{ getItemTitle(item) }}</div>
+              <div v-if="item.好感度门槛 > 0" class="item-threshold">灵犀 {{ item.好感度门槛 }}+</div>
+            </div>
+            <div class="card-bottom">
+              <div class="item-price">
+                <span class="price-glyph">◆</span>
+                <span class="price-num">{{ item.价格 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
     <!-- 物品格子 -->
-    <div class="item-grid">
+    <div v-else class="item-grid">
       <div
         v-for="item in currentItems"
         :key="'名称' in item ? item.名称 : item.NPC"
@@ -33,7 +63,7 @@
         @click="showDetail(item)"
       >
         <div class="card-top">
-          <div class="item-name">{{ '名称' in item ? item.名称 : item.NPC }}</div>
+          <div class="item-name">{{ getItemTitle(item) }}</div>
           <div v-if="item.好感度门槛 > 0" class="item-threshold">灵犀 {{ item.好感度门槛 }}+</div>
         </div>
         <div class="card-bottom">
@@ -61,9 +91,19 @@
             <div class="header-line"></div>
           </div>
 
-          <h3 class="modal-title">{{ '名称' in selectedItem ? selectedItem.名称 : selectedItem.NPC }}</h3>
+          <h3 class="modal-title">{{ getItemTitle(selectedItem) }}</h3>
+          <div v-if="getItemMetaPrimary(getItemName(selectedItem))" class="modal-meta">
+            <span>{{ getItemMetaPrimary(getItemName(selectedItem)) }}</span>
+            <span v-if="'适用对象' in selectedItem">{{ selectedItem.专属NPC ? `${selectedItem.专属NPC}命契专属` : selectedItem.适用对象 }}</span>
+            <span v-else-if="getContrabandBodyPart(getItemName(selectedItem))">{{ getContrabandBodyPart(getItemName(selectedItem)) }}</span>
+            <span v-else-if="getPillEffectLine(getItemName(selectedItem))">{{ getPillEffectLine(getItemName(selectedItem)) }}</span>
+          </div>
+          <p v-if="getItemShortHint(getItemName(selectedItem))" class="modal-hint">{{ getItemShortHint(getItemName(selectedItem)) }}</p>
           <p v-if="'描述' in selectedItem" class="modal-desc">{{ selectedItem.描述 }}</p>
-          <p v-if="'揭示' in selectedItem" class="modal-desc">{{ selectedItem.NPC }}：{{ selectedItem.揭示 }}</p>
+          <div v-if="'剧情线' in selectedItem" class="modal-story">
+            <p class="modal-desc">{{ selectedItem.NPC }} · {{ selectedItem.秘密主题 }}</p>
+            <p class="modal-desc">{{ selectedItem.解锁提示 }}</p>
+          </div>
           <p v-if="'效果' in selectedItem" class="modal-effect">
             <span class="effect-label">法效：</span>{{ '效果' in selectedItem ? selectedItem.效果 : '' }}
           </p>
@@ -85,14 +125,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useDataStore } from '../store';
-import { NSFW道具, 永久丹药, 特殊道具 } from '../data/items';
+import { NSFW道具, 永久丹药, 特殊道具, 禁器器阶, 丹药分类 } from '../data/items';
 import { 牝奴道具 } from '../data/items';
 import { 服装列表 } from '../data/outfits';
 import { 牝奴服装列表 } from '../data/outfits';
+import { getContrabandBodyPart, getContrabandTier, getExclusiveOutfitNpc, getItemDisplayName, getItemShortHint, getOutfitFloor, getPillCategory, getPillEffectLine, isExclusiveOutfitUnlocked } from '../data/itemDisplay';
 import { 特殊场景, 特殊剧情 } from '../data/scenes';
 import { checkItemThreshold } from '../guards';
 import { usePendingAction } from '../composables/usePendingAction';
 import { getItemLifecycle } from '../data/itemLifecycle';
+import { createNarrativeEntryForPurchase, hasPendingPurchase, insertEntryRumor } from '../data/narrativeEntry';
 
 type ShopItem =
   | (typeof 服装列表)[number]
@@ -109,6 +151,10 @@ const { 记录购买物品 } = usePendingAction();
 
 function getItemName(item: ShopItem): string {
   return '名称' in item && item.名称 ? item.名称 : 'NPC' in item ? item.NPC : '';
+}
+
+function getItemTitle(item: ShopItem): string {
+  return getItemDisplayName(getItemName(item));
 }
 
 const categories = computed(() => {
@@ -138,7 +184,7 @@ const balanceClass = computed(() => {
 const currentItems = computed(() => {
   switch (activeCategory.value) {
     case 'clothing':
-      return 服装列表;
+      return 服装列表.filter(item => item.楼层 !== '牝奴层' && isExclusiveOutfitUnlocked(item.名称, store.data.NPC));
     case 'nsfw':
       return NSFW道具;
     case 'pill':
@@ -156,11 +202,69 @@ const currentItems = computed(() => {
   }
 });
 
+const 楼层顺序 = ['凡衣层', '微露层', '诱形层', '缚心层', '命契层', '牝奴层'] as const;
+const 禁器器阶顺序 = 禁器器阶;
+const 丹药分类顺序 = 丹药分类;
+
+const isFloorGroupedCategory = computed(() => activeCategory.value === 'clothing' || activeCategory.value === 'nsfw' || activeCategory.value === 'pill');
+
+function getItemMetaPrimary(name: string): string {
+  return getOutfitFloor(name) || getContrabandTier(name) || getPillCategory(name);
+}
+
+const groupedCurrentItems = computed(() => {
+  if (activeCategory.value === 'pill') {
+    return 丹药分类顺序
+      .map(floor => ({
+        floor,
+        items: currentItems.value.filter(item => '分类' in item && item.分类 === floor),
+      }))
+      .filter(group => group.items.length > 0);
+  }
+
+  if (activeCategory.value === 'nsfw') {
+    return 禁器器阶顺序
+      .map(floor => ({
+        floor,
+        items: currentItems.value.filter(item => '器阶' in item && item.器阶 === floor),
+      }))
+      .filter(group => group.items.length > 0);
+  }
+
+  return 楼层顺序
+    .map(floor => ({
+      floor,
+      items: currentItems.value.filter(item => '楼层' in item && item.楼层 === floor),
+    }))
+    .filter(group => group.items.length > 0);
+});
+
 function canBuy(item: ShopItem): boolean {
   // 嘴中膏涩
   if (store.data.系统.灵石 < item.价格) return false;
 
   const name = getItemName(item);
+  const lifecycle = getItemLifecycle(name);
+
+  if (hasPendingPurchase(store.data.系统.待处理交互 ?? [], name)) return false;
+
+  if (lifecycle === '解锁剧情') {
+    const clue = (store.data.剧情 as any).线索状态?.[name];
+    return !store.data.剧情.已解锁.includes(name) && (!clue || clue.状态 === '已失效');
+  }
+
+  if (lifecycle === '解锁场景') {
+    const clue = (store.data.剧情 as any).线索状态?.[name];
+    return !store.data.场景.已解锁.includes(name) && (!clue || clue.状态 === '已失效');
+  }
+
+  if (lifecycle === '购买即生效') {
+    if (name === '改变阵法' && store.data.系统.已使用阵法) return false;
+    const clue = (store.data.剧情 as any).线索状态?.[name];
+    if (clue && clue.状态 !== '已失效') return false;
+  }
+
+  if (!isExclusiveOutfitUnlocked(name, store.data.NPC)) return false;
 
   // 改变阵法：需要柳素衣攻略值=100
   if (name === '改变阵法') {
@@ -185,6 +289,13 @@ function canBuy(item: ShopItem): boolean {
 function getBuyButtonText(item: ShopItem): string {
   if (store.data.系统.灵石 < item.价格) return '囊中羞涩';
   const name = getItemName(item);
+  const lifecycle = getItemLifecycle(name);
+  if (lifecycle === '解锁剧情' && (store.data.剧情.已解锁.includes(name) || (store.data.剧情 as any).线索状态?.[name])) return '因果已入簿';
+  if (lifecycle === '解锁场景' && (store.data.场景.已解锁.includes(name) || (store.data.剧情 as any).线索状态?.[name])) return '场景已开';
+  if (hasPendingPurchase(store.data.系统.待处理交互 ?? [], name)) return '线索待显';
+  if (lifecycle === '购买即生效' && name === '改变阵法' && store.data.系统.已使用阵法) return '事件已触发';
+  const exclusiveNpc = getExclusiveOutfitNpc(name);
+  if (exclusiveNpc && !isExclusiveOutfitUnlocked(name, store.data.NPC)) return '命契未成';
   if (name === '改变阵法' && (store.data.NPC['柳素衣']?.攻略值 ?? 0) < 100) return '素衣因果未满';
   if (item.好感度门槛 > 0 && item.类型 === '装备') {
     const npc列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
@@ -212,19 +323,45 @@ function addUnique(list: string[], name: string) {
   if (!list.includes(name)) list.push(name);
 }
 
+function applyNarrativeEntry(name: string) {
+  const entry = createNarrativeEntryForPurchase(name);
+  if (!entry) return;
+  const storyState = store.data.剧情 as any;
+  storyState.线索状态 ??= {};
+  storyState.线索状态[entry.key] = entry.status;
+  store.data.系统.风声列表 = insertEntryRumor(store.data.系统.风声列表 ?? [], entry.rumor) as typeof store.data.系统.风声列表;
+}
+
 function applyPurchaseResult(name: string) {
   const lifecycle = getItemLifecycle(name);
 
   if (lifecycle === '解锁场景') {
     addUnique(store.data.场景.已解锁, name);
+    applyNarrativeEntry(name);
     return;
   }
   if (lifecycle === '解锁剧情') {
     addUnique(store.data.剧情.已解锁, name);
+    applyNarrativeEntry(name);
     return;
   }
   if (lifecycle === '购买即生效') {
-    store.data.系统.已使用阵法 = true;
+    if (name === '改变阵法') {
+      store.data.系统.已使用阵法 = true;
+    }
+    const storyState = store.data.剧情 as any;
+    storyState.线索状态 ??= {};
+    if (['改变阵法', '欲海回声', '投欲钥'].includes(name)) {
+      storyState.线索状态[name] = {
+        类型: '特殊事件',
+        状态: '已触发',
+        风声ID: '',
+        关联名称: name,
+        推荐场景: [],
+        触发次数: 1,
+        最近场景: store.data.系统.当前场景 ?? '',
+      };
+    }
     return;
   }
 
@@ -373,6 +510,40 @@ function buyItem(item: ShopItem) {
   }
 }
 
+/* 服装楼层 — 金册分卷 */
+.floor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.floor-section {
+  min-width: 0;
+}
+
+.floor-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0 8px;
+}
+
+.floor-line {
+  flex: 1;
+  min-width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hh-border-accent), transparent);
+}
+
+.floor-title {
+  flex-shrink: 0;
+  font-family: $font-铭文;
+  font-size: 12px;
+  color: var(--hh-gold);
+  letter-spacing: 3px;
+  text-shadow: 0 0 8px var(--hh-gold-glow);
+}
+
 /* 物品格子 — 金册货架 */
 .item-grid {
   display: flex;
@@ -414,8 +585,11 @@ function buyItem(item: ShopItem) {
       font-family: $font-铭文;
       font-size: 14px;
       color: var(--hh-text-primary);
-      letter-spacing: 4px;
+      letter-spacing: 2px;
+      line-height: 1.45;
       margin-bottom: 4px;
+      overflow-wrap: anywhere;
+      word-break: keep-all;
     }
 
     .item-threshold {
@@ -584,6 +758,34 @@ function buyItem(item: ShopItem) {
   letter-spacing: 4px;
   margin: 0 0 12px;
   @include inscription-engrave;
+}
+
+.modal-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: var(--hh-gold);
+  font-family: $font-铭文;
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin: -4px 0 10px;
+  text-shadow: 0 0 8px var(--hh-gold-glow);
+
+  span {
+    padding: 2px 6px;
+    background: var(--hh-gold-glow);
+    border-radius: $radius-sm;
+  }
+}
+
+.modal-hint {
+  font-size: 13px;
+  color: var(--hh-text-secondary);
+  line-height: 1.7;
+  margin: 0 0 12px;
+  text-align: center;
+  text-shadow: 0 0 8px var(--hh-glow-color);
 }
 
 .modal-desc {

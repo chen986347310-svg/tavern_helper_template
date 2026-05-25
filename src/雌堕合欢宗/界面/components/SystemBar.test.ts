@@ -161,6 +161,39 @@ describe('SystemBar', () => {
   });
 
   describe('牝奴期模式', () => {
+    it('牝奴期沿用状态栏骨架并显示日课、命令与羞名风声', () => {
+      const wrapper = mount(SystemBar, {
+        props: {
+          mode: '牝奴期',
+          堕落度: 82,
+          牝阴决层数: 6,
+          时辰: '午时',
+          当前日课: '午后点名',
+          当前命令: '当众应名',
+          命令强度: 88,
+          rumorList: [
+            {
+              id: 'p2-shame-1',
+              来源: '公开示众',
+              地点: '莲灯前苑',
+              风声文本: '有人念起你的羞名。',
+              状态: '未读',
+              羞名等级: '挂牌',
+            },
+          ],
+        },
+      });
+
+      expect(wrapper.find('.system-bar').attributes('data-rumor-active')).toBe('true');
+      expect(wrapper.find('.system-bar').classes()).toContain('system-bar--p2');
+      expect(wrapper.find('.blossom-ring-wrapper').exists()).toBe(true);
+      expect(wrapper.find('.p2-stigma-glyph').text()).toBe('印');
+      expect(wrapper.text()).toContain('午时');
+      expect(wrapper.text()).toContain('午后点名');
+      expect(wrapper.text()).toContain('当众应名');
+      expect(wrapper.text()).toContain('6/9');
+    });
+
     it('堕落度=0 时 0 瓣亮起', () => {
       const wrapper = mount(SystemBar, {
         props: { mode: '牝奴期', 堕落度: 0 },
