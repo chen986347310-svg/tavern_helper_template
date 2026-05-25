@@ -111,8 +111,18 @@
 
 
     <!-- 日/夜切换 -->
-    <button class="theme-toggle" @click="toggleTheme" :aria-label="theme === 'dark' ? '切换白昼模式' : '切换暗夜模式'">
-      <svg v-if="theme === 'dark'" class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <button
+      :class="['theme-toggle', { 'theme-toggle--p2': mode === '牝奴期' }]"
+      :data-theme-mode="theme"
+      @click="toggleTheme"
+      :aria-label="themeToggleAria"
+      :title="themeToggleTitle"
+    >
+      <template v-if="mode === '牝奴期'">
+        <span class="p2-theme-thread" aria-hidden="true"></span>
+        <span class="p2-theme-mark" aria-hidden="true">{{ theme === 'chenxiang' ? '香' : '绯' }}</span>
+      </template>
+      <svg v-else-if="theme === 'chenxiang'" class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="12" cy="12" r="5" fill="currentColor"/>
         <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
@@ -203,6 +213,11 @@ function petalStyle(index: number) {
 import { computed } from 'vue';
 import { useTheme } from '../composables/useTheme';
 const { theme, toggleTheme } = useTheme();
+const themeToggleTitle = computed(() => {
+  if (props.mode === '牝奴期') return theme.value === 'chenxiang' ? '切换桃烙绯印' : '切换敛香沉香';
+  return theme.value === 'chenxiang' ? '切换桃花模式' : '切换沉香模式';
+});
+const themeToggleAria = computed(() => themeToggleTitle.value);
 </script>
 <style lang="scss" scoped>
 @use '../styles/variables' as *;
@@ -551,6 +566,73 @@ const { theme, toggleTheme } = useTheme();
     width: 18px;
     height: 18px;
   }
+}
+
+.theme-toggle--p2 {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px 999px 78% 78%;
+  background:
+    radial-gradient(ellipse at 50% 58%, rgba(255, 253, 249, 0.6), transparent 58%),
+    linear-gradient(180deg, rgba(163, 131, 83, 0.18), rgba(255, 253, 249, 0.18));
+  color: #5a423a;
+  box-shadow:
+    inset 0 0 0 1px rgba(163, 131, 83, 0.28),
+    inset 0 0 18px rgba(200, 75, 91, 0.08);
+  animation: p2-theme-breath 5.4s ease-in-out infinite;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(163, 131, 83, 0.72), transparent);
+    transform: translateX(-50%);
+  }
+
+  &::before { top: 7px; }
+  &::after { bottom: 7px; }
+
+  &:hover {
+    color: #c84b5b;
+    filter: drop-shadow(0 0 12px rgba(200, 75, 91, 0.22));
+  }
+
+  .p2-theme-mark {
+    font-family: $font-铭文;
+    font-size: 14px;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .p2-theme-thread {
+    position: absolute;
+    left: 50%;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(163, 131, 83, 0.54), transparent);
+    transform: translateX(-50%);
+  }
+}
+
+.theme-toggle--p2[data-theme-mode='taohua'] {
+  color: #c84b5b;
+  background:
+    radial-gradient(ellipse at 50% 58%, rgba(200, 75, 91, 0.18), transparent 58%),
+    linear-gradient(180deg, rgba(234, 168, 155, 0.28), rgba(255, 253, 249, 0.18));
+  box-shadow:
+    inset 0 0 0 1px rgba(200, 75, 91, 0.28),
+    inset 0 0 18px rgba(200, 75, 91, 0.14),
+    0 0 12px rgba(200, 75, 91, 0.12);
+}
+
+@keyframes p2-theme-breath {
+  0%, 100% { transform: scale(1); filter: saturate(0.96); }
+  50% { transform: scale(1.025); filter: saturate(1.16); }
 }
 
 /* 五气朝元阵 · 阵眼自转 */

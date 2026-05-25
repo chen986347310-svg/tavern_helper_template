@@ -47,7 +47,7 @@
         </Transition>
       </div>
 
-      <PageNav :currentTab="currentTab" @change="navigateTo" />
+      <PageNav :currentTab="currentTab" :phase="store.data.系统.阶段" @change="navigateTo" />
     </div>
   </div>
 

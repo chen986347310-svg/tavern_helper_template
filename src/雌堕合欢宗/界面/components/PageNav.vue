@@ -1,5 +1,5 @@
 <template>
-  <div class="page-nav">
+  <div class="page-nav" :data-phase="phase">
     <button
       v-for="tab in tabs"
       :key="tab.key"
@@ -45,20 +45,34 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
   currentTab: string;
-}>();
+  phase?: '攻略期' | '牝奴期' | string;
+}>(), {
+  phase: '攻略期',
+});
 
 defineEmits<{
   change: [tab: string];
 }>();
 
-const tabs = [
+const p1Tabs = [
   { key: 'home', label: '首页' },
   { key: 'shop', label: '商城' },
   { key: 'backpack', label: '背包' },
   { key: 'gallery', label: '图鉴' },
-];
+] as const;
+
+const p2Tabs = [
+  { key: 'home', label: '牝印' },
+  { key: 'shop', label: '执事库' },
+  { key: 'backpack', label: '法器匣' },
+  { key: 'gallery', label: '烙名录' },
+] as const;
+
+const tabs = computed(() => (props.phase === '牝奴期' ? p2Tabs : p1Tabs));
 </script>
 <style lang="scss" scoped>
 @use '../styles/variables' as *;
@@ -72,6 +86,24 @@ const tabs = [
   flex-shrink: 0;
   background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 30%);
   border-top: none;
+  position: relative;
+}
+
+.page-nav[data-phase='牝奴期'] {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(200, 75, 91, 0.16), transparent 64%),
+    linear-gradient(180deg, transparent 0%, rgba(255, 253, 249, 0.36) 34%, rgba(234, 168, 155, 0.14) 100%);
+}
+
+.page-nav[data-phase='牝奴期']::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 2px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(163, 131, 83, 0.35), transparent);
+  pointer-events: none;
 }
 
 .nav-tab {
@@ -129,6 +161,37 @@ const tabs = [
     }
 
 
+  }
+}
+
+.page-nav[data-phase='牝奴期'] .nav-tab {
+  padding: 4px 11px;
+
+  .tab-icon {
+    color: rgba(90, 66, 58, 0.58);
+    filter: drop-shadow(0 0 4px rgba(200, 75, 91, 0.08));
+  }
+
+  &.active {
+    background:
+      radial-gradient(ellipse at 50% 80%, rgba(200, 75, 91, 0.18), transparent 70%),
+      linear-gradient(180deg, rgba(255, 253, 249, 0.18), transparent);
+    box-shadow:
+      inset 0 0 0 1px rgba(200, 75, 91, 0.14),
+      inset 0 0 14px rgba(200, 75, 91, 0.08);
+
+    .tab-icon {
+      color: #c84b5b;
+      filter: drop-shadow(0 0 7px rgba(200, 75, 91, 0.28));
+    }
+
+    &::after {
+      background: linear-gradient(90deg, transparent, #c84b5b, rgba(163, 131, 83, 0.72), transparent);
+    }
+  }
+
+  &:hover:not(.active) .tab-icon {
+    color: #a38353;
   }
 }
 </style>

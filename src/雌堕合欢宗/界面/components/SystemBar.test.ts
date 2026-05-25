@@ -192,6 +192,8 @@ describe('SystemBar', () => {
       expect(wrapper.text()).toContain('午后点名');
       expect(wrapper.text()).toContain('当众应名');
       expect(wrapper.text()).toContain('6/9');
+      expect(wrapper.find('.theme-toggle').classes()).toContain('theme-toggle--p2');
+      expect(wrapper.find('.p2-theme-mark').text()).toMatch(/香|绯/);
     });
 
     it('堕落度=0 时 0 瓣亮起', () => {

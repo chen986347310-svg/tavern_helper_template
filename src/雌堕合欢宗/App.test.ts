@@ -140,6 +140,15 @@ describe('App 层 SystemBar 渲染', () => {
     expect(wrapper.text()).toContain('午后点名');
     expect(wrapper.text()).toContain('当众应名');
   });
+
+  it('牝奴期底部功能区改用 P2 语义', async () => {
+    mockData.系统.阶段 = '牝奴期';
+    const wrapper = mount(App, { global: { plugins: [createPinia()] } });
+    await flushPromises();
+
+    const labels = wrapper.findAll('.nav-tab').map(w => w.attributes('aria-label'));
+    expect(labels).toEqual(['牝印', '执事库', '法器匣', '烙名录']);
+  });
   it('全部完成时太极图标全粉', async () => {
     const wrapper = mount(App, { global: { plugins: [createPinia()] } });
 

@@ -21,6 +21,19 @@ describe('PageNav', () => {
     expect(wrapper.findAll('.tab-label')).toHaveLength(0);
   });
 
+  it('牝奴期替换功能区语义但保留原路由 key', async () => {
+    const wrapper = mount(PageNav, {
+      props: { currentTab: 'home', phase: '牝奴期' },
+    });
+
+    const labels = wrapper.findAll('.nav-tab').map(w => w.attributes('aria-label'));
+    expect(labels).toEqual(['牝印', '执事库', '法器匣', '烙名录']);
+    expect(wrapper.find('.page-nav').attributes('data-phase')).toBe('牝奴期');
+
+    await wrapper.findAll('.nav-tab')[1].trigger('click');
+    expect(wrapper.emitted('change')![0]).toEqual(['shop']);
+  });
+
   it('使用 SVG 铭文图标而非文本符号', () => {
     const wrapper = mount(PageNav, {
       props: { currentTab: 'home' },
