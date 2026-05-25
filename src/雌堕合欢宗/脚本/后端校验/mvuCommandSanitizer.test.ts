@@ -12,19 +12,19 @@ function command(type: string, path: string, value = 'null') {
 
 function appendCommand(path: string, value: string) {
   return {
-    type: 'insert',
+    type: 'add',
     full_match: `append:${path}`,
-    args: [path, "'-'", value],
+    args: [`${path}/-`, value],
     reason: 'test',
   } as any;
 }
 
 describe('sanitizeMvuCommands', () => {
-  it('removes insert and add commands produced by the extra variable parser', () => {
+  it('removes unsafe insert and add commands produced by the extra variable parser', () => {
     const commands = [
       command('set', '/系统/待处理交互', '[]'),
       command('set', '/系统/当前追查风声ID', '""'),
-      command('insert', '/剧情/事件记录/-', '{"id":"extra"}'),
+      command('insert', '/系统/剩余天数', '-1'),
       command('add', '/系统/剩余天数', '-1'),
     ];
 
@@ -173,13 +173,30 @@ describe('sanitizeMvuCommands', () => {
 
     const diagnostics = sanitizeMvuCommands(commands);
 
-    expect(commands.map(item => item.type)).toEqual(['set', 'set', 'set', 'insert']);
-    expect(commands.find(item => item.type === 'insert')?.args).toEqual([
+    expect(commands.map(item => item.type)).toEqual(['set', 'set', 'set', 'add']);
+    expect(commands.find(item => item.type === 'add')?.args).toEqual([
       '牝奴.调教记录',
       "'-'",
       '{"id":"event_1","摘要":"跪下看鞋"}',
     ]);
     expect(diagnostics.droppedCommands.map(item => item.type)).toEqual(['add']);
+  });
+
+  it('keeps parser-converted insert appends for backwards compatibility', () => {
+    const commands = [
+      command('set', '系统.待处理交互', '[]'),
+      {
+        type: 'insert',
+        full_match: 'insert:剧情.事件记录',
+        args: ['剧情.事件记录', "'-'", '{"id":"event_1"}'],
+        reason: 'test',
+      } as any,
+    ];
+
+    const diagnostics = sanitizeMvuCommands(commands);
+
+    expect(commands.map(item => item.type)).toEqual(['set', 'insert']);
+    expect(diagnostics.dropped).toBe(0);
   });
 
   it('returns an empty diagnostic for non-array command payloads', () => {

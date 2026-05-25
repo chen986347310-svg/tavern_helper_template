@@ -1,11 +1,11 @@
 <template>
-  <div class="backpack-page">
+  <div class="backpack-page" :data-phase="data.系统.阶段">
     <!-- 囊中藏珍 -->
     <div class="section">
       <div class="section-header">
         <div class="header-line"></div>
-        <span class="header-glyph">囊</span>
-        <span class="header-text">囊中藏珍</span>
+        <span class="header-glyph">{{ isPhase2 ? '匣' : '囊' }}</span>
+        <span class="header-text">{{ isPhase2 ? '待扣法器' : '囊中藏珍' }}</span>
         <div class="header-line"></div>
       </div>
 
@@ -17,11 +17,13 @@
           @click="selectItem(String(name))"
         >
           <span class="item-name">{{ getItemDisplayName(String(name)) }}</span>
-          <span :class="['item-count', { 'count-up': countAnimating && count > 0 }]">x{{ count }}</span>
+          <span v-if="isPhase2" class="item-focus">{{ getP2ArtifactFocus(String(name)) }}</span>
+          <span v-if="isPhase2 && isCurrentRoutineItem(String(name))" class="routine-badge">朱批点名</span>
+          <span :class="['item-count', { 'count-up': countAnimating && count > 0 }]">{{ isPhase2 ? `存数 ${count}` : `x${count}` }}</span>
         </div>
         <div v-if="Object.keys(ownedItems).length === 0" class="empty-state">
           <span class="empty-glyph">空</span>
-          <span class="empty-text">锦囊尚空</span>
+          <span class="empty-text">{{ isPhase2 ? '匣中空寂，咒槽尚待落锁' : '锦囊尚空' }}</span>
         </div>
       </div>
     </div>
@@ -31,10 +33,12 @@
       <div v-if="selectedItem" class="equip-section">
         <div class="section-header">
           <div class="header-line"></div>
-          <span class="header-glyph">佩</span>
-          <span class="header-text">安置「{{ getItemDisplayName(selectedItem) }}」</span>
+          <span class="header-glyph">{{ isPhase2 ? '扣' : '佩' }}</span>
+          <span class="header-text">{{ isPhase2 ? '扣合' : '安置' }}「{{ getItemDisplayName(selectedItem) }}」</span>
           <div class="header-line"></div>
         </div>
+
+        <p v-if="isPhase2" class="p2-selected-note">{{ getP2ArtifactBodyNote(selectedItem) }}</p>
 
         <div v-if="isEquippableItem(selectedItem)" class="equip-targets">
           <button
@@ -45,7 +49,7 @@
             @click="toggleEquip(target)"
           >
             <span class="btn-dot"></span>
-            {{ target }}
+            {{ getTargetLabel(target) }}
           </button>
         </div>
 
@@ -59,7 +63,7 @@
               @click="useItemOnTarget(target)"
             >
               <span class="btn-dot"></span>
-              {{ target }}
+              {{ getTargetLabel(target) }}
             </button>
           </div>
           <div v-else class="target-empty">此刻无人可承此丹</div>
@@ -75,29 +79,37 @@
     <div class="section">
       <div class="section-header">
         <div class="header-line"></div>
-        <span class="header-glyph">甲</span>
-        <span class="header-text">法器归属</span>
+        <span class="header-glyph">{{ isPhase2 ? '锁' : '甲' }}</span>
+        <span class="header-text">{{ isPhase2 ? '已落锁' : '法器归属' }}</span>
         <div class="header-line"></div>
       </div>
 
       <div class="equip-list">
-        <div v-for="target in equipTargets" :key="target" class="equip-row">
-          <span class="target-name">{{ target }}</span>
+        <div v-for="target in visibleEquipTargets" :key="target" class="equip-row">
+          <span class="target-name">{{ getTargetLabel(target) }}</span>
           <span class="target-divider">：</span>
           <span class="equipped-items">
-            <template v-if="data.道具.装备[target]?.length > 0">
+            <template v-if="visibleEquippedForTarget(target).length > 0">
               <button
-                v-for="(item, index) in data.道具.装备[target]"
+                v-for="(item, index) in visibleEquippedForTarget(target)"
                 :key="`${target}-${item}`"
                 type="button"
                 class="equipped-item"
                 @click="selectItem(item)"
               >
-                {{ getItemDisplayName(item) }}{{ index < data.道具.装备[target].length - 1 ? '、' : '' }}
+                {{ getItemDisplayName(item) }}{{ index < visibleEquippedForTarget(target).length - 1 ? '、' : '' }}
               </button>
             </template>
-            <span v-else>虚位</span>
+            <span v-else>{{ isPhase2 ? '虚槽未扣' : '虚位' }}</span>
           </span>
+        </div>
+      </div>
+
+      <div v-if="isPhase2" class="p2-body-echo" aria-label="法器身体回响">
+        <div v-if="phase2EquippedItems.length === 0" class="p2-echo-empty">身上暂未落锁，朱批还没有真正压进皮肉。</div>
+        <div v-for="item in phase2EquippedItems" :key="`echo-${item}`" class="p2-echo-row">
+          <span class="p2-echo-name">{{ getItemDisplayName(item) }}</span>
+          <span class="p2-echo-text">{{ getP2ArtifactBodyNote(item) }}</span>
         </div>
       </div>
     </div>
@@ -110,7 +122,16 @@ import { useDataStore } from '../store';
 import { checkItemThreshold, canEquip牝奴道具, get在场NPC列表 } from '../guards';
 import { usePendingAction } from '../composables/usePendingAction';
 import { isConsumableLifecycle, isEquippableLifecycle, itemRequiresTarget } from '../data/itemLifecycle';
-import { getExclusiveOutfitNpc, getItemDisplayName, isExclusiveOutfitUnlocked, isPlayerOnlyOutfit } from '../data/itemDisplay';
+import {
+  getExclusiveOutfitNpc,
+  getItemDisplayName,
+  getP2ArtifactBodyNote,
+  getP2ArtifactFocus,
+  isExclusiveOutfitUnlocked,
+  isP2ArtifactItem,
+  isPlayerOnlyOutfit,
+} from '../data/itemDisplay';
+import { getPhase2RoutineState } from '../data/phase2Routine';
 
 const store = useDataStore();
 const data = store.data;
@@ -118,19 +139,24 @@ const { 记录装备道具, 记录卸下道具, 记录使用物品 } = usePendin
 
 const selectedItem = ref<string | null>(null);
 const countAnimating = ref(false);
-const equipTargets = ['玩家', '白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'];
+const npcEquipTargets = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'];
+const isPhase2 = computed(() => data.系统.阶段 === '牝奴期');
 const ownedItems = computed(() => {
-  return Object.fromEntries(Object.entries(data.道具.拥有).filter(([, count]) => count > 0));
+  return Object.fromEntries(Object.entries(data.道具.拥有).filter(([name, count]) => count > 0 && (!isPhase2.value || isP2ArtifactItem(name))));
 });
 
 const consumableTargets = computed(() => get在场NPC列表(data.系统.场景上下文));
+const visibleEquipTargets = computed(() => (isPhase2.value ? ['玩家'] : npcEquipTargets));
+const phase2EquippedItems = computed(() => (data.道具.装备.玩家 ?? []).filter(isP2ArtifactItem));
+const phase2RoutineState = computed(() => getPhase2RoutineState(data.牝奴?.当前日课 ?? '', phase2EquippedItems.value));
 
 const availableEquipTargets = computed(() => {
-  if (!selectedItem.value) return equipTargets;
-  if (isPlayerOnlyOutfit(selectedItem.value)) return ['玩家'];
+  if (isPhase2.value) return ['玩家'];
+  if (!selectedItem.value) return npcEquipTargets;
+  if (isPlayerOnlyOutfit(selectedItem.value)) return [];
   const exclusiveNpc = getExclusiveOutfitNpc(selectedItem.value);
   if (exclusiveNpc) return [exclusiveNpc];
-  return equipTargets;
+  return npcEquipTargets;
 });
 
 watch(() => data.道具.拥有, () => {
@@ -139,6 +165,7 @@ watch(() => data.道具.拥有, () => {
 }, { deep: true });
 
 function selectItem(name: string) {
+  if (isPhase2.value && !isP2ArtifactItem(name)) return;
   selectedItem.value = selectedItem.value === name ? null : name;
 }
 
@@ -166,6 +193,13 @@ function isEquipped(target: string): boolean {
 function canEquipTo(target: string): boolean {
   if (!selectedItem.value) return true;
   if (!isEquippableItem(selectedItem.value)) return false;
+  if (isPhase2.value) {
+    if (target !== '玩家') return false;
+    if (!isP2ArtifactItem(selectedItem.value)) return false;
+    if (isEquipped(target)) return true;
+    return (data.道具.拥有[selectedItem.value] ?? 0) > 0;
+  }
+  if (target === '玩家') return false;
   if (isPlayerOnlyOutfit(selectedItem.value) && target !== '玩家') return false;
   const exclusiveNpc = getExclusiveOutfitNpc(selectedItem.value);
   if (exclusiveNpc && target !== exclusiveNpc) return false;
@@ -173,7 +207,6 @@ function canEquipTo(target: string): boolean {
   if (isEquipped(target)) return true;
   if ((data.道具.拥有[selectedItem.value] ?? 0) <= 0) return false;
   if (exclusiveNpc) return true;
-  if (target === '玩家') return true;
   if (!canEquip牝奴道具(data.系统.阶段, selectedItem.value)) {
     return false;
   }
@@ -183,15 +216,21 @@ function canEquipTo(target: string): boolean {
 
 function consumeOwnedItem(name: string) {
   const count = data.道具.拥有[name] ?? 0;
+  const nextOwned = { ...data.道具.拥有 };
   if (count <= 1) {
-    delete data.道具.拥有[name];
+    delete nextOwned[name];
+    data.道具.拥有 = nextOwned;
     return;
   }
-  data.道具.拥有[name] = count - 1;
+  nextOwned[name] = count - 1;
+  data.道具.拥有 = nextOwned;
 }
 
 function restoreOwnedItem(name: string) {
-  data.道具.拥有[name] = (data.道具.拥有[name] ?? 0) + 1;
+  data.道具.拥有 = {
+    ...data.道具.拥有,
+    [name]: (data.道具.拥有[name] ?? 0) + 1,
+  };
 }
 
 function useItem() {
@@ -226,16 +265,30 @@ function useItemOnTarget(target: string) {
 function toggleEquip(target: string) {
   if (!selectedItem.value) return;
   if (!isEquippableItem(selectedItem.value)) return;
+  if (!isPhase2.value && target === '玩家') return;
+  if (isPhase2.value && target !== '玩家') {
+    if (typeof toastr !== 'undefined') toastr.warning('牝奴期法器只准扣在己身');
+    return;
+  }
+  if (isPhase2.value && !isP2ArtifactItem(selectedItem.value)) return;
 
   if (!data.道具.装备[target]) {
-    data.道具.装备[target] = [];
+    data.道具.装备 = {
+      ...data.道具.装备,
+      [target]: [],
+    };
   }
 
-  const index = data.道具.装备[target].indexOf(selectedItem.value);
+  const equippedItems = data.道具.装备[target] ?? [];
+  const index = equippedItems.indexOf(selectedItem.value);
   if (index >= 0) {
-    data.道具.装备[target].splice(index, 1);
-    restoreOwnedItem(selectedItem.value);
-    记录卸下道具(selectedItem.value, target);
+    const itemName = selectedItem.value;
+    data.道具.装备 = {
+      ...data.道具.装备,
+      [target]: equippedItems.filter((_, itemIndex) => itemIndex !== index),
+    };
+    restoreOwnedItem(itemName);
+    记录卸下道具(itemName, target);
     return;
   }
 
@@ -273,10 +326,28 @@ function toggleEquip(target: string) {
     return;
   }
 
-  data.道具.装备[target].push(selectedItem.value);
-  consumeOwnedItem(selectedItem.value);
-  记录装备道具(selectedItem.value, target);
+  const itemName = selectedItem.value;
+  data.道具.装备 = {
+    ...data.道具.装备,
+    [target]: [...(data.道具.装备[target] ?? []), itemName],
+  };
+  consumeOwnedItem(itemName);
+  记录装备道具(itemName, target);
   selectedItem.value = null;
+}
+
+function visibleEquippedForTarget(target: string): string[] {
+  const equipped = data.道具.装备[target] ?? [];
+  return isPhase2.value ? equipped.filter(isP2ArtifactItem) : equipped;
+}
+
+function getTargetLabel(target: string): string {
+  if (isPhase2.value && target === '玩家') return '己身';
+  return target;
+}
+
+function isCurrentRoutineItem(name: string): boolean {
+  return phase2RoutineState.value.requiredItems.includes(name);
 }
 </script>
 
@@ -349,6 +420,17 @@ function toggleEquip(target: string) {
   }
 }
 
+.item-focus,
+.routine-badge {
+  font-size: 11px;
+  color: color-mix(in srgb, var(--p2-incense, var(--hh-text-secondary)) 64%, transparent);
+  letter-spacing: 2px;
+}
+
+.routine-badge {
+  color: var(--p2-blood, var(--hh-accent));
+}
+
 /* 空状态 */
 .empty-state {
   display: flex;
@@ -377,6 +459,14 @@ function toggleEquip(target: string) {
   border: none;
   background: var(--hh-bg-surface);
   border-radius: $radius-md;
+}
+
+.p2-selected-note {
+  margin: 0 0 10px;
+  color: color-mix(in srgb, var(--p2-incense, var(--hh-text-secondary)) 78%, transparent);
+  font-size: 12px;
+  line-height: 1.65;
+  letter-spacing: 1px;
 }
 
 .equip-targets {
@@ -524,6 +614,65 @@ function toggleEquip(target: string) {
       color: var(--hh-text-primary);
       text-shadow: 0 0 8px var(--hh-glow-color);
     }
+  }
+}
+
+.p2-body-echo {
+  margin-top: 12px;
+  padding: 11px 12px;
+  background:
+    radial-gradient(ellipse at 12% 18%, color-mix(in srgb, var(--p2-blood, var(--hh-accent)) 12%, transparent), transparent 54%),
+    linear-gradient(90deg, rgba(var(--p2-skin-rgb, 255, 253, 249), 0.72), rgba(var(--p2-skin-rgb, 255, 253, 249), 0.92));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--p2-gold, var(--hh-gold)) 14%, transparent);
+}
+
+.p2-echo-row,
+.p2-echo-empty {
+  font-size: 12px;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--p2-incense, var(--hh-text-secondary)) 78%, transparent);
+}
+
+.p2-echo-row {
+  display: grid;
+  grid-template-columns: minmax(76px, 0.32fr) 1fr;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--p2-gold, var(--hh-gold)) 10%, transparent);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.p2-echo-name {
+  color: var(--p2-blood, var(--hh-accent));
+  font-family: $font-铭文;
+  letter-spacing: 2px;
+}
+
+.backpack-page[data-phase='牝奴期'] {
+  .section {
+    margin-bottom: 16px;
+  }
+
+  .item-row,
+  .equip-section {
+    background:
+      linear-gradient(90deg, rgba(var(--p2-skin-rgb, 255, 253, 249), 0.84), rgba(var(--p2-skin-rgb, 255, 253, 249), 0.96)),
+      radial-gradient(ellipse at 88% 18%, color-mix(in srgb, var(--p2-blood, var(--hh-accent)) 10%, transparent), transparent 56%);
+    box-shadow: inset 0 -10px 18px rgba(90, 66, 58, 0.04);
+  }
+
+  .item-row.selected {
+    background:
+      radial-gradient(ellipse at 20% 50%, color-mix(in srgb, var(--p2-blood, var(--hh-accent)) 16%, transparent), transparent 64%),
+      rgba(var(--p2-skin-rgb, 255, 253, 249), 0.94);
+  }
+
+  .target-btn {
+    background: rgba(var(--p2-skin-rgb, 255, 253, 249), 0.86);
+    color: var(--p2-incense, var(--hh-text-secondary));
   }
 }
 

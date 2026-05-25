@@ -11,6 +11,7 @@ const mockData = reactive({
       牝阴决层数: 0,
       上次支配者: '',
       支配次数: {},
+      当前日课: '',
       改造进度: { 泌乳: false, 肛门: false, 憋尿: false },
     },
     NPC: {
@@ -63,10 +64,12 @@ describe('BackpackPage', () => {
     mockData.NPC.苏芸.好感度 = 0;
     mockData.NPC.苏芸.攻略值 = 0;
     mockData.NPC.苏芸.状态 = '未开始';
+    mockData.系统.阶段 = '攻略期';
     mockData.系统.时辰 = '午时';
     mockData.系统.当前场景 = '醉玉小筑';
     mockData.系统.待处理交互 = [];
     mockData.系统.场景上下文 = { 在场NPC: [] };
+    mockData.牝奴.当前日课 = '';
   });
 
   // --- 空状态 ---
@@ -99,7 +102,7 @@ describe('BackpackPage', () => {
 
     expect(wrapper.find('.item-name').text()).toBe('湿雾贴身裙');
     await wrapper.find('.item-row').trigger('click');
-    await wrapper.findAll('.target-btn')[1].trigger('click');
+    await wrapper.findAll('.target-btn')[0].trigger('click');
 
     expect(mockData.道具.装备['白芷']).toEqual(['透视罗裙']);
   });
@@ -110,7 +113,7 @@ describe('BackpackPage', () => {
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
 
-    expect(wrapper.findAll('.target-btn').map(btn => btn.text())).toEqual(['玩家']);
+    expect(wrapper.findAll('.target-btn').map(btn => btn.text())).toEqual(['己身']);
     await wrapper.find('.target-btn').trigger('click');
 
     expect(mockData.道具.装备['玩家']).toEqual(['牝奴链甲']);
@@ -163,12 +166,12 @@ describe('BackpackPage', () => {
   });
 
   // --- 装备目标 ---
-  it('装备区域显示6个目标', async () => {
+  it('攻略期装备区域只显示NPC目标', async () => {
     mockData.道具.拥有 = { 铃铛项圈: 1 };
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
     const targets = wrapper.findAll('.target-btn');
-    expect(targets).toHaveLength(6);
+    expect(targets.map(target => target.text())).toEqual(['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣']);
   });
 
   // --- 装备操作 ---
@@ -178,19 +181,26 @@ describe('BackpackPage', () => {
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
     const targetBtns = wrapper.findAll('.target-btn');
-    // 点击白芷 (index 1)
-    await targetBtns[1].trigger('click');
+    await targetBtns[0].trigger('click');
     expect(mockData.道具.装备['白芷']).toContain('铃铛项圈');
   });
 
-  it('玩家目标无好感度限制', async () => {
-    mockData.道具.拥有 = { 淫纹: 1 };
+  it('攻略期背包不显示玩家目标也不能装备玩家', async () => {
+    mockData.道具.拥有 = { 铃铛项圈: 1 };
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
-    const targetBtns = wrapper.findAll('.target-btn');
-    // 点击玩家 (index 0)
-    await targetBtns[0].trigger('click');
-    expect(mockData.道具.装备['玩家']).toContain('淫纹');
+    expect(wrapper.findAll('.target-btn').map(btn => btn.text())).not.toContain('玩家');
+    expect(wrapper.findAll('.equip-row').map(row => row.find('.target-name').text())).not.toContain('玩家');
+    expect(mockData.道具.装备['玩家']).toEqual([]);
+  });
+
+  it('攻略期玩家专属衣物不提供装备目标', async () => {
+    mockData.道具.拥有 = { 牝奴链甲: 1 };
+    const wrapper = mountBackpack();
+    await wrapper.find('.item-row').trigger('click');
+
+    expect(wrapper.findAll('.target-btn')).toHaveLength(0);
+    expect(mockData.道具.装备['玩家']).toEqual([]);
   });
 
   // --- canEquipTo ---
@@ -200,8 +210,7 @@ describe('BackpackPage', () => {
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
     const targetBtns = wrapper.findAll('.target-btn');
-    // 苏芸 (index 2) 好感度0 < 门槛30
-    expect(targetBtns[2].classes()).toContain('cannot-equip');
+    expect(targetBtns[1].classes()).toContain('cannot-equip');
   });
 
   it('好感度足够时目标按钮可点击', async () => {
@@ -210,8 +219,7 @@ describe('BackpackPage', () => {
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
     const targetBtns = wrapper.findAll('.target-btn');
-    // 白芷 (index 1) 好感度50 >= 门槛30
-    expect(targetBtns[1].classes()).not.toContain('cannot-equip');
+    expect(targetBtns[0].classes()).not.toContain('cannot-equip');
   });
 
 
@@ -220,7 +228,7 @@ describe('BackpackPage', () => {
     mockData.NPC.白芷.好感度 = 0;
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
-    await wrapper.findAll('.target-btn')[1].trigger('click');
+    await wrapper.findAll('.target-btn')[0].trigger('click');
 
     expect(mockData.道具.装备['白芷']).toContain('铃铛项圈');
     expect(mockData.道具.拥有['铃铛项圈']).toBeUndefined();
@@ -234,8 +242,8 @@ describe('BackpackPage', () => {
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
     const targetBtns = wrapper.findAll('.target-btn');
+    await targetBtns[0].trigger('click');
     await targetBtns[1].trigger('click');
-    await targetBtns[2].trigger('click');
 
     expect(mockData.道具.装备['白芷']).toEqual(['铃铛项圈']);
     expect(mockData.道具.装备['苏芸']).toEqual([]);
@@ -248,7 +256,7 @@ describe('BackpackPage', () => {
     const equippedItem = wrapper.find('.equipped-item');
     expect(equippedItem.exists()).toBe(true);
     await equippedItem.trigger('click');
-    await wrapper.findAll('.target-btn')[1].trigger('click');
+    await wrapper.findAll('.target-btn')[0].trigger('click');
 
     expect(mockData.道具.装备['白芷']).toEqual([]);
     expect(mockData.道具.拥有['铃铛项圈']).toBe(1);
@@ -261,7 +269,7 @@ describe('BackpackPage', () => {
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
     const targetBtns = wrapper.findAll('.target-btn');
-    expect(targetBtns[1].classes()).toContain('equipped');
+    expect(targetBtns[0].classes()).toContain('equipped');
   });
 
   it('点击已装备的目标取消装备', async () => {
@@ -270,15 +278,15 @@ describe('BackpackPage', () => {
     const wrapper = mountBackpack();
     await wrapper.find('.item-row').trigger('click');
     const targetBtns = wrapper.findAll('.target-btn');
-    await targetBtns[1].trigger('click');
+    await targetBtns[0].trigger('click');
     expect(mockData.道具.装备['白芷']).not.toContain('铃铛项圈');
   });
 
   // --- 当前装备显示 ---
-  it('当前装备区域显示所有目标', () => {
+  it('攻略期当前装备区域只显示NPC目标', () => {
     const wrapper = mountBackpack();
     const equipRows = wrapper.findAll('.equip-row');
-    expect(equipRows).toHaveLength(6);
+    expect(equipRows.map(row => row.find('.target-name').text())).toEqual(['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣']);
   });
 
   it('无装备时显示虚位', () => {
@@ -290,14 +298,14 @@ describe('BackpackPage', () => {
   it('有装备时显示道具显示名', () => {
     mockData.道具.装备['白芷'] = ['口塞', '束缚绳'];
     const wrapper = mountBackpack();
-    const baiRow = wrapper.findAll('.equip-row')[1]; // 白芷是第二个
+    const baiRow = wrapper.findAll('.equip-row')[0];
     expect(baiRow.find('.equipped-items').text()).toBe('缄声玉枚、缚影玄绳');
   });
 
   it('当前装备区域显示显示名但点击仍选择逻辑名', async () => {
     mockData.道具.装备['白芷'] = ['透视罗裙'];
     const wrapper = mountBackpack();
-    const baiRow = wrapper.findAll('.equip-row')[1];
+    const baiRow = wrapper.findAll('.equip-row')[0];
     expect(baiRow.find('.equipped-items').text()).toBe('湿雾贴身裙');
 
     await baiRow.find('.equipped-item').trigger('click');
@@ -393,6 +401,42 @@ describe('BackpackPage', () => {
 
     expect(wrapper.findAll('.target-btn')).toHaveLength(0);
     expect(mockData.道具.装备['白芷']).toEqual([]);
+  });
+
+  it('牝奴期只展示能扣在己身上的法器，并隐藏无关特殊道具', () => {
+    mockData.系统.阶段 = '牝奴期';
+    mockData.道具.拥有 = {
+      时间延长: 1,
+      改变阵法: 1,
+      铃铛项圈: 1,
+      牝铃: 1,
+      透视罗裙: 1,
+      牝奴链甲: 1,
+    };
+    const wrapper = mountBackpack();
+    const names = wrapper.findAll('.item-name').map(node => node.text());
+
+    expect(names).toContain('牝铃');
+    expect(names).toContain('牝锁贴身链甲');
+    expect(names).not.toContain('时间延长');
+    expect(names).not.toContain('改变阵法');
+    expect(names).not.toContain('湿雾贴身裙');
+  });
+
+  it('牝奴期法器只允许扣在己身并写入身体回响', async () => {
+    mockData.系统.阶段 = '牝奴期';
+    mockData.牝奴.当前日课 = '廊前听令';
+    mockData.道具.拥有 = { 牝铃: 1 };
+    const wrapper = mountBackpack();
+
+    await wrapper.find('.item-row').trigger('click');
+    expect(wrapper.findAll('.target-btn').map(btn => btn.text())).toEqual(['己身']);
+    expect(wrapper.find('.p2-selected-note').text()).toContain('小铃铛');
+    expect(wrapper.text()).toContain('朱批点名');
+    await wrapper.find('.target-btn').trigger('click');
+
+    expect(mockData.道具.装备['玩家']).toEqual(['牝铃']);
+    expect(wrapper.text()).toContain('牝铃');
   });
 
 });

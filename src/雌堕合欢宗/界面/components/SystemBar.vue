@@ -37,40 +37,20 @@
     <!-- 牝奴期模式 -->
     <div v-else class="bar-left bar-left--blossom">
       <div
-        class="blossom-ring-wrapper"
+        class="blossom-bar-wrapper"
         role="progressbar"
         :aria-valuenow="堕落度"
         aria-valuemin="0"
         aria-valuemax="100"
         :aria-label="'堕落度 ' + 堕落度 + '%'"
       >
-        <svg class="blossom-ring-svg" viewBox="0 0 80 80" aria-hidden="true">
-          <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(180,150,100,0.12)" stroke-width="5"/>
-          <circle
-            cx="40" cy="40" r="34"
-            fill="none"
-            :stroke="blossomColor"
-            stroke-width="5"
-            stroke-linecap="round"
-            :stroke-dasharray="circumference"
-            :stroke-dashoffset="dashOffset"
-            transform="rotate(-90 40 40)"
-            class="blossom-progress"
-          />
-        </svg>
-        <svg
-          v-for="i in 5"
-          :key="i"
-          class="blossom-petal"
-          :class="{ lit: i <= litPetals }"
-          :style="petalStyle(i)"
-          viewBox="0 0 16 16"
-          aria-hidden="true"
-        >
-          <path d="M8 1C8 1 12 5 12 8C12 11 10 14 8 15C6 14 4 11 4 8C4 5 8 1 8 1Z" fill="currentColor"/>
-        </svg>
-        <span class="p2-stigma-glyph" aria-hidden="true">印</span>
-        <span class="blossom-value">{{ 堕落度 }}%</span>
+        <div class="blossom-bar-meta">
+          <span class="p2-stigma-glyph" aria-hidden="true">印</span>
+          <span class="blossom-value">{{ 堕落度 }}%</span>
+        </div>
+        <div class="blossom-bar-track" aria-hidden="true">
+          <span class="blossom-bar-fill" :style="blossomBarStyle"></span>
+        </div>
       </div>
     </div>
 
@@ -178,37 +158,17 @@ const activeRumors = computed(() => (props.rumorList ?? []).filter(rumor => rumo
 const hasActiveRumor = computed(() => activeRumors.value.length > 0);
 
 
-const circumference = 2 * Math.PI * 34;
-
-const dashOffset = computed(() => {
-  if (props.mode !== '牝奴期') return circumference;
-  return circumference * (1 - (props.堕落度 ?? 0) / 100);
-});
-
 const blossomColor = computed(() => {
   const v = props.mode === '牝奴期' ? (props.堕落度 ?? 0) : 0;
-  if (v < 30) return 'rgba(180,150,100,0.4)';
-  if (v < 70) return '#f0a0b0';
-  return '#e85070';
+  if (v < 30) return 'color-mix(in srgb, var(--p2-gold) 44%, transparent)';
+  if (v < 70) return 'color-mix(in srgb, var(--p2-blood) 62%, var(--p2-gold))';
+  return 'var(--p2-blood)';
 });
 
-const litPetals = computed(() => {
-  if (props.mode !== '牝奴期') return 0;
-  return Math.floor((props.堕落度 ?? 0) / 20);
-});
-
-function petalStyle(index: number) {
-  const angle = (index - 1) * 72 - 90;
-  const rad = (angle * Math.PI) / 180;
-  const radius = 30;
-  const x = 50 + radius * Math.cos(rad);
-  const y = 50 + radius * Math.sin(rad);
-  return {
-    left: x + '%',
-    top: y + '%',
-    transform: 'translate(-50%, -50%)',
-  };
-}
+const blossomBarStyle = computed(() => ({
+  width: `${props.mode === '牝奴期' ? Math.min(Math.max(props.堕落度 ?? 0, 0), 100) : 0}%`,
+  background: blossomColor.value,
+}));
 
 import { computed } from 'vue';
 import { useTheme } from '../composables/useTheme';
@@ -367,65 +327,69 @@ const themeToggleAria = computed(() => themeToggleTitle.value);
   50% { filter: drop-shadow(0 0 20px currentColor); opacity: 1; }
 }
 
-/* ── 牝奴期樱花圆环 ── */
+/* ── 牝奴期血墨条 ── */
 .bar-left--blossom {
-  justify-content: center;
+  justify-content: flex-start;
 }
 
-.blossom-ring-wrapper {
+.blossom-bar-wrapper {
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 116px;
+  min-height: 36px;
+  padding: 6px 8px;
   flex-shrink: 0;
-
-  .blossom-ring-svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .blossom-progress {
-    transition: stroke-dashoffset 0.5s ease;
-  }
+  display: grid;
+  grid-template-rows: auto 8px;
+  gap: 5px;
+  background:
+    linear-gradient(90deg, rgba(var(--p2-skin-rgb), 0.82), rgba(var(--p2-skin-rgb), 0.5)),
+    radial-gradient(ellipse at 12% 50%, color-mix(in srgb, var(--p2-blood) 10%, transparent), transparent 62%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--p2-gold) 18%, transparent),
+    inset 0 -8px 16px color-mix(in srgb, var(--p2-incense) 5%, transparent);
 }
 
-.blossom-petal {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  color: $blossom-未亮;
-  transition: all 0.4s ease;
+.blossom-bar-meta {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 
-  &.lit {
-    color: $blossom-亮色;
-    filter: drop-shadow(0 0 15px rgba(240, 160, 176, 0.3));
-  }
+.blossom-bar-track {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--p2-incense) 14%, transparent), rgba(var(--p2-skin-rgb), 0.68)),
+    color-mix(in srgb, var(--p2-gold) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--p2-gold) 18%, transparent);
+}
+
+.blossom-bar-fill {
+  display: block;
+  height: 100%;
+  transition: width 0.42s ease, background 0.42s ease;
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--p2-blood) 28%, transparent),
+    inset 0 0 8px rgba(var(--p2-skin-rgb), 0.18);
 }
 
 .blossom-value {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-family: $font-铭文;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: $铭文赤金;
-  @include inscription-engrave;
+  color: var(--p2-blood);
+  line-height: 1;
+  text-shadow: 0 0 8px color-mix(in srgb, var(--p2-blood) 24%, transparent);
 }
 
 .p2-stigma-glyph {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-family: $font-铭文;
-  font-size: 24px;
-  color: var(--hh-accent);
-  opacity: 0.16;
-  filter: drop-shadow(0 0 8px var(--hh-glow-color));
+  font-size: 13px;
+  color: var(--p2-blood);
+  opacity: 0.86;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--p2-blood) 24%, transparent));
   pointer-events: none;
 }
 
@@ -473,23 +437,58 @@ const themeToggleAria = computed(() => themeToggleTitle.value);
 }
 
 .system-bar--p2 {
+  &::before {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(var(--p2-skin-rgb), 0.92) 0%,
+        transparent 15%,
+        transparent 85%,
+        rgba(var(--p2-skin-rgb), 0.92) 100%
+      ),
+      radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--p2-mist) 64%, transparent), transparent 70%);
+  }
+
   .bar-left--blossom {
-    filter: drop-shadow(0 0 8px var(--hh-glow-color));
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--p2-blood) 18%, transparent));
   }
 
-  .blossom-ring-wrapper {
-    width: 60px;
-    height: 60px;
-  }
-
-  .blossom-petal.lit {
-    color: var(--hh-accent);
-    filter: drop-shadow(0 0 12px var(--hh-glow-color));
+  .blossom-bar-wrapper {
+    width: clamp(96px, 24vw, 126px);
   }
 
   .bar-stats {
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
+  }
+
+  .stat-item {
+    min-width: 0;
+    min-height: 28px;
+    padding: 4px 7px;
+    background:
+      linear-gradient(90deg, rgba(var(--p2-skin-rgb), 0.74), rgba(var(--p2-skin-rgb), 0.46)),
+      radial-gradient(ellipse at 0% 50%, color-mix(in srgb, var(--p2-blood) 8%, transparent), transparent 64%);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--p2-gold) 16%, transparent),
+      inset 0 -8px 12px color-mix(in srgb, var(--p2-incense) 4%, transparent);
+  }
+
+  .stat-glyph {
+    flex: 0 0 auto;
+    width: 14px;
+    color: var(--p2-blood);
+    text-align: center;
+    letter-spacing: 0;
+    text-shadow: 0 0 8px color-mix(in srgb, var(--p2-blood) 22%, transparent);
+  }
+
+  .stat-value {
+    min-width: 0;
+    color: color-mix(in srgb, var(--p2-incense) 88%, #1f1512);
+    text-shadow: none;
+    font-size: 12px;
+    line-height: 1.15;
   }
 
   .p2-routine-stat,
@@ -497,16 +496,20 @@ const themeToggleAria = computed(() => themeToggleTitle.value);
     min-width: 0;
 
     .stat-value {
-      max-width: 72px;
+      max-width: clamp(76px, 22vw, 132px);
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      white-space: normal;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
   }
 
   .p2-command-stat .stat-value {
-    color: var(--hh-accent);
-    text-shadow: 0 0 8px var(--hh-glow-color);
+    color: var(--p2-blood);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--p2-blood) 28%, transparent);
   }
 }
 
@@ -573,12 +576,12 @@ const themeToggleAria = computed(() => themeToggleTitle.value);
   height: 34px;
   border-radius: 999px 999px 78% 78%;
   background:
-    radial-gradient(ellipse at 50% 58%, rgba(255, 253, 249, 0.6), transparent 58%),
-    linear-gradient(180deg, rgba(163, 131, 83, 0.18), rgba(255, 253, 249, 0.18));
-  color: #5a423a;
+    radial-gradient(ellipse at 50% 58%, rgba(var(--p2-skin-rgb), 0.6), transparent 58%),
+    linear-gradient(180deg, color-mix(in srgb, var(--p2-gold) 18%, transparent), rgba(var(--p2-skin-rgb), 0.18));
+  color: var(--p2-incense);
   box-shadow:
-    inset 0 0 0 1px rgba(163, 131, 83, 0.28),
-    inset 0 0 18px rgba(200, 75, 91, 0.08);
+    inset 0 0 0 1px color-mix(in srgb, var(--p2-gold) 28%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--p2-blood) 8%, transparent);
   animation: p2-theme-breath 5.4s ease-in-out infinite;
 
   &::before,
@@ -588,7 +591,7 @@ const themeToggleAria = computed(() => themeToggleTitle.value);
     left: 50%;
     width: 20px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(163, 131, 83, 0.72), transparent);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--p2-gold) 72%, transparent), transparent);
     transform: translateX(-50%);
   }
 
@@ -596,8 +599,8 @@ const themeToggleAria = computed(() => themeToggleTitle.value);
   &::after { bottom: 7px; }
 
   &:hover {
-    color: #c84b5b;
-    filter: drop-shadow(0 0 12px rgba(200, 75, 91, 0.22));
+    color: var(--p2-blood);
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--p2-blood) 22%, transparent));
   }
 
   .p2-theme-mark {
@@ -614,20 +617,20 @@ const themeToggleAria = computed(() => themeToggleTitle.value);
     top: 8px;
     bottom: 8px;
     width: 1px;
-    background: linear-gradient(180deg, transparent, rgba(163, 131, 83, 0.54), transparent);
+    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--p2-gold) 54%, transparent), transparent);
     transform: translateX(-50%);
   }
 }
 
 .theme-toggle--p2[data-theme-mode='taohua'] {
-  color: #c84b5b;
+  color: var(--p2-blood);
   background:
-    radial-gradient(ellipse at 50% 58%, rgba(200, 75, 91, 0.18), transparent 58%),
-    linear-gradient(180deg, rgba(234, 168, 155, 0.28), rgba(255, 253, 249, 0.18));
+    radial-gradient(ellipse at 50% 58%, color-mix(in srgb, var(--p2-blood) 18%, transparent), transparent 58%),
+    linear-gradient(180deg, color-mix(in srgb, var(--p2-mist) 86%, transparent), rgba(var(--p2-skin-rgb), 0.18));
   box-shadow:
-    inset 0 0 0 1px rgba(200, 75, 91, 0.28),
-    inset 0 0 18px rgba(200, 75, 91, 0.14),
-    0 0 12px rgba(200, 75, 91, 0.12);
+    inset 0 0 0 1px color-mix(in srgb, var(--p2-blood) 28%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--p2-blood) 14%, transparent),
+    0 0 12px color-mix(in srgb, var(--p2-blood) 12%, transparent);
 }
 
 @keyframes p2-theme-breath {

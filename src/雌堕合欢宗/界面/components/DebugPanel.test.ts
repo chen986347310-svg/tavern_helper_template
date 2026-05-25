@@ -2,8 +2,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { reactive } from 'vue';
+import { readFileSync } from 'node:fs';
 import DebugPanel from './DebugPanel.vue';
 import { useDebug, __resetDebugState } from '../composables/useDebug';
+
+const DebugPanelSource = readFileSync('src/雌堕合欢宗/界面/components/DebugPanel.vue', 'utf-8');
 
 function createData(灵石 = 0) {
   return reactive({
@@ -130,6 +133,13 @@ describe('DebugPanel', () => {
     expect(queue!.textContent).toContain('rumor-1');
     expect(queue!.textContent).toContain('丹炉彻夜未熄');
     wrapper.unmount();
+  });
+
+  it('调试面板主要文字使用高对比颜色，避免半透明低可读性', () => {
+    const lowContrastTextPattern = /\.(?:debug-label|debug-pending-empty|debug-range-value|debug-close)[\s\S]*?color:\s*rgba\([^;]+,\s*0\.[0-5]\)/;
+    expect(DebugPanelSource).not.toMatch(lowContrastTextPattern);
+    expect(DebugPanelSource).toContain('--debug-text');
+    expect(DebugPanelSource).toContain('--debug-muted');
   });
 
   it('拖动标题栏会更新悬浮窗位置', async () => {

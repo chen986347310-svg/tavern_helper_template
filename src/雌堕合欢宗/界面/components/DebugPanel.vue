@@ -699,6 +699,11 @@ onBeforeUnmount(() => {
 @use '../styles/mixins' as *;
 
 .debug-panel {
+  --debug-text: rgba(246, 238, 224, 0.95);
+  --debug-muted: rgba(222, 196, 154, 0.82);
+  --debug-field: rgba(242, 202, 126, 0.94);
+  --debug-strong: #f1c66b;
+
   z-index: 9999;
   width: min(380px, calc(100vw - 32px));
   max-height: min(82vh, 720px);
@@ -728,12 +733,12 @@ onBeforeUnmount(() => {
   .debug-close {
     background: none;
     border: none;
-    color: rgba(180, 150, 100, 0.5);
+    color: var(--debug-muted);
     cursor: pointer;
     font-size: 14px;
 
     &:hover {
-      color: $铭文赤金;
+      color: var(--debug-strong);
     }
   }
 }
@@ -741,7 +746,7 @@ onBeforeUnmount(() => {
 .debug-section-title {
   font-family: $font-铭文;
   font-size: 11px;
-  color: rgba(212, 160, 23, 0.82);
+  color: var(--debug-strong);
 }
 
 .debug-pending {
@@ -755,7 +760,7 @@ onBeforeUnmount(() => {
 
 .debug-pending-empty {
   font-size: 11px;
-  color: rgba(180, 150, 100, 0.56);
+  color: var(--debug-muted);
 }
 
 .debug-pending-list {
@@ -791,18 +796,18 @@ onBeforeUnmount(() => {
   align-items: center;
   padding: 1px 5px;
   border: 1px solid rgba(212, 160, 23, 0.1);
-  color: rgba(212, 160, 23, 0.72);
+  color: var(--debug-field);
   font-family: $font-等宽;
   font-size: 10px;
 }
 
 .debug-pending-type {
-  color: $铭文赤金;
+  color: var(--debug-strong);
 }
 
 .debug-pending-hint {
   margin: 0;
-  color: rgba(232, 224, 208, 0.76);
+  color: var(--debug-text);
   font-size: 11px;
   line-height: 1.45;
 }
@@ -828,7 +833,7 @@ onBeforeUnmount(() => {
 
   .debug-label {
     font-size: 11px;
-    color: rgba(180, 150, 100, 0.5);
+    color: var(--debug-muted);
     min-width: 56px;
     flex-shrink: 0;
   }
@@ -838,7 +843,7 @@ onBeforeUnmount(() => {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(212, 160, 23, 0.15);
     border-radius: $radius-sm;
-    color: rgba(212, 160, 23, 0.8);
+    color: var(--debug-field);
     padding: 3px 6px;
     font-size: 12px;
     font-family: $font-等宽;
@@ -849,7 +854,7 @@ onBeforeUnmount(() => {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(212, 160, 23, 0.15);
     border-radius: $radius-sm;
-    color: rgba(212, 160, 23, 0.8);
+    color: var(--debug-field);
     padding: 3px 6px;
     font-size: 12px;
   }
@@ -862,7 +867,7 @@ onBeforeUnmount(() => {
   .debug-range-value {
     font-family: $font-等宽;
     font-size: 11px;
-    color: rgba(212, 160, 23, 0.7);
+    color: var(--debug-field);
     min-width: 24px;
     text-align: right;
   }

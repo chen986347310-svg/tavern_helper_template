@@ -1,7 +1,10 @@
 // @vitest-environment happy-dom
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
 import PageNav from '../components/PageNav.vue';
+
+const pageNavSource = readFileSync('src/雌堕合欢宗/界面/components/PageNav.vue', 'utf8');
 
 describe('PageNav', () => {
   it('渲染4个导航标签', () => {
@@ -32,6 +35,20 @@ describe('PageNav', () => {
 
     await wrapper.findAll('.nav-tab')[1].trigger('click');
     expect(wrapper.emitted('change')![0]).toEqual(['shop']);
+  });
+
+  it('牝奴期导航样式读取全局 P2 token，而不是写死旧色值', () => {
+    expect(pageNavSource).toContain('var(--p2-blood)');
+    expect(pageNavSource).toContain('var(--p2-gold)');
+    expect(pageNavSource).not.toContain('#c84b5b');
+  });
+
+  it('牝奴期使用专属 P2 图标，不复用攻略期图标', () => {
+    const wrapper = mount(PageNav, {
+      props: { currentTab: 'home', phase: '牝奴期' },
+    });
+    expect(wrapper.findAll('.p2-tab-icon')).toHaveLength(4);
+    expect(wrapper.findAll('.tab-icon')).toHaveLength(4);
   });
 
   it('使用 SVG 铭文图标而非文本符号', () => {

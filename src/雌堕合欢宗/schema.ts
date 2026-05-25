@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 const NPC名Schema = z.enum(['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣']);
 const TimeNameSchema = z.enum(['晨时', '午时', '酉时', '亥时']);
+const RecordTimeNameSchema = z.string().prefault('晨时');
 const SceneNameSchema = z.string().prefault('莲灯前苑');
 const 心声探测态Schema = z.enum(['无波动', '可窥探', '已捕获', '反震', '锁闭']);
 const 公开度Schema = z.enum(['公开', '半私密', '私密', '禁地']);
@@ -123,7 +124,7 @@ const 事件记录Schema = z.object({
   类型: z.string().prefault(''),
   摘要: z.string().prefault(''),
   日: z.coerce.number().transform(value => _.clamp(value, 1, 999)).prefault(1),
-  时辰: TimeNameSchema.prefault('晨时'),
+  时辰: RecordTimeNameSchema,
   地点: z.string().prefault('莲灯前苑'),
   涉及NPC: z.array(NPC名Schema).prefault([]),
   公开度: 公开度Schema.prefault('公开'),
@@ -133,7 +134,7 @@ const 事件记录Schema = z.object({
 
 const 调教记录Schema = z.object({
   id: z.string().prefault(''),
-  时辰: TimeNameSchema.prefault('晨时'),
+  时辰: RecordTimeNameSchema,
   支配者: z.string().prefault(''),
   摘要: z.string().prefault(''),
   羞名等级: 羞名等级Schema.prefault('微闻'),
@@ -159,7 +160,7 @@ export const Schema = z.object({
       待处理交互: z
         .array(
           z.object({
-            类型: z.enum(['装备', '卸下', '购买', '灵识窃取', '装备道具', '购买物品', '使用物品', '追查风声']).prefault('购买'),
+            类型: z.enum(['装备', '卸下', '购买', '灵识窃取', '装备道具', '购买物品', '使用物品', '追查风声', '领受法器']).prefault('购买'),
             目标: z.string().prefault(''),
             道具: z.string().prefault(''),
             数量: z.coerce

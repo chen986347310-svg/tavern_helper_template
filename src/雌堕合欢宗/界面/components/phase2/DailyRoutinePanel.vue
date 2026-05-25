@@ -2,36 +2,47 @@
   <section class="p2-routine-panel" aria-label="执事名册">
     <div class="panel-kicker"><span aria-hidden="true">朱</span>执事名册</div>
     <div class="routine-main">
-      <span class="routine-label">日课伏侍</span>
+      <span class="routine-label">{{ state.hasRequirement ? '今日朱批' : '日课伏侍' }}</span>
       <strong>{{ routine || '候命' }}</strong>
     </div>
     <div class="routine-meta">
       <span class="routine-seal">朱批 {{ safeCount }}</span>
+      <span v-if="state.hasRequirement" class="routine-requirement">
+        须扣 {{ state.requiredLabel || '无' }}
+      </span>
       <span class="routine-settlement">{{ settlement || '尚无结算' }}</span>
+      <span v-if="state.hasRequirement" :class="['routine-state', { missing: state.isMissing }]">
+        {{ state.isMissing ? `违令 · ${state.shame}` : '受令中' }}
+      </span>
+      <span v-if="state.isMissing" class="routine-punishment">
+        {{ state.punishment }}
+      </span>
+      <span class="routine-body-note">{{ state.bodyNote }}</span>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { getPhase2RoutineState } from '../../data/phase2Routine';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   routine: string;
   count: number;
   settlement: string;
-}>();
+  equippedItems?: readonly string[];
+}>(), {
+  equippedItems: () => [],
+});
 
 const safeCount = computed(() => (Number.isFinite(props.count) ? Math.min(Math.max(Math.round(props.count), 0), 99) : 0));
+const state = computed(() => getPhase2RoutineState(props.routine, props.equippedItems));
 </script>
 
 <style lang="scss" scoped>
 @use '../../styles/variables' as *;
 
 .p2-routine-panel {
-  --p2-skin: #fffdf9;
-  --p2-incense: #5a423a;
-  --p2-blood: #c84b5b;
-  --p2-gold: #a38353;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -142,5 +153,25 @@ const safeCount = computed(() => (Number.isFinite(props.count) ? Math.min(Math.m
   -webkit-box-orient: vertical;
   overflow: hidden;
   mask-image: linear-gradient(to right, black 82%, transparent 100%);
+}
+
+.routine-requirement,
+.routine-state,
+.routine-punishment,
+.routine-body-note {
+  color: color-mix(in srgb, var(--p2-incense) 76%, transparent);
+  letter-spacing: 1px;
+}
+
+.routine-state.missing {
+  color: var(--p2-blood);
+}
+
+.routine-punishment {
+  color: color-mix(in srgb, var(--p2-blood) 88%, transparent);
+}
+
+.routine-body-note {
+  color: color-mix(in srgb, var(--p2-gold) 56%, transparent);
 }
 </style>

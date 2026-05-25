@@ -2,7 +2,7 @@ import { useDataStore } from '../store';
 import { getContrabandBodyPart, getContrabandTier, getItemDisplayName, getItemShortHint, getPillCategory, getPillEffectLine, getStoryLine, getStoryNpc, getStoryTheme } from '../data/itemDisplay';
 import { createNarrativeEntryForPurchase } from '../data/narrativeEntry';
 
-type PendingActionType = '装备' | '卸下' | '购买' | '灵识窃取' | '装备道具' | '购买物品' | '使用物品' | '追查风声';
+type PendingActionType = '装备' | '卸下' | '购买' | '灵识窃取' | '装备道具' | '购买物品' | '使用物品' | '追查风声' | '领受法器';
 type TimeName = '晨时' | '午时' | '酉时' | '亥时';
 type SceneName = string;
 
@@ -76,6 +76,10 @@ export function usePendingAction() {
     记录交互({ 类型: '购买物品', 目标: '玩家', 道具, 数量, ...getItemNarrativeMeta(道具) });
   }
 
+  function 记录领受法器(道具: string, 数量 = 1) {
+    记录交互({ 类型: '领受法器', 目标: '玩家', 道具, 道具显示名: getItemDisplayName(道具), 数量, ...getItemNarrativeMeta(道具) });
+  }
+
   function 记录装备道具(道具: string, 目标: string, 数量 = 1) {
     记录交互({ 类型: '装备道具', 目标, 道具, 数量, ...getItemNarrativeMeta(道具) });
   }
@@ -106,5 +110,5 @@ export function usePendingAction() {
     });
   }
 
-  return { 记录交互, 记录购买物品, 记录装备道具, 记录卸下道具, 记录使用物品, 记录灵识窃取, 记录追查风声 };
+  return { 记录交互, 记录购买物品, 记录领受法器, 记录装备道具, 记录卸下道具, 记录使用物品, 记录灵识窃取, 记录追查风声 };
 }

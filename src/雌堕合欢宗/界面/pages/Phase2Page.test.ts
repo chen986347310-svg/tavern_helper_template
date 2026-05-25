@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia } from 'pinia';
@@ -65,6 +66,7 @@ vi.mock('../styles/_global.scss', () => ({}));
 
 import Phase2Page from './Phase2Page.vue';
 // mockData defined above
+const phase2PageSource = readFileSync('src/雌堕合欢宗/界面/pages/Phase2Page.vue', 'utf8');
 
 describe('Phase2Page', () => {
   beforeEach(() => {
@@ -103,6 +105,12 @@ describe('Phase2Page', () => {
   });
 
   describe('牝奴期主控台', () => {
+    it('继承全局 P2 双色 token，避免主题按钮被页面局部变量截断', () => {
+      expect(phase2PageSource).not.toMatch(/\.phase2-page\s*\{[\s\S]*?--p2-skin:/);
+      expect(phase2PageSource).toContain('var(--p2-skin-rgb)');
+      expect(phase2PageSource).toContain('var(--p2-blood-rgb)');
+    });
+
     it('组装牝印核心、日课、支配者、羞名风声与旧信息', () => {
       Object.assign(mockData.系统, {
         风声列表: [
@@ -139,7 +147,8 @@ describe('Phase2Page', () => {
       expect(wrapper.text()).toContain('柳素衣');
       expect(wrapper.text()).toContain('有人念起你的羞名');
       expect(wrapper.text()).toContain('听命');
-      expect(wrapper.text()).toContain('身躯改塑');
+      expect(wrapper.text()).toContain('身体留痕');
+      expect(wrapper.text()).toContain('实时改塑');
       expect(wrapper.text()).toContain('牝阴决');
     });
 
@@ -207,56 +216,83 @@ describe('Phase2Page', () => {
   });
 
   describe('改造进度', () => {
-    it('默认按改造谱系渲染三项未完成状态', () => {
+    it('默认按改造谱系渲染三项实时花谱状态', () => {
       const wrapper = mount(Phase2Page);
       const items = wrapper.findAll('.transform-item');
       expect(items).toHaveLength(3);
+      expect(wrapper.findAll('.body-signal')).toHaveLength(4);
+      expect(wrapper.find('.body-signal-list').exists()).toBe(true);
       expect(items.map(item => item.find('.item-label').text())).toEqual(['乳泉', '后庭', '禁溺']);
-      expect(items.map(item => item.find('.item-trace').text())).toEqual(['未启', '未驯', '未锁']);
+      expect(items.map(item => item.find('.item-trace').text())).toEqual(['清透未启', '纹路未驯', '水脉未锁']);
+      expect(items.map(item => item.find('.item-cause').text())).toEqual(['灵息回流', '咒纹未驯', '水脉平静']);
       expect(items.every(item => item.find('.transform-flower').exists())).toBe(true);
       expect(wrapper.findAll('.transform-item.done')).toHaveLength(0);
     });
 
     it('泌乳完成后点亮对应改造谱系', () => {
       mockData.牝奴.改造进度.泌乳 = true;
+      mockData.牝奴.堕落度 = 90;
+      mockData.牝奴.当前命令 = '奉茶侍寝';
+      mockData.牝奴.命令强度 = 84;
+      mockData.牝奴.牝阴决层数 = 6;
+      mockData.牝奴.今日调教次数 = 3;
+      mockData.牝奴.最近调教结算 = '廊下应名一次';
+      mockData.道具.装备.玩家 = ['牝印'] as string[];
       const wrapper = mount(Phase2Page);
       const doneItems = wrapper.findAll('.transform-item.done');
       expect(doneItems).toHaveLength(1);
       expect(doneItems[0].find('.transform-flower').exists()).toBe(true);
       expect(doneItems[0].find('.flower-core').exists()).toBe(true);
       expect(doneItems[0].find('.item-label').text()).toBe('乳泉');
-      expect(doneItems[0].find('.item-trace').text()).toBe('已醒');
+      expect(doneItems[0].find('.item-trace').text()).toBe('乳泉成印');
+      expect(doneItems[0].find('.item-cause').text()).toBe('花瓣固染');
+      expect(wrapper.find('.transform-pulse').text()).toBe('血墨急涌');
+      expect(wrapper.findAll('.body-signal')).toHaveLength(4);
+      expect(wrapper.find('.body-signal-list').text()).toContain('奉茶侍寝');
+      expect(wrapper.find('.body-signal-list').text()).toContain('6 层');
+      expect(wrapper.find('.body-signal-list').text()).toContain('廊下应名一次');
     });
   });
 
   describe('淫纹视觉', () => {
-    it('堕落度<50时不显示淫纹区域', () => {
-      mockData.牝奴.堕落度 = 30;
+    it('堕落度=0时仍显示淡纹并保持零进度', () => {
+      mockData.牝奴.堕落度 = 0;
       const wrapper = mount(Phase2Page);
-      expect(wrapper.find('.yinwen-section').exists()).toBe(false);
-    });
-
-    it('堕落度=50时点亮2段淫纹图腾', () => {
-      mockData.牝奴.堕落度 = 50;
-      const wrapper = mount(Phase2Page);
-      expect(wrapper.findAll('.yinwen-piece')).toHaveLength(5);
-      expect(wrapper.findAll('.yinwen-piece.active')).toHaveLength(2);
+      expect(wrapper.find('.yinwen-section').exists()).toBe(true);
+      expect(wrapper.find('.yinwen-tattoo').attributes('data-yinwen-progress')).toBe('0');
       expect(wrapper.find('.yinwen-label').text()).toBe('淫纹初醒');
+      expect(wrapper.find('.yinwen-tattoo').attributes('aria-label')).toBe('淫纹进度 0%');
     });
 
-    it('堕落度=75时点亮4段淫纹图腾', () => {
+    it('堕落度=25时开始出现渐进填充', () => {
+      mockData.牝奴.堕落度 = 25;
+      const wrapper = mount(Phase2Page);
+      expect(wrapper.find('.yinwen-tattoo').exists()).toBe(true);
+      expect(wrapper.findAll('.yinwen-tattoo-img')).toHaveLength(2);
+      expect(wrapper.find('.yinwen-tattoo').attributes('data-yinwen-progress')).toBe('25');
+      expect(wrapper.find('.yinwen-label').text()).toBe('淫纹燃心');
+    });
+
+    it('堕落度=75时由内向外扩散并进入淫纹成阵', () => {
       mockData.牝奴.堕落度 = 75;
       const wrapper = mount(Phase2Page);
-      expect(wrapper.findAll('.yinwen-piece')).toHaveLength(5);
-      expect(wrapper.findAll('.yinwen-piece.active')).toHaveLength(4);
+      const tattoo = wrapper.find('.yinwen-tattoo');
+      expect(tattoo.attributes('style')).toContain('--yinwen-spread');
+      expect(tattoo.attributes('style')).toContain('--yinwen-fill');
       expect(wrapper.find('.yinwen-label').text()).toBe('淫纹成阵');
     });
 
-    it('堕落度=95时点亮完整淫纹图腾', () => {
-      mockData.牝奴.堕落度 = 95;
+    it('堕落度=85时进入淫纹成阵', () => {
+      mockData.牝奴.堕落度 = 85;
       const wrapper = mount(Phase2Page);
-      expect(wrapper.findAll('.yinwen-piece')).toHaveLength(5);
-      expect(wrapper.findAll('.yinwen-piece.active')).toHaveLength(5);
+      expect(wrapper.find('.yinwen-tattoo').attributes('data-yinwen-progress')).toBe('85');
+      expect(wrapper.find('.yinwen-label').text()).toBe('淫纹成阵');
+    });
+
+    it('堕落度=100时达到满绽', () => {
+      mockData.牝奴.堕落度 = 100;
+      const wrapper = mount(Phase2Page);
+      expect(wrapper.find('.yinwen-tattoo').attributes('aria-label')).toBe('淫纹进度 100%');
       expect(wrapper.find('.yinwen-label').text()).toBe('淫纹满绽');
     });
   });

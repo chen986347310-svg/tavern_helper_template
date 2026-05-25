@@ -122,6 +122,39 @@ const SELECTABLE_PATHS = new Set([
   '/系统/时辰',
 ]);
 
+function getAppendBasePath(command: SanitizedCommand): string {
+  const path = getCommandPath(command);
+  if (command.type === 'insert') {
+    const indexOrKey = command.args?.[1];
+    return SAFE_APPEND_PATHS.has(path) && (indexOrKey === "'-'" || indexOrKey === '-' || indexOrKey === '"-"') ? path : '';
+  }
+  if (command.type !== 'add') return '';
+  if (SAFE_APPEND_PATHS.has(path)) {
+    const indexOrKey = command.args?.[1];
+    return indexOrKey === "'-'" || indexOrKey === '-' || indexOrKey === '"-"'
+      ? path
+      : '';
+  }
+  if (path.endsWith('/-')) {
+    const basePath = path.slice(0, -2);
+    return SAFE_APPEND_PATHS.has(basePath) ? basePath : '';
+  }
+  if (path.endsWith('.-')) {
+    const basePath = path.slice(0, -2);
+    return SAFE_APPEND_PATHS.has(basePath) ? basePath : '';
+  }
+  return '';
+}
+
+function normalizeSafeAppendCommand(command: SanitizedCommand): SanitizedCommand {
+  const basePath = getAppendBasePath(command);
+  if (!basePath) return command;
+  return {
+    ...command,
+    args: [basePath, "'-'", command.args?.at(-1)],
+  };
+}
+
 function getCommandPath(command: SanitizedCommand): string {
   const firstArg = command.args?.[0];
   return typeof firstArg === 'string' ? firstArg : '';
@@ -150,7 +183,7 @@ function parseLiteral(literal: string): unknown {
 
 function getSoulEchoNpc(command: SanitizedCommand): string {
   if (!isSafeAppendCommand(command)) return '';
-  const path = getCommandPath(command);
+  const path = getAppendBasePath(command);
   if (path !== '系统.心音回响' && path !== '/系统/心音回响') return '';
   const value = parseLiteral(getCommandValueLiteral(command));
   return isPlainRecord(value) && typeof value.npc === 'string' ? value.npc : '';
@@ -166,7 +199,7 @@ function getSoulEchoSemanticKey(value: unknown): string {
 }
 
 function getSoulEchoCommandSemanticKey(command: SanitizedCommand): string {
-  const path = getCommandPath(command);
+  const path = getAppendBasePath(command);
   if (path !== '系统.心音回响' && path !== '/系统/心音回响') return '';
   return getSoulEchoSemanticKey(parseLiteral(getCommandValueLiteral(command)));
 }
@@ -285,10 +318,7 @@ function isSelectableCommand(command: SanitizedCommand): boolean {
 }
 
 function isSafeAppendCommand(command: SanitizedCommand): boolean {
-  if (command.type !== 'insert') return false;
-  const path = getCommandPath(command);
-  const indexOrKey = command.args?.[1];
-  return SAFE_APPEND_PATHS.has(path) && (indexOrKey === "'-'" || indexOrKey === '-' || indexOrKey === '"-"');
+  return Boolean(getAppendBasePath(command));
 }
 
 function valueScore(command: SanitizedCommand): number {
@@ -401,15 +431,16 @@ export function sanitizeMvuCommands(commands: SanitizedCommand[] | undefined): C
 
   for (const command of commands) {
     if (isSafeAppendCommand(command)) {
-      const soulEchoKey = getSoulEchoCommandSemanticKey(command);
+      const appendCommand = normalizeSafeAppendCommand(command);
+      const soulEchoKey = getSoulEchoCommandSemanticKey(appendCommand);
       if (soulEchoKey) {
         if (keptSoulEchoKeys.has(soulEchoKey)) {
-          droppedCommands.push(drop(command, 'duplicate_soul_echo_semantic_key'));
+          droppedCommands.push(drop(appendCommand, 'duplicate_soul_echo_semantic_key'));
           continue;
         }
         keptSoulEchoKeys.add(soulEchoKey);
       }
-      keptSafeAppends.push(command);
+      keptSafeAppends.push(appendCommand);
       continue;
     }
 
@@ -464,7 +495,7 @@ export function applySanitizedCommandFallback(newData: Record<string, any>, diag
       continue;
     }
     if (isSafeAppendCommand(command)) {
-      appendByPath(newData, path, parseLiteral(getCommandValueLiteral(command)));
+      appendByPath(newData, getAppendBasePath(command), parseLiteral(getCommandValueLiteral(command)));
     }
   }
 }

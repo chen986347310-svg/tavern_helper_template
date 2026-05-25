@@ -1,5 +1,87 @@
 <template>
-  <div class="gallery-page">
+  <div v-if="isPhase2" class="gallery-page p2-brand-ledger" :data-phase="data.系统.阶段">
+    <section class="p2-brand-hero" aria-label="烙名录">
+      <div class="p2-brand-seal">烙</div>
+      <div class="p2-brand-title">
+        <span>宗门烙名录</span>
+        <strong>{{ primaryShameName }}</strong>
+      </div>
+      <p>{{ p2LedgerSummary }}</p>
+    </section>
+
+    <section class="p2-brand-section p2-shame-book">
+      <div class="p2-brand-section-head">
+        <span>羞</span>
+        <strong>羞名册</strong>
+      </div>
+      <div class="p2-shame-tags">
+        <span v-for="name in p2ShameNames" :key="name" class="p2-shame-tag">{{ name }}</span>
+      </div>
+    </section>
+
+    <section class="p2-brand-section p2-verdict-book">
+      <div class="p2-brand-section-head">
+        <span>朱</span>
+        <strong>朱批录</strong>
+      </div>
+      <div class="p2-brand-scroll">
+        <article
+          v-for="entry in p2VerdictEntries"
+          :key="entry.id"
+          :class="['p2-brand-entry', `is-${entry.tone}`]"
+        >
+          <span class="p2-entry-glyph">{{ entry.glyph }}</span>
+          <div class="p2-entry-copy">
+            <strong>{{ entry.title }}</strong>
+            <em>{{ entry.meta }}</em>
+            <p>{{ entry.text }}</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="p2-brand-section p2-rumor-threads">
+      <div class="p2-brand-section-head">
+        <span>风</span>
+        <strong>风声牵丝</strong>
+      </div>
+      <div class="p2-brand-scroll">
+        <button
+          v-for="rumor in p2ShameRumors"
+          :key="rumor.id"
+          :class="['p2-rumor-thread', { focused: data.系统.当前追查风声ID === rumor.id }]"
+          type="button"
+          @click="focusRumor(rumor.id)"
+        >
+          <span class="p2-thread-level">{{ rumor.羞名等级 || rumor.紧急度 || '微闻' }}</span>
+          <span class="p2-thread-place">{{ rumor.地点 }}{{ rumor.子区域 ? ' · ' + rumor.子区域 : '' }}</span>
+          <strong>{{ rumor.风声文本 }}</strong>
+          <em>{{ rumor.故事钩子 || '待宗门落笔。' }}</em>
+        </button>
+        <div v-if="p2ShameRumors.length === 0" class="p2-brand-empty">听风廊暂未把你的名字传开。</div>
+      </div>
+    </section>
+
+    <section class="p2-brand-section p2-obedience-traces">
+      <div class="p2-brand-section-head">
+        <span>命</span>
+        <strong>承命痕</strong>
+      </div>
+      <div class="p2-brand-scroll">
+        <article v-for="trace in p2ObedienceTraces" :key="trace.id" class="p2-brand-entry is-bound">
+          <span class="p2-entry-glyph">{{ trace.glyph }}</span>
+          <div class="p2-entry-copy">
+            <strong>{{ trace.title }}</strong>
+            <em>{{ trace.meta }}</em>
+            <p>{{ trace.text }}</p>
+          </div>
+        </article>
+        <div v-if="p2ObedienceTraces.length === 0" class="p2-brand-empty">承命册尚空，朱批还未压下新的痕。</div>
+      </div>
+    </section>
+  </div>
+
+  <div v-else class="gallery-page">
     <!-- NPC 档案 -->
     <div class="section">
       <div class="section-header">
@@ -235,11 +317,14 @@
 import { computed, ref } from 'vue';
 import { useDataStore } from '../store';
 import { get灵犀等级, get道心侵蚀 } from '../composables/useStatusText';
+import { getItemDisplayName } from '../data/itemDisplay';
+import { getPhase2RoutineState } from '../data/phase2Routine';
 
 const store = useDataStore();
 const data = store.data;
 
 const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
+const P2_RUMOR_SOURCES = ['牝奴日课', '牝印命令', '调教余波', '宗门闲谈', '公开示众', '支配者传唤'];
 const selectedNpc = ref<string | null>(null);
 const activeNpcFilter = ref<NpcName | ''>('');
 const activeRumorStatusFilter = ref<RumorArchive['状态'] | ''>('');
@@ -270,7 +355,30 @@ type RumorArchive = {
   风声文本: string;
   故事钩子?: string;
   状态?: '未读' | '已读' | '已追查' | '已失效';
+  羞名等级?: string;
+  羞名标签?: string[];
+  反噬日课?: string;
+  是否可承接?: boolean;
 };
+
+type P2BrandEntry = {
+  id: string;
+  glyph: string;
+  title: string;
+  meta: string;
+  text: string;
+  tone: 'verdict' | 'urgent' | 'bound' | 'quiet';
+};
+
+type P2TrainingRecord = {
+  id?: string;
+  时辰?: string;
+  支配者?: string;
+  摘要?: string;
+  羞名等级?: string;
+};
+
+const isPhase2 = computed(() => data.系统.阶段 === '牝奴期');
 
 const soulEchoArchives = computed(() => ((data.系统.心音回响 ?? []) as SoulEchoArchive[])
   .filter(echo => echo.text?.trim())
@@ -299,6 +407,101 @@ const currentSceneArchive = computed(() => ({
 const unlockedSceneArchives = computed(() => Array.from(new Set((data.场景.已解锁 ?? []) as string[]))
   .filter(scene => scene));
 
+const p2EquippedItems = computed(() => data.道具.装备['玩家'] ?? []);
+
+const p2RoutineState = computed(() => getPhase2RoutineState(data.牝奴?.当前日课 ?? '', p2EquippedItems.value));
+
+const p2ShameRumors = computed(() => ((data.系统.风声列表 ?? []) as RumorArchive[])
+  .filter(rumor => rumor.id && rumor.风声文本?.trim())
+  .filter(rumor => P2_RUMOR_SOURCES.includes(rumor.来源 ?? '') || Boolean(rumor.羞名等级 || rumor.反噬日课 || rumor.是否可承接))
+  .slice(0, 8));
+
+const p2TrainingRecords = computed(() => ((data.牝奴?.调教记录 ?? []) as P2TrainingRecord[])
+  .filter(record => record.摘要?.trim())
+  .slice(-6)
+  .reverse());
+
+const p2ShameNames = computed(() => {
+  const names = [
+    ...((data.牝奴?.羞名标签 ?? []) as string[]),
+    ...(p2RoutineState.value.isMissing && p2RoutineState.value.shame ? [p2RoutineState.value.shame] : []),
+    ...p2ShameRumors.value.flatMap(rumor => rumor.羞名标签 ?? []),
+  ].filter(Boolean);
+  const uniqueNames = Array.from(new Set(names)).slice(0, 8);
+  return uniqueNames.length > 0 ? uniqueNames : ['未挂牌'];
+});
+
+const primaryShameName = computed(() => p2ShameNames.value[0] || '未挂牌');
+
+const p2LedgerSummary = computed(() => {
+  if (p2RoutineState.value.isMissing) return `${p2RoutineState.value.shame}已被朱批记下，${p2RoutineState.value.punishment}。`;
+  if (data.牝奴?.最近调教结算) return `${data.牝奴.最近调教结算}，余声被收进名册。`;
+  if (p2ShameRumors.value.length > 0) return '听风廊已有低语牵住你的名字，等你亲自承接。';
+  return '名册暂静，只有牝印在纸肉下留着温痕。';
+});
+
+const p2VerdictEntries = computed<P2BrandEntry[]>(() => {
+  const entries: P2BrandEntry[] = [];
+  if (p2RoutineState.value.routine && p2RoutineState.value.routine !== '候命') {
+    entries.push({
+      id: 'routine',
+      glyph: '课',
+      title: p2RoutineState.value.routine,
+      meta: p2RoutineState.value.requiredLabel ? `须扣 ${p2RoutineState.value.requiredLabel}` : '候命',
+      text: p2RoutineState.value.isMissing ? `${p2RoutineState.value.shame}，${p2RoutineState.value.punishment}。` : p2RoutineState.value.bodyNote,
+      tone: p2RoutineState.value.isMissing ? 'urgent' : 'verdict',
+    });
+  }
+  if (data.牝奴?.当前命令) {
+    entries.push({
+      id: 'command',
+      glyph: '印',
+      title: data.牝奴.当前命令,
+      meta: `牝印强度 ${data.牝奴.命令强度 ?? 0}`,
+      text: data.牝奴.当前支配者 ? `${data.牝奴.当前支配者}的朱批压在命令上。` : '命令从牝印深处回响，暂未署名。',
+      tone: 'verdict',
+    });
+  }
+  if (data.牝奴?.最近调教结算) {
+    entries.push({
+      id: 'settlement',
+      glyph: '痕',
+      title: '近次落账',
+      meta: data.系统.时辰 || '时辰未录',
+      text: data.牝奴.最近调教结算,
+      tone: 'quiet',
+    });
+  }
+  return entries.length > 0 ? entries : [{
+    id: 'empty-verdict',
+    glyph: '静',
+    title: '朱批未落',
+    meta: '候命',
+    text: '执事库尚未把新的羞名压进册页。',
+    tone: 'quiet',
+  }];
+});
+
+const p2ObedienceTraces = computed<P2BrandEntry[]>(() => {
+  const recordEntries = p2TrainingRecords.value.map((record, index) => ({
+    id: record.id || `training-${index}`,
+    glyph: '录',
+    title: record.支配者 || '执事',
+    meta: `${record.时辰 || '时辰未录'} · ${record.羞名等级 || '微闻'}`,
+    text: record.摘要 || '',
+    tone: 'bound' as const,
+  }));
+  const gearEntries = p2EquippedItems.value.map((item, index) => ({
+    id: `gear-${item}-${index}`,
+    glyph: '锁',
+    title: getItemDisplayName(item),
+    meta: '己身已扣',
+    text: `${getItemDisplayName(item)}已经被记入承命册，旁人只要一眼就知道你身上有器。`,
+    tone: 'bound' as const,
+  }));
+  return [...recordEntries, ...gearEntries].slice(0, 8);
+});
+
 function selectNpc(name: string) {
   selectedNpc.value = selectedNpc.value === name ? null : name;
 }
@@ -324,6 +527,214 @@ function toggleSceneFilter(scene: string) {
 /* ═══════════════════════════════════
    鉴·图鉴页面 — 金册玉牒
    ═══════════════════════════════════ */
+
+.p2-brand-ledger {
+  padding: 12px 0 18px;
+  color: var(--p2-incense, #5a423a);
+}
+
+.p2-brand-hero {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 14px;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  background:
+    linear-gradient(180deg, rgba(var(--p2-skin-rgb, 255, 253, 249), 0.95), rgba(var(--p2-skin-rgb, 255, 253, 249), 0.82)),
+    radial-gradient(circle at 18% 24%, rgba(var(--p2-mist-rgb, 234, 168, 155), 0.24), transparent 44%);
+  box-shadow: inset 0 0 0 1px rgba(var(--p2-gold-rgb, 163, 131, 83), 0.18);
+}
+
+.p2-brand-seal {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(var(--p2-blood-rgb, 200, 75, 91), 0.15), rgba(var(--p2-gold-rgb, 163, 131, 83), 0.22));
+  color: var(--p2-blood, #c84b5b);
+  font-family: $font-铭文;
+  font-size: 20px;
+  letter-spacing: 0;
+}
+
+.p2-brand-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  span {
+    font-family: $font-铭文;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: color-mix(in srgb, var(--p2-incense) 82%, #fff);
+  }
+
+  strong {
+    font-family: $font-铭文;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--p2-gold, #a38353);
+  }
+}
+
+.p2-brand-hero p,
+.p2-entry-copy p,
+.p2-brand-empty {
+  margin: 0;
+  color: color-mix(in srgb, var(--p2-incense) 86%, #fff);
+  line-height: 1.6;
+}
+
+.p2-brand-section {
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  background:
+    linear-gradient(180deg, rgba(var(--p2-skin-rgb, 255, 253, 249), 0.92), rgba(var(--p2-skin-rgb, 255, 253, 249), 0.8)),
+    radial-gradient(circle at 88% 12%, rgba(var(--p2-mist-rgb, 234, 168, 155), 0.16), transparent 36%);
+  box-shadow: inset 0 0 0 1px rgba(var(--p2-gold-rgb, 163, 131, 83), 0.12);
+}
+
+.p2-brand-section-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-family: $font-铭文;
+  letter-spacing: 4px;
+
+  span {
+    color: var(--p2-blood, #c84b5b);
+  }
+
+  strong {
+    color: var(--p2-gold, #a38353);
+    font-size: 14px;
+  }
+}
+
+.p2-shame-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.p2-shame-tag {
+  padding: 5px 10px;
+  background: rgba(var(--p2-mist-rgb, 234, 168, 155), 0.16);
+  color: var(--p2-incense, #5a423a);
+  font-family: $font-铭文;
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+
+.p2-brand-scroll {
+  display: grid;
+  gap: 10px;
+}
+
+.p2-brand-entry,
+.p2-rumor-thread {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 12px;
+  padding: 12px 14px;
+  background: rgba(var(--p2-skin-rgb, 255, 253, 249), 0.86);
+  box-shadow: inset 0 0 0 1px rgba(var(--p2-gold-rgb, 163, 131, 83), 0.1);
+}
+
+.p2-brand-entry.is-urgent,
+.p2-rumor-thread.focused {
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--p2-blood-rgb, 200, 75, 91), 0.22),
+    0 0 18px rgba(var(--p2-blood-rgb, 200, 75, 91), 0.08);
+}
+
+.p2-brand-entry.is-bound {
+  background: rgba(var(--p2-skin-rgb, 255, 253, 249), 0.8);
+}
+
+.p2-entry-glyph {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(var(--p2-mist-rgb, 234, 168, 155), 0.16);
+  color: var(--p2-blood, #c84b5b);
+  font-family: $font-铭文;
+  font-size: 13px;
+}
+
+.p2-entry-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  strong,
+  em {
+    font-style: normal;
+  }
+
+  strong {
+    font-family: $font-铭文;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--p2-gold, #a38353);
+  }
+
+  em {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: color-mix(in srgb, var(--p2-incense) 70%, #fff);
+  }
+
+  p {
+    font-size: 12px;
+  }
+}
+
+.p2-rumor-thread {
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.p2-rumor-thread .p2-thread-level,
+.p2-rumor-thread .p2-thread-place {
+  font-family: $font-铭文;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: color-mix(in srgb, var(--p2-incense) 76%, #fff);
+}
+
+.p2-rumor-thread strong {
+  grid-column: 1 / -1;
+  font-family: $font-铭文;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--p2-incense, #5a423a);
+}
+
+.p2-rumor-thread em {
+  grid-column: 1 / -1;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--p2-incense) 80%, #fff);
+}
+
+.p2-brand-empty {
+  padding: 14px 2px;
+  font-family: $font-铭文;
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+
+.p2-brand-ledger .section {
+  margin-bottom: 20px;
+}
 
 .gallery-page {
   padding: 12px 0;

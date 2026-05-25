@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="scroll-frame">
+    <div class="scroll-frame" :data-phase="store.data.系统.阶段">
       <!-- 金色角落装饰 -->
       <div class="corner-ornament top-left"></div>
       <div class="corner-ornament top-right"></div>
@@ -64,7 +64,7 @@ import GalleryPage from './界面/pages/GalleryPage.vue';
 import SystemBar from './界面/components/SystemBar.vue';
 import PageNav from './界面/components/PageNav.vue';
 import DebugPanel from './界面/components/DebugPanel.vue';
-import { computed } from 'vue';
+import { computed, onMounted, nextTick } from 'vue';
 import { useNavigation } from './界面/composables/useNavigation';
 import { useGradientCenter } from './界面/composables/useGradientCenter';
 import { useDataStore } from './界面/store';
@@ -78,6 +78,27 @@ import './界面/styles/_global.scss';
 const { currentTab, navigateTo } = useNavigation();
 useGradientCenter();
 const store = useDataStore();
+
+function hideOlderStatusFrames() {
+  try {
+    const frame = window.frameElement as HTMLIFrameElement | null;
+    if (!frame || !window.parent?.document) return;
+    frame.dataset.hehuanStatusFrame = '1';
+    const frames = Array.from(window.parent.document.querySelectorAll<HTMLIFrameElement>('iframe[data-hehuan-status-frame="1"]'));
+    frames.slice(0, -1).forEach(oldFrame => {
+      oldFrame.style.display = 'none';
+      oldFrame.style.height = '0';
+      oldFrame.style.margin = '0';
+      oldFrame.setAttribute('aria-hidden', 'true');
+    });
+  } catch {}
+}
+
+onMounted(() => {
+  hideOlderStatusFrames();
+  void nextTick(hideOlderStatusFrames);
+  window.setTimeout(hideOlderStatusFrames, 250);
+});
 
 const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as const;
 type SceneName = string;
@@ -120,6 +141,28 @@ const presentNpcList = computed(() => {
   @include gold-book-bg(50%, 50%);
   border: none;
   box-shadow: none;
+}
+
+.scroll-frame[data-phase='牝奴期'] {
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--p2-mist) 72%, transparent), transparent 56%),
+    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--p2-blood) 10%, transparent), transparent 64%),
+    linear-gradient(180deg, color-mix(in srgb, var(--p2-skin) 96%, white) 0%, var(--p2-skin) 42%, color-mix(in srgb, var(--p2-skin) 88%, var(--p2-mist)) 100%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--p2-gold) 10%, transparent),
+    inset 0 0 34px color-mix(in srgb, var(--p2-blood) 5%, transparent);
+}
+
+.scroll-frame[data-phase='牝奴期'] .content-area {
+  scrollbar-color: color-mix(in srgb, var(--p2-blood) 28%, transparent) transparent;
+}
+
+.scroll-frame[data-phase='牝奴期'] .content-area::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--p2-blood) 22%, transparent);
+}
+
+.scroll-frame[data-phase='牝奴期'] .content-area::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--p2-blood) 38%, transparent);
 }
 
 /* 金色角落装饰 */

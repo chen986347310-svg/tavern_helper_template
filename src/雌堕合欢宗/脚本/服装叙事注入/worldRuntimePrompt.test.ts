@@ -95,7 +95,11 @@ describe('buildWorldRuntimePrompt', () => {
     expect(result!.visible.content).toContain('牝奴.今日调教次数');
     expect(result!.visible.content).toContain('牝奴.最近调教结算');
     expect(result!.visible.content).toContain('add /牝奴/调教记录/-');
+    expect(result!.visible.content).toContain('道具.装备.玩家');
+    expect(result!.visible.content).toContain('执事库发付不是商城购买');
     expect(result!.scan.content).toContain('牝奴.当前命令');
     expect(result!.scan.content).toContain('调教记录');
+    expect(result!.scan.content).toContain('法器匣');
+    expect(result!.scan.content).toContain('羞名风声');
   });
 });

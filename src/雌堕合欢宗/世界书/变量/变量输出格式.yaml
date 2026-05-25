@@ -5,7 +5,7 @@
     - the update commands works like the **JSON Patch (RFC 6902)** standard, must be a valid JSON array containing operation objects, but supports the following operations instead:
       - replace: replace the value of existing paths
       - delta: update the value of existing number paths by a delta value
-      - insert: insert new items into an object or array (using `-` as array index intends appending to the end)
+      - add: add new items into an object or array (using `-` as array index intends appending to the end)
       - remove
       - move
     - don't update field names starts with `_` as they are readonly, such as `_变量`
@@ -20,8 +20,8 @@
     [
       { "op": "replace", "path": "${/path/to/variable}", "value": "${new_value}" },
       { "op": "delta", "path": "${/path/to/number/variable}", "value": "${positive_or_negative_delta}" },
-      { "op": "insert", "path": "${/path/to/object/new_key}", "value": "${new_value}" },
-      { "op": "insert", "path": "${/path/to/array/-}", "value": "${new_value}" },
+      { "op": "add", "path": "${/path/to/object/new_key}", "value": "${new_value}" },
+      { "op": "add", "path": "${/path/to/array/-}", "value": "${new_value}" },
       { "op": "remove", "path": "${/path/to/object/key}" },
       { "op": "remove", "path": "${/path/to/array/0}" },
       { "op": "move", "from": "${/path/to/variable}", "to": "${/path/to/another/path}" },
@@ -44,7 +44,7 @@
     <JSONPatch>
     [
       { "op": "replace", "path": "/系统/时间状态", "value": { "当前日": 1, "时段进度": 1, "最近耗时": "一个时辰", "最近结算原因": "追查风声推进一个时段", "最近事件类型": "追查风声", "是否过夜": false } },
-      { "op": "insert", "path": "/剧情/事件记录/-", "value": { "id": "event_1_午时_追查风声", "类型": "追查风声", "摘要": "玩家循风声进入听风廊追查旧誓余波。", "日": 1, "时辰": "午时", "地点": "听风廊", "涉及NPC": ["白芷"], "公开度": "半私密", "后果标签": ["风声追查"], "已生成风声": false } },
+      { "op": "add", "path": "/剧情/事件记录/-", "value": { "id": "event_1_午时_追查风声", "类型": "追查风声", "摘要": "玩家循风声进入听风廊追查旧誓余波。", "日": 1, "时辰": "午时", "地点": "听风廊", "涉及NPC": ["白芷"], "公开度": "半私密", "后果标签": ["风声追查"], "已生成风声": false } },
       { "op": "replace", "path": "/系统/待处理交互", "value": [] }
     ]
     </JSONPatch>
@@ -81,7 +81,7 @@
   rule:
     - 有 系统.待处理交互 时，正文承接后必须在同一个 <JSONPatch> 中 replace /系统/时间状态。
     - 若涉及 NSFW、欲海遮蔽、投欲钥、改变阵法或欲海暴露，必须 replace /系统/欲海状态。
-    - 若事件会影响后续风声、心音、NPC反应或P2日课，必须 insert 到 /剧情/事件记录/-；事件记录最多保留最近20条，必要时 replace 整个 /剧情/事件记录。
+    - 若事件会影响后续风声、心音、NPC反应或P2日课，必须 add 到 /剧情/事件记录/-；事件记录最多保留最近20条，必要时 replace 整个 /剧情/事件记录。
     - 禁止只清空队列不写时间结算。
   time_extension_example: |-
     <UpdateVariable>
@@ -219,6 +219,40 @@
     ]
     </JSONPatch>
     </UpdateVariable>
+牝奴期法器扣合闭环样例:
+  purpose: "用于约束AI承接P2法器匣扣合：承认前端已写入 道具.装备.玩家，并同步日课、羞名、调教记录或承命痕。"
+  input_state_example: |-
+    系统:
+      阶段: 牝奴期
+      待处理交互:
+        - 类型: 装备道具
+          目标: 玩家
+          道具: 牝铃
+          道具显示名: 牝铃
+          AI短提示: 铃声贴着步子发颤，身体会先替你应命。
+    牝奴:
+      当前日课: 廊前听令
+      当前支配者: 纪兰
+    道具:
+      装备:
+        玩家: [牝铃]
+  reply_requirement:
+    - 正文必须写法器扣到己身后的身体回响、日课服从压力、执事或支配者如何记录此事。
+    - 不要写成商城购买、灵石消费或普通穿衣。
+    - 不要重复插入 道具.装备.玩家；前端已经装备。
+    - 同一次 JSONPatch 至少清空 系统.待处理交互；若产生羞名或日课后果，应同步更新 牝奴.当前日课/当前命令/最近调教结算，并 add 到 /牝奴/调教记录/-。
+  output_example: |-
+    <UpdateVariable>
+    <Analysis>Handled P2 artifact equip, recorded obedience consequence, and cleared the queue.</Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "/牝奴/当前命令", "value": "听铃应名，不准迟疑" },
+      { "op": "replace", "path": "/牝奴/最近调教结算", "value": "纪兰在听风廊验过牝铃，命你依铃声复名。" },
+      { "op": "add", "path": "/牝奴/调教记录/-", "value": { "id": "p2_bell_1", "时辰": "午时", "支配者": "纪兰", "摘要": "纪兰在听风廊验过牝铃，命你依铃声复名。", "羞名等级": "传开" } },
+      { "op": "replace", "path": "/系统/待处理交互", "value": [] }
+    ]
+    </JSONPatch>
+    </UpdateVariable>
 丹药使用下一楼层闭环样例:
   purpose: "用于约束AI承接丹药使用：使用显示名、分类、作用线和AI短提示写药性反应，按需写长期效果，并清空队列。"
   input_state_example: |-
@@ -234,14 +268,14 @@
   reply_requirement:
     - 正文必须先写服丹后的气息、身体或心神变化，不要说“读取变量”。
     - 不要重复扣除 道具.拥有；前端已经扣库存。
-    - 若写长期效果，可 insert 到 /道具/已生效效果/-。
+    - 若写长期效果，可 add 到 /道具/已生效效果/-。
     - 同一次 JSONPatch 必须清空 系统.待处理交互。
   output_example: |-
     <UpdateVariable>
     <Analysis>Handled pending pill use, recorded lasting scent effect, and cleared the queue.</Analysis>
     <JSONPatch>
     [
-      { "op": "insert", "path": "/道具/已生效效果/-", "value": { "目标": "白芷", "道具": "体香丹", "来源交互ID": "", "生效楼层": 0, "效果标签": ["体香", "社交外显"], "可被AI覆盖": true } },
+      { "op": "add", "path": "/道具/已生效效果/-", "value": { "目标": "白芷", "道具": "体香丹", "来源交互ID": "", "生效楼层": 0, "效果标签": ["体香", "社交外显"], "可被AI覆盖": true } },
       { "op": "replace", "path": "/系统/待处理交互", "value": [] }
     ]
     </JSONPatch>
@@ -271,11 +305,11 @@ MVU开放场景路径硬约束:
 
 MVU v4字段自愈硬约束:
   rule:
-    - JSON Patch 的 实机修正：对于 schema/initvar 已定义的 v4 字段，即使旧快照显示缺失，也优先使用 replace；insert 仅用于动态新增对象键或数组追加。
+    - JSON Patch 的 实机修正：对于 schema/initvar 已定义的 v4 字段，即使旧快照显示缺失，也优先使用 replace；add 仅用于动态新增对象键或数组追加。
     - 若当前变量的 系统 中缺少 时辰、当前场景、待处理交互、场景上下文、风声列表、当前追查风声ID，必须在本次 <JSONPatch> 用 replace 写入完整值，再处理剧情变量。
-    - "insert 仅用于真正的动态新增对象键或数组追加，例如：{ 'op': 'insert', 'path': '/系统/风声列表/-', 'value': {...} }；不要对 schema/initvar 已定义的 v4 字段使用 insert。"
+    - "add 仅用于真正的动态新增对象键或数组追加，例如：{ 'op': 'add', 'path': '/系统/风声列表/-', 'value': {...} }；不要对 schema/initvar 已定义的 v4 字段使用 add。"
     - "对已经存在的字段才使用 replace，例如：{ 'op': 'replace', 'path': '/系统/待处理交互', 'value': [] }。"
-    - 若不确定 v4 字段是否存在，优先使用 replace 写入 schema/initvar 已定义字段；不要对这些字段使用 insert。
+    - 若不确定 v4 字段是否存在，优先使用 replace 写入 schema/initvar 已定义字段；不要对这些字段使用 add。
     - 工程推荐每次回复输出一个 <UpdateVariable> 块；若连续出现多个 <UpdateVariable>，按出现顺序应用，后块覆盖前块。
   bootstrap_example: |-
     <UpdateVariable>
@@ -321,7 +355,7 @@ MVU额外模型解析协作协议:
   extra_model_rules:
     - 额外解析模型必须读取正文剧情、当前 MVU 变量、系统.待处理交互，并输出标准 <UpdateVariable>；若存在正文变量块，则负责补全和修正。
     - 额外解析模型禁止输出英文二次总结块、禁止输出第二个 JSONPatch、禁止把变量更新写成“变量更新情况”摘要。
-    - 实机验证结论：v4 字段已在 schema/initvar 中定义时，额外解析模型应直接使用 replace 更新这些路径；不要再依赖 insert 自愈。
+    - 实机验证结论：v4 字段已在 schema/initvar 中定义时，额外解析模型应直接使用 replace 更新这些路径；不要再依赖新增操作自愈。
     - 系统.当前场景、系统.时辰、系统.场景上下文、系统.风声列表、系统.当前追查风声ID、系统.待处理交互 均属于 schema/initvar 已定义字段，优先使用 replace 更新。
     - 额外解析模型不得重复扣除背包库存；前端已经完成购买、使用、装备、卸下的即时变量写入时，只做剧情承认与长期影响回写。
   bootstrap_patch_required_paths:

@@ -55,6 +55,15 @@ function normalizeTimeFields(new_data: Record<string, any>, old_data: Record<str
       }
     }
   }
+
+  const trainingRecords = _.get(new_data, '牝奴.调教记录', []);
+  if (Array.isArray(trainingRecords)) {
+    for (const record of trainingRecords) {
+      if (_.isPlainObject(record)) {
+        record.时辰 = normalizeTimeName(record.时辰, currentTime);
+      }
+    }
+  }
 }
 
 function ensureV4SystemFields(new_data: Record<string, any>): void {

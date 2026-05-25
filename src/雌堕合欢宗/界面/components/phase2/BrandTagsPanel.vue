@@ -19,10 +19,6 @@ const visibleTags = computed(() => (props.tags ?? []).filter(Boolean).slice(0, 8
 @use '../../styles/variables' as *;
 
 .p2-brand-tags {
-  --p2-skin: #fffdf9;
-  --p2-incense: #5a423a;
-  --p2-blood: #c84b5b;
-  --p2-gold: #a38353;
   display: flex;
   flex-direction: column;
   gap: 8px;

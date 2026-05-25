@@ -113,14 +113,7 @@
       - 名称: 宗门文化
         启用: true
         激活策略:
-          类型: 绿灯
-          关键字:
-            - 合欢宗
-            - 合欢花
-            - 双修
-            - 修炼室
-            - 阴阳池
-            - 经阁
+          类型: 蓝灯
         插入位置:
           类型: 角色定义之前
           顺序: 2
@@ -132,13 +125,7 @@
       - 名称: 文风指南
         启用: true
         激活策略:
-          类型: 绿灯
-          关键字:
-            - 文风
-            - 描写
-            - 叙事
-            - 以景写情
-            - 留白
+          类型: 蓝灯
         插入位置:
           类型: 角色定义之前
           顺序: 3
@@ -562,13 +549,53 @@
       启用: true
       查找表达式: <StatusPlaceHolderImpl/>
       替换为: |-
-        <iframe src="http://localhost:5500/dist/%E9%9B%8C%E5%A0%95%E5%90%88%E6%AC%A2%E5%AE%97/index.html" style="width:100%;height:400px;border:none;border-radius:6px;margin:8px 0;"></iframe>
+        ```html
+        <!DOCTYPE html>
+        <html lang="zh-CN">
+        <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>雌堕合欢宗·状态栏</title>
+        </head>
+        <body>
+        <script>
+        try {
+          const frame = window.frameElement;
+          if (frame) {
+            frame.dataset.hehuanStatusFrame = '1';
+            const frames = Array.from(parent.document.querySelectorAll('iframe[data-hehuan-status-frame="1"]'));
+            frames.slice(0, -1).forEach(oldFrame => {
+              oldFrame.style.display = 'none';
+              oldFrame.style.height = '0';
+              oldFrame.style.margin = '0';
+              oldFrame.setAttribute('aria-hidden', 'true');
+            });
+          }
+        } catch (error) {}
+        $('body').load('http://localhost:5500/dist/%E9%9B%8C%E5%A0%95%E5%90%88%E6%AC%A2%E5%AE%97/index.html')
+        </script>
+        </body>
+        </html>
+        ```
       来源:
         用户输入: false
         AI输出: true
       作用于:
         仅格式显示: true
         仅格式提示词: false
+      最大深度: 1
+
+    - 正则名称: '[界面]清理旧状态栏占位符'
+      启用: true
+      查找表达式: <StatusPlaceHolderImpl/>
+      替换为: ''
+      来源:
+        用户输入: false
+        AI输出: true
+      作用于:
+        仅格式显示: true
+        仅格式提示词: false
+      最小深度: 2
 
   酒馆助手:
     脚本库:

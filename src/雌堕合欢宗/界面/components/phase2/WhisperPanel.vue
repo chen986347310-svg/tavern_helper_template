@@ -53,10 +53,6 @@ function lockRumor(rumor: P2WhisperRumor) {
 @use '../../styles/variables' as *;
 
 .p2-whisper-panel {
-  --p2-skin: #fffdf9;
-  --p2-incense: #5a423a;
-  --p2-blood: #c84b5b;
-  --p2-gold: #a38353;
   display: flex;
   flex-direction: column;
   gap: 9px;

@@ -58,7 +58,15 @@ function isInstantItem(name: string): boolean {
   return getItemLifecycle(name) === '购买即生效';
 }
 
-function buildActionLine(action: PendingAction): string {
+function isPhase2(data: PendingActionPromptData): boolean {
+  return data.系统?.阶段 === '牝奴期';
+}
+
+function isPlayerTarget(target: string): boolean {
+  return target === '玩家' || target === '己身' || target === '';
+}
+
+function buildActionLine(action: PendingAction, data: PendingActionPromptData): string {
   const type = action.类型 ?? '';
   const target = action.目标 ?? '';
   const logicName = action.道具 ?? '';
@@ -72,11 +80,19 @@ function buildActionLine(action: PendingAction): string {
       }
       return `玩家购买了「${displayName}」(${logicName})，${hint}。正文必须至少一句承认该道具已入手或激活；禁止"队列清空但正文一字未提"。`;
     }
+    case '领受法器':
+      return `牝奴期玩家从执事库领受「${displayName}」(${logicName})，${hint}。这是宗门发付或日课领受，不是购物或灵石交易；正文必须承接发付来源、当前日课关系、执事或支配者记录。变量上承认前端已写入 道具.拥有，不要重复增加库存。`;
     case '使用物品':
       return `玩家对${target}使用了「${displayName}」(${logicName})，${hint}。正文必须在本楼层写出使用效果：身体变化、气息波动、场景反应或目标反应。`;
     case '装备道具':
+      if (isPhase2(data) && isPlayerTarget(target)) {
+        return `牝奴期玩家将「${displayName}」(${logicName})扣到己身，${hint}。这是法器匣承命，不是购物或普通穿戴；正文必须写出法器对身体的即时回响、对当前日课的影响，以及是否被执事或支配者记入羞名/承命痕。变量上只承认前端已完成的 道具.装备.玩家，不要重复插入装备。`;
+      }
       return `玩家将「${displayName}」(${logicName})装备到${target}身上，${hint}。正文必须写出目标的反应：顺从、抗拒、羞恼或沉默。`;
     case '卸下':
+      if (isPhase2(data) && isPlayerTarget(target)) {
+        return `牝奴期玩家试图解除己身「${displayName}」(${logicName})。正文应写出法器残痕、日课违令风险、执事斥责或羞名余波；变量上只承认前端已完成的卸下结果，不要重复改写 道具.装备.玩家。`;
+      }
       return `玩家解除了${target}身上的「${displayName}」(${logicName})。正文应写出残痕退去、压力消散或目标反应。`;
     case '追查风声': {
       const location = action.场景 || action.地点 || '';
@@ -144,6 +160,8 @@ function buildP2RuntimeLines(): string[] {
   return [
     '【牝奴期运行结算】本楼层若承接牝奴期交互，必须同步判断当前日课、当前支配者、牝印命令与调教后果，并写入牝奴.当前日课、牝奴.当前支配者、牝奴.当前命令、牝奴.命令强度、牝奴.今日调教次数和牝奴.最近调教结算。',
     '牝奴期的重要羞名、日课、公开示众或支配事件必须追加牝奴.调教记录，并同步写入剧情.事件记录；若公开度为公开或涉及羞名流传，应生成或承接一条羞名风声。',
+    '牝奴期必须读取 道具.装备.玩家 判断法器对身体、日课和羞名的影响：缺少日课所需法器时，可写斥责、羞名标签和更重日课；已扣法器时，应写承命、身体回响和被记录的压力。',
+    '牝奴期没有商城购物语义；执事库发付只代表宗门下发或日课领受，AI不得叙述玩家用灵石购买牝奴期法器。',
   ];
 }
 
@@ -159,7 +177,7 @@ function buildScanTokens(actions: PendingAction[]): string[] {
     if (logicName) tokens.push(logicName);
     if (displayName && displayName !== logicName) tokens.push(displayName);
 
-    if (type === '购买物品' || type === '使用物品') {
+    if (type === '购买物品' || type === '使用物品' || type === '领受法器') {
       tokens.push('道具AI承接闭环');
       if (isInstantItem(logicName)) tokens.push('特殊道具事件规则');
       if (action.丹药分类) tokens.push('丹药叙事规则');
@@ -167,10 +185,12 @@ function buildScanTokens(actions: PendingAction[]): string[] {
       if (logicName === '欲海遮蔽符') tokens.push('欲海状态', '遮蔽剩余时段');
       if (logicName === '投欲钥') tokens.push('欲海状态', '锁定', '牝奴期');
     }
+    if (type === '领受法器') tokens.push('执事库', '发付', '日课领受', '道具.拥有', '法器匣');
     if (type === '装备道具' || type === '卸下') {
       const tier = action.器阶 || getContrabandTier(logicName);
       if (tier) tokens.push('禁器叙事规则', tier);
       tokens.push('服装叙事规则');
+      tokens.push('道具.装备.玩家', '法器匣', '承命痕');
     }
     if (type === '追查风声') tokens.push('风声');
     if (action.剧情线 === '牝奴羞名' || action.AI短提示?.includes('P2羞名')) {
@@ -187,7 +207,7 @@ export function buildPendingActionPrompt(data: PendingActionPromptData): Pending
   const actions = data.系统?.待处理交互 ?? [];
   if (actions.length === 0) return null;
 
-  const actionLines = actions.map(buildActionLine);
+  const actionLines = actions.map(action => buildActionLine(action, data));
 
   actionLines.push(...buildWorldRuntimeLines(actions));
   if (needsP2Runtime(data, actions)) actionLines.push(...buildP2RuntimeLines());

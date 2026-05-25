@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { nextTick } from 'vue';
 import SystemBar from './SystemBar.vue';
 
 describe('SystemBar', () => {
@@ -186,7 +187,7 @@ describe('SystemBar', () => {
 
       expect(wrapper.find('.system-bar').attributes('data-rumor-active')).toBe('true');
       expect(wrapper.find('.system-bar').classes()).toContain('system-bar--p2');
-      expect(wrapper.find('.blossom-ring-wrapper').exists()).toBe(true);
+      expect(wrapper.find('.blossom-bar-wrapper').exists()).toBe(true);
       expect(wrapper.find('.p2-stigma-glyph').text()).toBe('印');
       expect(wrapper.text()).toContain('午时');
       expect(wrapper.text()).toContain('午后点名');
@@ -196,38 +197,48 @@ describe('SystemBar', () => {
       expect(wrapper.find('.p2-theme-mark').text()).toMatch(/香|绯/);
     });
 
-    it('堕落度=0 时 0 瓣亮起', () => {
+    it('牝奴期主题按钮会切换根主题并同步按钮状态', async () => {
+      const wrapper = mount(SystemBar, {
+        props: { mode: '牝奴期', 堕落度: 82 },
+      });
+
+      const before = wrapper.find('.theme-toggle').attributes('data-theme-mode');
+
+      await wrapper.find('.theme-toggle').trigger('click');
+      await nextTick();
+
+      const after = wrapper.find('.theme-toggle').attributes('data-theme-mode');
+      expect(after).not.toBe(before);
+      expect(document.documentElement.getAttribute('data-theme')).toBe(after);
+      expect(wrapper.find('.p2-theme-mark').text()).toBe(after === 'chenxiang' ? '香' : '绯');
+    });
+
+    it('堕落度=0 时血墨条为空', () => {
       const wrapper = mount(SystemBar, {
         props: { mode: '牝奴期', 堕落度: 0 },
       });
-      const litPetals = wrapper.findAll('.blossom-petal.lit');
-      expect(litPetals).toHaveLength(0);
+      expect(wrapper.find('.blossom-bar-fill').attributes('style')).toContain('width: 0%');
     });
 
-    it('堕落度=40 时 2 瓣亮起', () => {
+    it('堕落度=40 时血墨条填充40%', () => {
       const wrapper = mount(SystemBar, {
         props: { mode: '牝奴期', 堕落度: 40 },
       });
-      const litPetals = wrapper.findAll('.blossom-petal.lit');
-      expect(litPetals).toHaveLength(2);
+      expect(wrapper.find('.blossom-bar-fill').attributes('style')).toContain('width: 40%');
     });
 
-    it('堕落度=100 时 5 瓣亮起', () => {
+    it('堕落度=100 时血墨条填满', () => {
       const wrapper = mount(SystemBar, {
         props: { mode: '牝奴期', 堕落度: 100 },
       });
-      const litPetals = wrapper.findAll('.blossom-petal.lit');
-      expect(litPetals).toHaveLength(5);
+      expect(wrapper.find('.blossom-bar-fill').attributes('style')).toContain('width: 100%');
     });
 
-    it('SVG 圆环进度匹配堕落度', () => {
+    it('条状进度匹配堕落度', () => {
       const wrapper = mount(SystemBar, {
         props: { mode: '牝奴期', 堕落度: 60 },
       });
-      const progress = wrapper.find('.blossom-progress');
-      const circumference = 2 * Math.PI * 34;
-      const expectedOffset = circumference * (1 - 60 / 100);
-      expect(progress.attributes('stroke-dashoffset')).toBeCloseTo(expectedOffset, 1);
+      expect(wrapper.find('.blossom-bar-fill').attributes('style')).toContain('width: 60%');
     });
 
     it('显示堕落度百分比', () => {
@@ -237,12 +248,13 @@ describe('SystemBar', () => {
       expect(wrapper.find('.blossom-value').text()).toBe('75%');
     });
 
-    it('包含 SVG 樱花圆环', () => {
+    it('包含条状堕落度组件而非圆环花瓣', () => {
       const wrapper = mount(SystemBar, {
         props: { mode: '牝奴期', 堕落度: 50 },
       });
-      expect(wrapper.find('.blossom-ring-svg').exists()).toBe(true);
-      expect(wrapper.findAll('.blossom-petal')).toHaveLength(5);
+      expect(wrapper.find('.blossom-bar-track').exists()).toBe(true);
+      expect(wrapper.find('.blossom-ring-svg').exists()).toBe(false);
+      expect(wrapper.findAll('.blossom-petal')).toHaveLength(0);
     });
 
     it('牝奴期有正确的无障碍属性', () => {
@@ -252,7 +264,7 @@ describe('SystemBar', () => {
       const bar = wrapper.find('.system-bar');
       expect(bar.attributes('role')).toBe('toolbar');
       expect(bar.attributes('aria-label')).toBe('牝奴堕落状态栏');
-      const progress = wrapper.find('.blossom-ring-wrapper');
+      const progress = wrapper.find('.blossom-bar-wrapper');
       expect(progress.attributes('role')).toBe('progressbar');
       expect(progress.attributes('aria-valuenow')).toBe('50');
     });

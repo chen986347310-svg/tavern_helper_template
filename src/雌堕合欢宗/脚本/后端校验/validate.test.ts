@@ -1183,7 +1183,7 @@ describe('v4 system migration defaults', () => {
     expect(new_data.牝奴.支配次数.苏芸).toBe(2);
   });
 
-  it('AI写入未支持时辰时归一化系统时辰与事件账本时辰以避免状态栏校验崩溃', () => {
+  it('AI写入未支持时辰时归一化系统时辰、事件账本和调教记录时辰以避免状态栏校验崩溃', () => {
     const old_data = makeData({
       系统: { 阶段: '牝奴期', 时辰: '酉时', 当前场景: '阴阳池' },
       剧情: { 事件记录: [] },
@@ -1206,12 +1206,24 @@ describe('v4 system migration defaults', () => {
           },
         ],
       },
+      牝奴: {
+        调教记录: [
+          {
+            id: 'record_201_5_1_辰时',
+            时辰: '辰时',
+            支配者: '纪兰',
+            摘要: '听风廊公开检视缺装',
+            羞名等级: '挂牌',
+          },
+        ],
+      },
     });
 
     validateVariables(new_data, old_data);
 
     expect(new_data.系统.时辰).toBe('酉时');
     expect(new_data.剧情.事件记录[0].时辰).toBe('酉时');
+    expect(new_data.牝奴.调教记录[0].时辰).toBe('晨时');
   });
 
 });

@@ -49,12 +49,6 @@ const yinjuePercent = computed(() => Math.max(0, Math.min(100, ((Number(props.yi
 @use '../../styles/variables' as *;
 
 .p2-stigma-core {
-  --p2-skin: #fffdf9;
-  --p2-skin-shadow: #eaded1;
-  --p2-incense: #5a423a;
-  --p2-blood: #c84b5b;
-  --p2-gold: #a38353;
-  --p2-ash: #8d7c70;
   display: grid;
   grid-template-columns: 62px minmax(0, 1fr);
   gap: 14px;

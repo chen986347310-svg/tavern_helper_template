@@ -117,7 +117,8 @@
                   "装备道具",
                   "购买物品",
                   "使用物品",
-                  "追查风声"
+                  "追查风声",
+                  "领受法器"
                 ]
               },
               "目标": {
@@ -688,7 +689,7 @@
           "maxItems": 20,
           "type": "array",
           "items": {
-            "$ref": "#/$defs/__schema11"
+            "$ref": "#/$defs/__schema12"
           }
         }
       }
@@ -912,8 +913,7 @@
           "type": "string"
         },
         "时辰": {
-          "default": "晨时",
-          "$ref": "#/$defs/__schema0"
+          "$ref": "#/$defs/__schema11"
         },
         "支配者": {
           "default": "",
@@ -930,6 +930,10 @@
       }
     },
     "__schema11": {
+      "default": "晨时",
+      "type": "string"
+    },
+    "__schema12": {
       "type": "object",
       "properties": {
         "id": {
@@ -949,8 +953,7 @@
           "type": "number"
         },
         "时辰": {
-          "default": "晨时",
-          "$ref": "#/$defs/__schema0"
+          "$ref": "#/$defs/__schema11"
         },
         "地点": {
           "default": "莲灯前苑",

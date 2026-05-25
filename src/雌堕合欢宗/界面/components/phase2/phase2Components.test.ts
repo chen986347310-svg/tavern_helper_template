@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+import { readFileSync } from 'node:fs';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 
@@ -8,7 +9,22 @@ import DominatorPanel from './DominatorPanel.vue';
 import StigmaCore from './StigmaCore.vue';
 import WhisperPanel from './WhisperPanel.vue';
 
+const phase2ComponentSources = [
+  'src/雌堕合欢宗/界面/components/phase2/StigmaCore.vue',
+  'src/雌堕合欢宗/界面/components/phase2/DailyRoutinePanel.vue',
+  'src/雌堕合欢宗/界面/components/phase2/DominatorPanel.vue',
+  'src/雌堕合欢宗/界面/components/phase2/WhisperPanel.vue',
+  'src/雌堕合欢宗/界面/components/phase2/BrandTagsPanel.vue',
+].map(path => readFileSync(path, 'utf8'));
+
 describe('P2 master console components', () => {
+  it('core panels inherit global P2 tokens so theme toggle can recolor them', () => {
+    phase2ComponentSources.forEach(source => {
+      expect(source).not.toMatch(/\.p2-[\w-]+\s*\{[\s\S]*?--p2-blood:/);
+      expect(source).not.toContain('#c84b5b');
+    });
+  });
+
   it('renders stigma core with forced command state', () => {
     const wrapper = mount(StigmaCore, { props: { corruption: 86, yinjueLayer: 6, command: '当众应名', intensity: 88 } });
 
@@ -24,6 +40,28 @@ describe('P2 master console components', () => {
     expect(wrapper.text()).toContain('廊下应名一次');
     expect(wrapper.text()).not.toContain('任务');
     expect(wrapper.text()).not.toContain('通知');
+  });
+
+  it('renders routine required gear and missing gear punishment', () => {
+    const wrapper = mount(DailyRoutinePanel, {
+      props: { routine: '廊前听令', count: 1, settlement: '', equippedItems: [] },
+    });
+
+    expect(wrapper.text()).toContain('须扣');
+    expect(wrapper.text()).toContain('牝铃');
+    expect(wrapper.text()).toContain('听命耳坠');
+    expect(wrapper.text()).toContain('违令');
+    expect(wrapper.text()).toContain('拒铃迟令');
+    expect(wrapper.text()).toContain('廊前三巡听铃课');
+  });
+
+  it('renders routine as active when required gear is equipped', () => {
+    const wrapper = mount(DailyRoutinePanel, {
+      props: { routine: '廊前听令', count: 1, settlement: '', equippedItems: ['牝铃'] },
+    });
+
+    expect(wrapper.text()).toContain('受令中');
+    expect(wrapper.text()).not.toContain('违令');
   });
 
   it('renders dominator gaze including Liu special state', () => {

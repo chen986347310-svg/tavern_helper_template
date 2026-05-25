@@ -1,5 +1,90 @@
 <template>
-  <div class="shop-page">
+  <div class="shop-page" :data-phase="store.data.系统.阶段">
+    <template v-if="isPhase2">
+      <section class="p2-dispatch-ledger" aria-label="执事库">
+        <div class="p2-ledger-title">
+          <span class="p2-ledger-seal">朱</span>
+          <div>
+            <span class="p2-ledger-kicker">宗门执事库</span>
+            <strong>日课发付</strong>
+          </div>
+        </div>
+        <div class="p2-ledger-line">
+          <span>今日朱批</span>
+          <strong>{{ p2RoutineState.routine }}</strong>
+        </div>
+        <div class="p2-ledger-line" :data-missing="p2RoutineState.isMissing">
+          <span>{{ p2RoutineState.hasRequirement ? '须扣法器' : '候命状态' }}</span>
+          <strong>{{ p2RoutineState.requiredLabel || '暂无指定法器' }}</strong>
+        </div>
+        <p class="p2-ledger-note">
+          {{ p2RoutineState.isMissing ? `${p2RoutineState.shame}，${p2RoutineState.punishment}` : p2RoutineState.bodyNote }}
+        </p>
+      </section>
+
+      <div class="category-tabs p2-tabs">
+        <button
+          v-for="cat in p2Categories"
+          :key="cat.key"
+          :class="['tab-btn', { active: p2ActiveCategory === cat.key }]"
+          @click="p2ActiveCategory = cat.key"
+        >
+          <span class="tab-glyph">{{ cat.glyph }}</span>
+          <span class="tab-text">{{ cat.label }}</span>
+        </button>
+      </div>
+
+      <div v-if="p2ActiveCategory !== 'record'" class="item-grid p2-dispatch-grid">
+        <div
+          v-for="item in p2CurrentItems"
+          :key="getItemName(item)"
+          :class="['item-card', 'p2-dispatch-card', { disabled: !canReceiveP2Item(item), named: p2RoutineState.requiredItems.includes(getItemName(item)) }]"
+          @click="showDetail(item)"
+        >
+          <div class="card-top">
+            <div class="item-name">{{ getItemTitle(item) }}</div>
+            <div class="item-threshold">{{ getP2ArtifactFocus(getItemName(item)) }}</div>
+          </div>
+          <div class="card-bottom">
+            <div class="p2-grant-state">{{ getP2GrantState(item) }}</div>
+          </div>
+        </div>
+        <div v-if="p2CurrentItems.length === 0" class="p2-dispatch-empty">今日朱批未点名新器。</div>
+      </div>
+
+      <section v-else class="p2-record-panel">
+        <div v-if="p2EquippedItems.length === 0" class="p2-dispatch-empty">承命册尚空，身上没有新落锁的法器。</div>
+        <div v-for="item in p2EquippedItems" :key="item" class="p2-record-row">
+          <span class="p2-record-name">{{ getItemDisplayName(item) }}</span>
+          <span class="p2-record-text">{{ getP2ArtifactBodyNote(item) }}</span>
+        </div>
+      </section>
+
+      <Transition name="modal">
+        <div v-if="selectedItem" class="detail-overlay" @click.self="selectedItem = null">
+          <div class="detail-modal">
+            <div class="modal-header">
+              <div class="header-line"></div>
+              <span class="header-glyph">授</span>
+              <div class="header-line"></div>
+            </div>
+            <h3 class="modal-title">{{ getItemTitle(selectedItem) }}</h3>
+            <div class="modal-meta">
+              <span>{{ getP2ArtifactFocus(getItemName(selectedItem)) }}</span>
+              <span>{{ getP2GrantState(selectedItem) }}</span>
+            </div>
+            <p v-if="getItemShortHint(getItemName(selectedItem))" class="modal-hint">{{ getItemShortHint(getItemName(selectedItem)) }}</p>
+            <p class="modal-effect">
+              <span class="effect-label">身识：</span>{{ getP2ArtifactBodyNote(getItemName(selectedItem)) }}
+            </p>
+            <button :class="['buy-btn', { shake: shakeBtn }]" :disabled="!canReceiveP2Item(selectedItem)" @click="handleP2ReceiveClick(selectedItem)">
+              {{ getP2ReceiveButtonText(selectedItem) }}
+            </button>
+          </div>
+        </div>
+      </Transition>
+    </template>
+    <template v-else>
     <!-- 囊中灵蕴 -->
     <div class="shop-header">
       <div :class="['balance-display', balanceClass]">
@@ -107,18 +192,20 @@
           <p v-if="'效果' in selectedItem" class="modal-effect">
             <span class="effect-label">法效：</span>{{ '效果' in selectedItem ? selectedItem.效果 : '' }}
           </p>
+          <p v-if="isPhase2" class="modal-hint">{{ getP2ArtifactBodyNote(getItemName(selectedItem)) }}</p>
 
-          <div class="modal-price">
+          <div v-if="!isPhase2" class="modal-price">
             <span class="price-glyph">◆</span>
             <span class="price-num">{{ selectedItem.价格 }}</span>
           </div>
 
-          <button :class="['buy-btn', { shake: shakeBtn }]" :disabled="!canBuy(selectedItem)" @click="handleBuyClick(selectedItem)">
-            {{ getBuyButtonText(selectedItem) }}
+          <button :class="['buy-btn', { shake: shakeBtn }]" :disabled="isPhase2 ? !canReceiveP2Item(selectedItem) : !canBuy(selectedItem)" @click="isPhase2 ? handleP2ReceiveClick(selectedItem) : handleBuyClick(selectedItem)">
+            {{ isPhase2 ? getP2ReceiveButtonText(selectedItem) : getBuyButtonText(selectedItem) }}
           </button>
         </div>
       </div>
     </Transition>
+    </template>
   </div>
 </template>
 
@@ -129,12 +216,26 @@ import { NSFW道具, 永久丹药, 特殊道具, 禁器器阶, 丹药分类 } fr
 import { 牝奴道具 } from '../data/items';
 import { 服装列表 } from '../data/outfits';
 import { 牝奴服装列表 } from '../data/outfits';
-import { getContrabandBodyPart, getContrabandTier, getExclusiveOutfitNpc, getItemDisplayName, getItemShortHint, getOutfitFloor, getPillCategory, getPillEffectLine, isExclusiveOutfitUnlocked } from '../data/itemDisplay';
+import {
+  getContrabandBodyPart,
+  getContrabandTier,
+  getExclusiveOutfitNpc,
+  getItemDisplayName,
+  getItemShortHint,
+  getOutfitFloor,
+  getP2ArtifactBodyNote,
+  getP2ArtifactFocus,
+  getPillCategory,
+  getPillEffectLine,
+  isExclusiveOutfitUnlocked,
+  isP2ArtifactItem,
+} from '../data/itemDisplay';
 import { 特殊场景, 特殊剧情 } from '../data/scenes';
 import { checkItemThreshold } from '../guards';
 import { usePendingAction } from '../composables/usePendingAction';
 import { getItemLifecycle } from '../data/itemLifecycle';
 import { createNarrativeEntryForPurchase, hasPendingPurchase, insertEntryRumor } from '../data/narrativeEntry';
+import { getPhase2RoutineState } from '../data/phase2Routine';
 
 type ShopItem =
   | (typeof 服装列表)[number]
@@ -147,7 +248,9 @@ type ShopItem =
   | (typeof 牝奴服装列表)[number];
 
 const store = useDataStore();
-const { 记录购买物品 } = usePendingAction();
+const { 记录购买物品, 记录领受法器 } = usePendingAction();
+const isPhase2 = computed(() => store.data.系统.阶段 === '牝奴期');
+const p2ActiveCategory = ref<'routine' | 'dispatch' | 'record'>('routine');
 
 function getItemName(item: ShopItem): string {
   return '名称' in item && item.名称 ? item.名称 : 'NPC' in item ? item.NPC : '';
@@ -155,6 +258,34 @@ function getItemName(item: ShopItem): string {
 
 function getItemTitle(item: ShopItem): string {
   return getItemDisplayName(getItemName(item));
+}
+
+const p2ArtifactCatalog = computed(() => [...NSFW道具, ...牝奴道具, ...牝奴服装列表].filter(item => isP2ArtifactItem(item.名称)));
+const p2EquippedItems = computed(() => (store.data.道具.装备.玩家 ?? []).filter(isP2ArtifactItem));
+const p2RoutineState = computed(() => getPhase2RoutineState(store.data.牝奴?.当前日课 ?? '', p2EquippedItems.value));
+const p2RoutineItems = computed(() =>
+  p2RoutineState.value.requiredItems
+    .map(name => p2ArtifactCatalog.value.find(item => item.名称 === name))
+    .filter((item): item is (typeof p2ArtifactCatalog.value)[number] => Boolean(item)),
+);
+const p2DispatchItems = computed(() => p2ArtifactCatalog.value);
+const p2CurrentItems = computed(() => {
+  if (p2ActiveCategory.value === 'routine') return p2RoutineItems.value;
+  if (p2ActiveCategory.value === 'dispatch') return p2DispatchItems.value;
+  return [];
+});
+const p2Categories = [
+  { key: 'routine', glyph: '课', label: '日课' },
+  { key: 'dispatch', glyph: '发', label: '发付' },
+  { key: 'record', glyph: '录', label: '承命' },
+] as const;
+
+function getP2GrantState(item: ShopItem): string {
+  const name = getItemName(item);
+  if ((store.data.道具.装备.玩家 ?? []).includes(name)) return '已落锁';
+  if ((store.data.道具.拥有[name] ?? 0) > 0) return '已领受';
+  if (p2RoutineState.value.requiredItems.includes(name)) return '朱批点名';
+  return '待授';
 }
 
 const categories = computed(() => {
@@ -286,6 +417,22 @@ function canBuy(item: ShopItem): boolean {
   return true;
 }
 
+function canReceiveP2Item(item: ShopItem | null): boolean {
+  if (!item) return false;
+  const name = getItemName(item);
+  if (!isP2ArtifactItem(name)) return false;
+  if ((store.data.道具.装备.玩家 ?? []).includes(name)) return false;
+  return (store.data.道具.拥有[name] ?? 0) <= 0;
+}
+
+function getP2ReceiveButtonText(item: ShopItem | null): string {
+  if (!item) return '候令';
+  const name = getItemName(item);
+  if ((store.data.道具.装备.玩家 ?? []).includes(name)) return '已落锁';
+  if ((store.data.道具.拥有[name] ?? 0) > 0) return '已领受';
+  return '领受法器';
+}
+
 function getBuyButtonText(item: ShopItem): string {
   if (store.data.系统.灵石 < item.价格) return '囊中羞涩';
   const name = getItemName(item);
@@ -317,6 +464,18 @@ function handleBuyClick(item: ShopItem) {
     return;
   }
   buyItem(item);
+}
+
+function handleP2ReceiveClick(item: ShopItem | null) {
+  if (!item || !canReceiveP2Item(item)) {
+    shakeBtn.value = true;
+    setTimeout(() => { shakeBtn.value = false; }, 400);
+    return;
+  }
+  const name = getItemName(item);
+  store.data.道具.拥有[name] = (store.data.道具.拥有[name] ?? 0) + 1;
+  记录领受法器(name);
+  selectedItem.value = null;
 }
 
 function addUnique(list: string[], name: string) {
@@ -391,6 +550,181 @@ function buyItem(item: ShopItem) {
 
 .shop-page {
   padding: 12px 0;
+}
+
+.p2-dispatch-ledger {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 14px;
+  padding: 13px 14px;
+  background:
+    radial-gradient(ellipse at 86% 18%, color-mix(in srgb, var(--p2-blood) 14%, transparent), transparent 58%),
+    linear-gradient(90deg, rgba(var(--p2-skin-rgb), 0.86), rgba(var(--p2-skin-rgb), 0.97));
+  color: var(--p2-incense);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--p2-gold) 12%, transparent);
+}
+
+.p2-ledger-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  strong {
+    display: block;
+    color: var(--p2-incense);
+    font-family: $font-铭文;
+    font-size: 17px;
+    letter-spacing: 3px;
+  }
+}
+
+.p2-ledger-seal {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--p2-blood);
+  border: 1px solid color-mix(in srgb, var(--p2-blood) 46%, transparent);
+  font-family: $font-铭文;
+  transform: rotate(-8deg);
+}
+
+.p2-ledger-kicker,
+.p2-ledger-line span {
+  color: var(--p2-gold);
+  font-size: 11px;
+  letter-spacing: 3px;
+}
+
+.p2-ledger-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+
+  strong {
+    color: var(--p2-incense);
+    font-weight: 500;
+    text-align: right;
+  }
+
+  &[data-missing='true'] strong {
+    color: var(--p2-blood);
+  }
+}
+
+.p2-ledger-note,
+.p2-dispatch-empty {
+  margin: 0;
+  color: color-mix(in srgb, var(--p2-incense) 72%, transparent);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.p2-tabs {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+
+  .tab-btn {
+    min-height: 34px;
+    border: none;
+    border-radius: 0;
+    background:
+      linear-gradient(90deg, transparent, rgba(var(--p2-skin-rgb), 0.72), transparent),
+      radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--p2-blood) 8%, transparent), transparent 72%);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--p2-gold) 14%, transparent),
+      inset 0 -8px 14px color-mix(in srgb, var(--p2-incense) 4%, transparent);
+
+    .tab-glyph {
+      color: color-mix(in srgb, var(--p2-blood) 78%, var(--p2-incense));
+      text-shadow: 0 0 8px color-mix(in srgb, var(--p2-blood) 18%, transparent);
+    }
+
+    .tab-text {
+      color: color-mix(in srgb, var(--p2-incense) 82%, #1e1512);
+    }
+
+    &.active {
+      background:
+        linear-gradient(90deg, transparent, rgba(var(--p2-skin-rgb), 0.82), transparent),
+        radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--p2-blood) 18%, transparent), transparent 70%),
+        color-mix(in srgb, var(--p2-mist) 46%, transparent);
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--p2-blood) 24%, transparent),
+        inset 0 -10px 18px color-mix(in srgb, var(--p2-blood) 8%, transparent),
+        0 0 12px color-mix(in srgb, var(--p2-blood) 10%, transparent);
+
+      .tab-glyph,
+      .tab-text {
+        color: var(--p2-blood);
+      }
+    }
+
+    &:hover:not(.active) {
+      border-color: transparent;
+      background:
+        linear-gradient(90deg, transparent, rgba(var(--p2-skin-rgb), 0.78), transparent),
+        radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--p2-gold) 15%, transparent), transparent 70%);
+
+      .tab-glyph,
+      .tab-text {
+        color: var(--p2-gold);
+      }
+    }
+  }
+}
+
+.p2-dispatch-grid {
+  margin-top: 2px;
+}
+
+.p2-dispatch-card {
+  background:
+    linear-gradient(180deg, rgba(var(--p2-skin-rgb), 0.86), rgba(var(--p2-skin-rgb), 0.98)),
+    radial-gradient(ellipse at 80% 12%, color-mix(in srgb, var(--p2-blood) 12%, transparent), transparent 56%);
+  box-shadow: inset 0 -10px 18px rgba(90, 66, 58, 0.04);
+
+  &.named {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--p2-blood) 28%, transparent),
+      inset 0 -10px 18px rgba(90, 66, 58, 0.04);
+  }
+}
+
+.p2-grant-state {
+  color: var(--p2-blood);
+  font-family: $font-铭文;
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+
+.p2-record-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.p2-record-row {
+  display: grid;
+  grid-template-columns: minmax(86px, 0.34fr) 1fr;
+  gap: 9px;
+  padding: 10px 12px;
+  background: rgba(var(--p2-skin-rgb), 0.9);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--p2-gold) 12%, transparent);
+}
+
+.p2-record-name {
+  color: var(--p2-blood);
+  font-family: $font-铭文;
+  letter-spacing: 2px;
+}
+
+.p2-record-text {
+  color: color-mix(in srgb, var(--p2-incense) 76%, transparent);
+  font-size: 12px;
+  line-height: 1.55;
 }
 
 /* 囊中灵蕴 — 金库天窗 */

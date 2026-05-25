@@ -25,6 +25,7 @@ const mockData = reactive({
       牝阴决层数: 0,
       上次支配者: '',
       支配次数: {},
+      当前日课: '',
       改造进度: { 泌乳: false, 肛门: false, 憋尿: false },
     },
     NPC: {
@@ -62,6 +63,7 @@ function mountShop() {
 
 describe('ShopPage', () => {
   beforeEach(() => {
+    mockData.系统.阶段 = '攻略期';
     mockData.系统.灵石 = 10000;
     mockData.NPC.白芷.好感度 = 50;
     mockData.NPC.白芷.攻略值 = 30;
@@ -74,6 +76,7 @@ describe('ShopPage', () => {
     mockData.系统.风声列表 = [];
     mockData.系统.已使用阵法 = false;
     mockData.系统.待处理交互 = [];
+    mockData.牝奴.当前日课 = '';
   });
 
   // --- 灵石余额显示 ---
@@ -140,13 +143,13 @@ describe('ShopPage', () => {
     expect(wrapper.text()).not.toContain('牝印初染衣');
   });
 
-  it('牝奴期牝奴分类显示牝奴服显示名', async () => {
+  it('牝奴期发付页显示牝奴服显示名', async () => {
     mockData.系统.阶段 = '牝奴期';
     const wrapper = mountShop();
-    const biNuTab = wrapper.findAll('.tab-btn').find(t => t.find('.tab-text').text() === '牝奴');
-    expect(biNuTab).toBeTruthy();
+    const dispatchTab = wrapper.findAll('.tab-btn').find(t => t.find('.tab-text').text() === '发付');
+    expect(dispatchTab).toBeTruthy();
 
-    await biNuTab!.trigger('click');
+    await dispatchTab!.trigger('click');
     await flushPromises();
 
     expect(wrapper.text()).toContain('牝印初染衣');
@@ -420,6 +423,68 @@ describe('ShopPage', () => {
       地点: '阴阳池',
       状态: '未读',
     });
+  });
+
+  it('牝奴期执事库不显示灵石价格和商城分类', () => {
+    mockData.系统.阶段 = '牝奴期';
+    mockData.牝奴.当前日课 = '廊前听令';
+    const wrapper = mountShop();
+
+    expect(wrapper.text()).toContain('宗门执事库');
+    expect(wrapper.text()).toContain('日课发付');
+    expect(wrapper.text()).toContain('须扣法器');
+    expect(wrapper.text()).toContain('牝铃');
+    expect(wrapper.find('.balance-value').exists()).toBe(false);
+    expect(wrapper.findAll('.price-num')).toHaveLength(0);
+    expect(wrapper.text()).not.toContain('灵石');
+    expect(wrapper.text()).not.toContain('购买');
+    expect(wrapper.findAll('.tab-btn').map(tab => tab.text())).toEqual(['课日课', '发发付', '录承命']);
+  });
+
+  it('牝奴期执事库页签使用 P2 脂白桃花背景，不继承 P1 金箔按钮底色', () => {
+    expect(ShopPageSource).toMatch(/\.p2-tabs\s*\{[\s\S]*?\.tab-btn\s*\{[\s\S]*?var\(--p2-skin-rgb\)/);
+    expect(ShopPageSource).toMatch(/\.p2-tabs\s*\{[\s\S]*?&\.active\s*\{[\s\S]*?var\(--p2-blood\)/);
+  });
+
+  it('牝奴期承领法器不消耗灵石并写入领受法器待处理交互', async () => {
+    mockData.系统.阶段 = '牝奴期';
+    mockData.系统.灵石 = 0;
+    mockData.牝奴.当前日课 = '廊前听令';
+    const wrapper = mountShop();
+
+    const bellCard = wrapper.findAll('.item-card').find(c => c.find('.item-name').text() === '牝铃');
+    expect(bellCard).toBeTruthy();
+    await bellCard!.trigger('click');
+    await wrapper.find('.detail-overlay .buy-btn').trigger('click');
+
+    expect(mockData.道具.拥有['牝铃']).toBe(1);
+    expect(mockData.系统.灵石).toBe(0);
+    expect(mockData.系统.待处理交互).toHaveLength(1);
+    expect(mockData.系统.待处理交互[0]).toMatchObject({
+      类型: '领受法器',
+      目标: '玩家',
+      道具: '牝铃',
+      道具显示名: '牝铃',
+      数量: 1,
+      时辰: '午时',
+      场景: '醉玉小筑',
+    });
+  });
+
+  it('牝奴期发付页只出现身体法器，不出现特殊事件道具', async () => {
+    mockData.系统.阶段 = '牝奴期';
+    const wrapper = mountShop();
+    const dispatchTab = wrapper.findAll('.tab-btn').find(tab => tab.text().includes('发付'));
+    expect(dispatchTab).toBeTruthy();
+    await dispatchTab!.trigger('click');
+    await flushPromises();
+
+    expect(wrapper.text()).toContain('牝印');
+    expect(wrapper.text()).toContain('听铃颈环');
+    expect(wrapper.text()).not.toContain('时间延长');
+    expect(wrapper.text()).not.toContain('改变阵法');
+    expect(wrapper.text()).not.toContain('欲海回声');
+    expect(wrapper.text()).not.toContain('投欲钥');
   });
 
   it('剧情商城显示剧情信物名，购买后解锁剧情线且不进入背包', async () => {

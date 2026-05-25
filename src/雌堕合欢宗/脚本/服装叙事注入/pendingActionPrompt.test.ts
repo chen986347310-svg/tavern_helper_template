@@ -93,6 +93,51 @@ describe('buildPendingActionPrompt', () => {
     expect(result!.visible.content).toContain('顺从、抗拒、羞恼或沉默');
   });
 
+  it('牝奴期玩家扣合法器时注入法器匣、身体回响与承命痕指令', () => {
+    const result = buildPendingActionPrompt({
+      系统: {
+        阶段: '牝奴期',
+        待处理交互: [{ 类型: '装备道具', 目标: '玩家', 道具: '牝铃', 道具显示名: '牝铃' }],
+        场景上下文: { 在场NPC: ['纪兰'], 地点: '听风廊', 公开度: '公开' },
+        灵石: 0,
+        当前场景: '听风廊',
+      },
+    });
+
+    expect(result).not.toBeNull();
+    expect(result!.visible.content).toContain('扣到己身');
+    expect(result!.visible.content).toContain('法器匣承命');
+    expect(result!.visible.content).toContain('身体的即时回响');
+    expect(result!.visible.content).toContain('当前日课');
+    expect(result!.visible.content).toContain('羞名/承命痕');
+    expect(result!.visible.content).toContain('道具.装备.玩家');
+    expect(result!.scan.content).toContain('法器匣');
+    expect(result!.scan.content).toContain('承命痕');
+  });
+
+  it('牝奴期领受法器注入执事库发付而非购买指令', () => {
+    const result = buildPendingActionPrompt({
+      系统: {
+        阶段: '牝奴期',
+        待处理交互: [{ 类型: '领受法器', 目标: '玩家', 道具: '牝铃', 道具显示名: '牝铃' }],
+        场景上下文: { 在场NPC: ['纪兰'], 地点: '听风廊', 公开度: '公开' },
+        灵石: 0,
+        当前场景: '听风廊',
+      },
+    });
+
+    expect(result).not.toBeNull();
+    expect(result!.visible.content).toContain('执事库领受');
+    expect(result!.visible.content).toContain('宗门发付');
+    expect(result!.visible.content).toContain('日课领受');
+    expect(result!.visible.content).toContain('道具.拥有');
+    expect(result!.visible.content).toContain('不要重复增加库存');
+    expect(result!.visible.content).not.toContain('玩家购买了');
+    expect(result!.scan.content).toContain('领受法器');
+    expect(result!.scan.content).toContain('执事库');
+    expect(result!.scan.content).toContain('发付');
+  });
+
   it('卸下注入残痕退去指令', () => {
     const result = buildPendingActionPrompt({
       系统: {
@@ -328,6 +373,10 @@ describe('buildPendingActionPrompt', () => {
     expect(result!.visible.content).toContain('牝奴.当前命令');
     expect(result!.visible.content).toContain('牝奴.调教记录');
     expect(result!.visible.content).toContain('剧情.事件记录');
+    expect(result!.visible.content).toContain('道具.装备.玩家');
+    expect(result!.visible.content).toContain('缺少日课所需法器');
+    expect(result!.visible.content).toContain('执事库发付');
+    expect(result!.visible.content).toContain('不得叙述玩家用灵石购买牝奴期法器');
     expect(result!.scan.content).toContain('牝奴日课');
     expect(result!.scan.content).toContain('羞名风声');
   });
@@ -407,6 +456,7 @@ describe('buildPendingActionPrompt', () => {
     expect(result!.visible.content).toContain('只能输出一个<UpdateVariable>');
     expect(result!.visible.content).toContain('只能输出一个完整<JSONPatch>');
     expect(result!.visible.content).toContain('禁止输出第二个<UpdateVariable>');
+    expect(result!.visible.content).toContain('add到/-');
     expect(result!.visible.content).toContain('禁止使用insert');
     expect(result!.visible.content).toContain('最短闭环优先');
     expect(result!.visible.content).toContain('第一优先级');

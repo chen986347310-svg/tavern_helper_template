@@ -54,6 +54,19 @@
   --theme-bar-fill: linear-gradient(90deg,#6b3a3a,#9c2c31);
   --theme-progress-fill: linear-gradient(90deg,#5a3020,#9c2c31);
   --theme-card-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  --p2-skin: #fffdf9;
+  --p2-skin-rgb: 255, 253, 249;
+  --p2-incense: #5a423a;
+  --p2-incense-rgb: 90, 66, 58;
+  --p2-blood: #c84b5b;
+  --p2-blood-rgb: 200, 75, 91;
+  --p2-gold: #a38353;
+  --p2-gold-rgb: 163, 131, 83;
+  --p2-mist: rgba(234, 168, 155, 0.2);
+  --p2-mist-rgb: 234, 168, 155;
+  --p2-skin-shadow: #eaded1;
+  --p2-ash: #8d7c70;
+  --p2-purple: #3d273c;
 }
 
 [data-theme="taohua"] {
@@ -97,6 +110,19 @@
   --theme-bar-fill: linear-gradient(90deg,#3a4a4a,#b8c2c6);
   --theme-progress-fill: linear-gradient(90deg,#2a3a3a,#b8c2c6);
   --theme-card-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  --p2-skin: #fff7f4;
+  --p2-skin-rgb: 255, 247, 244;
+  --p2-incense: #6c3d43;
+  --p2-incense-rgb: 108, 61, 67;
+  --p2-blood: #d64e68;
+  --p2-blood-rgb: 214, 78, 104;
+  --p2-gold: #b58b68;
+  --p2-gold-rgb: 181, 139, 104;
+  --p2-mist: rgba(214, 78, 104, 0.18);
+  --p2-mist-rgb: 214, 78, 104;
+  --p2-skin-shadow: #f1dfd9;
+  --p2-ash: #9a8078;
+  --p2-purple: #5c3349;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap");

@@ -39,11 +39,6 @@ const topCounts = computed(() =>
 @use '../../styles/variables' as *;
 
 .p2-dominator-panel {
-  --p2-skin: #fffdf9;
-  --p2-incense: #5a423a;
-  --p2-blood: #c84b5b;
-  --p2-gold: #a38353;
-  --p2-purple: #3d273c;
   display: flex;
   flex-direction: column;
   gap: 8px;

@@ -10,6 +10,14 @@ const mockData = reactive({
     牝奴: {
       堕落度: 0,
       牝阴决层数: 0,
+      当前日课: '候命',
+      当前支配者: '',
+      当前命令: '',
+      命令强度: 0,
+      今日调教次数: 0,
+      最近调教结算: '',
+      羞名标签: [] as string[],
+      调教记录: [] as any[],
       上次支配者: '',
       支配次数: {},
       改造进度: { 泌乳: false, 肛门: false, 憋尿: false },
@@ -48,6 +56,7 @@ describe('GalleryPage', () => {
     mockData.NPC.纪兰.状态 = '未开始';
     mockData.NPC.沈月秋.状态 = '未开始';
     mockData.NPC.柳素衣.状态 = '未开始';
+    mockData.系统.阶段 = '攻略期';
     mockData.系统.当前场景 = '醉玉小筑';
     mockData.系统.场景上下文 = { 地点: '醉玉小筑', 子区域: '前院', 场景来源: '核心地点', 公开度: '半私密', 在场NPC: [], NPC活动: {}, 氛围: [], 故事钩子: [], 特殊事件: '' };
     mockData.系统.风声列表 = [];
@@ -55,6 +64,15 @@ describe('GalleryPage', () => {
     mockData.系统.待处理交互 = [];
     mockData.系统.心音回响 = [];
     mockData.系统.当前聚焦心声NPC = '';
+    mockData.牝奴.当前日课 = '候命';
+    mockData.牝奴.当前支配者 = '';
+    mockData.牝奴.当前命令 = '';
+    mockData.牝奴.命令强度 = 0;
+    mockData.牝奴.今日调教次数 = 0;
+    mockData.牝奴.最近调教结算 = '';
+    mockData.牝奴.羞名标签 = [];
+    mockData.牝奴.调教记录 = [];
+    mockData.道具.装备.玩家 = [];
     mockData.场景.已解锁 = [];
     mockData.剧情.已解锁 = [];
   });
@@ -357,5 +375,84 @@ describe('GalleryPage', () => {
     expect(GalleryPageSource).toMatch(/\.timeline-archive::before\s*\{[\s\S]*?linear-gradient/);
     expect(GalleryPageSource).toMatch(/\.timeline-dot\s*\{[\s\S]*?border-radius:\s*50%/);
     expect(GalleryPageSource).toMatch(/\.timeline-meta\s*\{[\s\S]*?color:\s*#bfa17a;[\s\S]*?color:\s*var\(--hh-text-secondary,\s*#bfa17a\)/);
+  });
+
+  // --- P2 烙名录 ---
+  it('牝奴期将图鉴入口替换为烙名录，不渲染P1命魂录和商城语义', () => {
+    mockData.系统.阶段 = '牝奴期';
+    mockData.牝奴.当前日课 = '廊前听令';
+    mockData.牝奴.当前命令 = '当众应名';
+    mockData.牝奴.命令强度 = 66;
+    mockData.牝奴.当前支配者 = '柳素衣';
+    mockData.牝奴.羞名标签 = ['铃前失仪'];
+    const wrapper = mountGallery();
+
+    expect(wrapper.find('.p2-brand-ledger').exists()).toBe(true);
+    expect(wrapper.text()).toContain('宗门烙名录');
+    expect(wrapper.text()).toContain('羞名册');
+    expect(wrapper.text()).toContain('朱批录');
+    expect(wrapper.text()).toContain('风声牵丝');
+    expect(wrapper.text()).toContain('承命痕');
+    expect(wrapper.text()).toContain('铃前失仪');
+    expect(wrapper.text()).toContain('当众应名');
+    expect(wrapper.text()).not.toContain('命魂录');
+    expect(wrapper.text()).not.toContain('商城');
+    expect(wrapper.text()).not.toContain('购买');
+    expect(wrapper.text()).not.toContain('灵石');
+  });
+
+  it('牝奴期烙名录从日课缺装派生羞名与惩戒朱批', () => {
+    mockData.系统.阶段 = '牝奴期';
+    mockData.牝奴.当前日课 = '廊前听令';
+    const wrapper = mountGallery();
+
+    expect(wrapper.text()).toContain('拒铃迟令');
+    expect(wrapper.text()).toContain('改派「廊前三巡听铃课」');
+    expect(wrapper.text()).toContain('须扣 牝铃 / 听命耳坠');
+  });
+
+  it('牝奴期烙名录展示羞名风声并可聚焦承接', async () => {
+    mockData.系统.阶段 = '牝奴期';
+    mockData.系统.风声列表 = [
+      {
+        id: 'p2-rumor-1',
+        来源: '公开示众',
+        地点: '听风廊',
+        子区域: '回廊',
+        相关NPC: ['柳素衣'],
+        风声文本: '听说她今日被记作铃前失仪。',
+        故事钩子: '听风复名留下弟子低语',
+        状态: '未读',
+        羞名等级: '挂牌',
+        羞名标签: ['铃前失仪'],
+        反噬日课: '听风复名',
+        是否可承接: true,
+      },
+    ];
+    const wrapper = mountGallery();
+
+    const rumor = wrapper.find('.p2-rumor-thread');
+    expect(rumor.exists()).toBe(true);
+    expect(rumor.text()).toContain('挂牌');
+    expect(rumor.text()).toContain('听风廊 · 回廊');
+    expect(rumor.text()).toContain('听说她今日被记作铃前失仪。');
+
+    await rumor.trigger('click');
+    expect(mockData.系统.当前追查风声ID).toBe('p2-rumor-1');
+    expect(mockData.系统.待处理交互).toEqual([]);
+  });
+
+  it('牝奴期烙名录展示调教记录与已扣法器作为承命痕', () => {
+    mockData.系统.阶段 = '牝奴期';
+    mockData.牝奴.调教记录 = [
+      { id: 'train-1', 时辰: '午时', 支配者: '纪兰', 摘要: '纪兰在听风廊令她复述羞名。', 羞名等级: '传开' },
+    ];
+    mockData.道具.装备.玩家 = ['牝铃'];
+    const wrapper = mountGallery();
+
+    expect(wrapper.findAll('.p2-obedience-traces .p2-brand-entry')).toHaveLength(2);
+    expect(wrapper.text()).toContain('纪兰在听风廊令她复述羞名。');
+    expect(wrapper.text()).toContain('牝铃');
+    expect(wrapper.text()).toContain('己身已扣');
   });
 });
