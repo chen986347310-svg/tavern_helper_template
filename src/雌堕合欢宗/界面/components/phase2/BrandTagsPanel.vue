@@ -16,30 +16,48 @@ const visibleTags = computed(() => (props.tags ?? []).filter(Boolean).slice(0, 8
 </script>
 
 <style lang="scss" scoped>
+@use '../../styles/variables' as *;
+
 .p2-brand-tags {
-  --p2-gold: var(--hh-gold, #a38353);
-  --p2-jade: var(--hh-text-primary, #e6e1da);
+  --p2-skin: #fffdf9;
+  --p2-incense: #5a423a;
+  --p2-blood: #c84b5b;
+  --p2-gold: #a38353;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px 10px;
+  padding: 12px 12px 14px;
   border: 0;
-  border-radius: 0;
+  border-radius: 2px;
   background:
-    radial-gradient(ellipse at 80% 0, color-mix(in srgb, var(--hh-accent, #9c2c31) 12%, transparent), transparent 60%),
-    color-mix(in srgb, var(--hh-bg-surface, #0f0a14) 68%, transparent);
-  color: var(--p2-jade);
+    radial-gradient(ellipse at 78% 10%, rgba(200, 75, 91, 0.14), transparent 58%),
+    linear-gradient(90deg, rgba(163, 131, 83, 0.1), transparent 30%, rgba(234, 168, 155, 0.1)),
+    var(--p2-skin);
+  color: var(--p2-incense);
   position: relative;
+  overflow: hidden;
 }
 
 .p2-brand-tags::before {
   content: '';
   position: absolute;
-  left: 10px;
-  right: 10px;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 24% 52%, rgba(90, 66, 58, 0.08) 0 1px, transparent 1.6px),
+    linear-gradient(130deg, transparent 0 45%, rgba(163, 131, 83, 0.12) 46%, transparent 49%);
+  background-size: 21px 21px, 100% 100%;
+  opacity: 0.7;
+}
+
+.p2-brand-tags::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
   top: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--hh-divider-alpha, rgba(163, 131, 83, 0.25)), transparent);
+  background: linear-gradient(90deg, transparent, rgba(163, 131, 83, 0.42), transparent);
 }
 
 .panel-kicker {
@@ -49,6 +67,8 @@ const visibleTags = computed(() => (props.tags ?? []).filter(Boolean).slice(0, 8
   display: flex;
   align-items: center;
   gap: 6px;
+  position: relative;
+  z-index: 1;
 }
 
 .panel-kicker span {
@@ -56,33 +76,51 @@ const visibleTags = computed(() => (props.tags ?? []).filter(Boolean).slice(0, 8
   height: 17px;
   display: grid;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--hh-accent, #9c2c31) 38%, transparent);
-  color: var(--hh-accent, #9c2c31);
+  border: 1px solid rgba(200, 75, 91, 0.38);
+  color: var(--p2-blood);
   font-size: 10px;
   transform: rotate(-7deg);
 }
 
 .brand-empty {
-  color: var(--hh-text-muted, rgba(230, 225, 218, 0.58));
+  color: rgba(90, 66, 58, 0.48);
   font-size: 12px;
   letter-spacing: 3px;
+  position: relative;
+  z-index: 1;
 }
 
 .brand-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 7px 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .brand-tag {
-  padding: 2px 0;
+  padding: 3px 0 2px;
   border: 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--hh-accent, #9c2c31) 28%, transparent);
+  border-bottom: 1px solid rgba(200, 75, 91, 0.28);
   border-radius: 0;
-  background: transparent;
-  color: color-mix(in srgb, var(--hh-accent, #9c2c31) 72%, var(--p2-jade));
+  background:
+    linear-gradient(90deg, rgba(200, 75, 91, 0.11), transparent 70%),
+    transparent;
+  color: var(--p2-blood);
+  font-family: $font-铭文;
   font-size: 11px;
   letter-spacing: 1px;
-  text-shadow: 0 0 8px var(--hh-glow-color, rgba(156, 44, 49, 0.28));
+  text-shadow: 0 0 8px rgba(200, 75, 91, 0.18);
+  position: relative;
+}
+
+.brand-tag::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -3px;
+  height: 5px;
+  background: radial-gradient(ellipse, rgba(200, 75, 91, 0.18), transparent 72%);
 }
 </style>

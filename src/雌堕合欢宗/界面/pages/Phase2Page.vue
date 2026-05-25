@@ -76,7 +76,15 @@
       </div>
       <div class="transform-grid">
         <div v-for="mark in transformMarks" :key="mark.key" :class="['transform-item', { done: mark.done }]">
-          <span class="item-icon" aria-hidden="true">{{ mark.done ? mark.doneGlyph : mark.glyph }}</span>
+          <span class="item-icon transform-flower" aria-hidden="true">
+            <svg viewBox="0 0 64 64">
+              <path class="flower-petal flower-petal--top" d="M32 9 C39 18 39 26 32 32 C25 26 25 18 32 9Z" />
+              <path class="flower-petal flower-petal--right" d="M55 31 C46 39 38 39 32 32 C38 25 46 24 55 31Z" />
+              <path class="flower-petal flower-petal--bottom" d="M32 55 C25 46 25 38 32 32 C39 38 39 46 32 55Z" />
+              <path class="flower-petal flower-petal--left" d="M9 31 C18 24 26 25 32 32 C26 39 18 39 9 31Z" />
+              <circle class="flower-core" cx="32" cy="32" r="5" />
+            </svg>
+          </span>
           <span class="item-label">{{ mark.label }}</span>
           <span class="item-trace">{{ mark.done ? mark.doneText : mark.pendingText }}</span>
         </div>
@@ -236,30 +244,48 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
 @use '../styles/mixins' as *;
 
 .phase2-page {
-  --p2-void: var(--hh-bg-main, #0f0a14);
-  --p2-blood: var(--hh-accent, #9c2c31);
-  --p2-red: color-mix(in srgb, var(--hh-accent, #d44d54) 78%, #fff0eb);
-  --p2-gold: var(--hh-gold, #a38353);
-  --p2-jade: var(--hh-text-primary, #e6e1da);
-  padding: 10px 0 12px;
+  --p2-skin: #fffdf9;
+  --p2-incense: #5a423a;
+  --p2-blood: #c84b5b;
+  --p2-gold: #a38353;
+  --p2-mist: rgba(234, 168, 155, 0.2);
+  padding: 0 0 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  color: var(--p2-jade);
+  gap: 10px;
+  color: var(--p2-incense);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 249, 0.96) 0%, rgba(255, 253, 249, 0.78) 22%, rgba(255, 253, 249, 0.9) 48%, rgba(255, 253, 249, 0.98) 100%),
+    radial-gradient(ellipse at top, rgba(234, 168, 155, 0.2), transparent 55%);
+  position: relative;
+}
+
+.phase2-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(90, 66, 58, 0.08) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 82% 18%, rgba(200, 75, 91, 0.08) 0 1px, transparent 1.5px),
+    linear-gradient(180deg, transparent 0 24%, rgba(200, 75, 91, 0.04) 25%, transparent 26%);
+  background-size: 20px 20px, 26px 26px, 100% 100%;
+  opacity: 0.7;
 }
 
 .phase2-console {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 6px;
-  padding: 8px 8px 10px;
+  padding: 10px 10px 12px;
   border: 0;
-  border-radius: 0;
+  border-radius: 2px;
   background:
-    radial-gradient(ellipse at 50% 0, color-mix(in srgb, var(--hh-accent, #9c2c31) 14%, transparent), transparent 58%),
-    linear-gradient(180deg, color-mix(in srgb, var(--hh-bg-surface, #0f0a14) 92%, transparent), color-mix(in srgb, var(--hh-accent, #9c2c31) 8%, transparent)),
-    var(--hh-bg-surface);
-  box-shadow: inset 0 0 22px color-mix(in srgb, var(--hh-glow-color, rgba(156, 44, 49, 0.35)) 30%, transparent);
+    radial-gradient(ellipse at 50% 0, rgba(234, 168, 155, 0.18), transparent 58%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 253, 249, 0.94));
+  box-shadow:
+    inset 0 0 0 1px rgba(163, 131, 83, 0.12),
+    inset 0 0 24px rgba(200, 75, 91, 0.05);
   position: relative;
   overflow: hidden;
 }
@@ -268,10 +294,10 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
 .phase2-console::after {
   content: '';
   position: absolute;
-  left: 8px;
-  right: 8px;
+  left: 12px;
+  right: 12px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--hh-divider-alpha, rgba(191, 161, 122, 0.25)), transparent);
+  background: linear-gradient(90deg, transparent, rgba(163, 131, 83, 0.38), transparent);
 }
 
 .phase2-console::before { top: 0; }
@@ -285,13 +311,13 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
 /* 堕落阶段卡片 */
 .stage-card {
   border: none;
-  border-radius: 0;
-  padding: 10px 14px;
+  border-radius: 2px;
+  padding: 10px 14px 12px;
   background:
-    radial-gradient(ellipse at 18% 50%, var(--hh-accent-glow) 0%, transparent 70%),
-    color-mix(in srgb, var(--hh-bg-surface) 68%, transparent);
+    linear-gradient(180deg, rgba(255, 253, 249, 0.64), rgba(255, 253, 249, 0.86)),
+    radial-gradient(ellipse at 18% 50%, rgba(200, 75, 91, 0.12), transparent 70%);
   position: relative;
-  opacity: 0.86;
+  box-shadow: inset 0 0 0 1px rgba(163, 131, 83, 0.08);
 }
 
 .stage-header {
@@ -309,32 +335,33 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--hh-gold-glow);
+    border: 1px solid rgba(163, 131, 83, 0.28);
     border-radius: 3px;
-    background: var(--hh-gold-glow);
+    background: rgba(255, 253, 249, 0.56);
   }
 
   .stage-title {
     font-family: $font-铭文;
     font-size: 14px;
-    color: $铭文赤金;
-    letter-spacing: 4px;
+    color: var(--p2-blood);
+    letter-spacing: 3px;
   }
 }
 
 .stage-desc {
   font-size: 12px;
-  color: var(--hh-text-secondary);
+  color: rgba(90, 66, 58, 0.78);
   line-height: 1.6;
 }
 
 /* 身躯改塑 */
 .transform-section {
   border: none;
-  border-radius: 0;
-  padding: 10px 14px;
-  background: color-mix(in srgb, var(--hh-bg-surface) 62%, transparent);
-  opacity: 0.82;
+  border-radius: 2px;
+  padding: 10px 14px 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 249, 0.56), rgba(255, 253, 249, 0.9));
+  box-shadow: inset 0 0 0 1px rgba(163, 131, 83, 0.08);
 }
 
 .transform-header {
@@ -352,16 +379,16 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--hh-gold-glow);
+    border: 1px solid rgba(163, 131, 83, 0.28);
     border-radius: 3px;
-    background: var(--hh-gold-glow);
+    background: rgba(255, 253, 249, 0.56);
   }
 
   .transform-title {
     font-family: $font-铭文;
     font-size: 13px;
-    color: var(--hh-text-secondary);
-    letter-spacing: 4px;
+    color: rgba(90, 66, 58, 0.74);
+    letter-spacing: 3px;
   }
 }
 
@@ -382,12 +409,12 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
   row-gap: 2px;
   min-height: 48px;
   padding: 7px 8px;
-  border: 1px solid color-mix(in srgb, var(--hh-divider-alpha, rgba(191, 161, 122, 0.22)) 70%, transparent);
-  border-radius: 0;
+  border: 1px solid rgba(163, 131, 83, 0.18);
+  border-radius: 2px;
   transition: all 0.4s ease;
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--hh-bg-main, #0f0a14) 34%, transparent), transparent),
-    color-mix(in srgb, var(--hh-bg-surface, #170d10) 48%, transparent);
+    linear-gradient(90deg, rgba(234, 168, 155, 0.1), transparent 72%),
+    rgba(255, 253, 249, 0.72);
 
   .item-icon {
     grid-area: icon;
@@ -395,18 +422,31 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
     height: 32px;
     display: grid;
     place-items: center;
-    border: 1px solid color-mix(in srgb, var(--hh-gold, #a38353) 26%, transparent);
+    border: 1px solid rgba(163, 131, 83, 0.22);
+    border-radius: 999px 999px 82% 82%;
     color: var(--hh-text-muted);
-    font-family: $font-铭文;
-    font-size: 12px;
-    opacity: 0.68;
+    opacity: 0.82;
     transition: all 0.4s ease;
+  }
+
+  .item-icon svg {
+    width: 20px;
+    height: 20px;
+    overflow: visible;
+  }
+
+  .flower-petal,
+  .flower-core {
+    fill: rgba(90, 66, 58, 0.12);
+    stroke: rgba(163, 131, 83, 0.48);
+    stroke-width: 1.1;
+    transition: all 0.42s ease;
   }
 
   .item-label {
     grid-area: label;
     font-size: 12px;
-    color: var(--hh-text-secondary);
+    color: rgba(90, 66, 58, 0.78);
     letter-spacing: 3px;
     transition: color 0.4s ease;
   }
@@ -414,42 +454,52 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
   .item-trace {
     grid-area: trace;
     font-size: 10px;
-    color: var(--hh-text-muted);
+    color: rgba(90, 66, 58, 0.52);
     letter-spacing: 2px;
   }
 
   &.done {
-    border-color: color-mix(in srgb, var(--hh-accent, #9c2c31) 34%, transparent);
+    border-color: rgba(200, 75, 91, 0.34);
     background:
-      radial-gradient(ellipse at 0 50%, color-mix(in srgb, var(--hh-accent, #9c2c31) 18%, transparent), transparent 72%),
-      color-mix(in srgb, var(--hh-bg-surface, #170d10) 54%, transparent);
+      radial-gradient(ellipse at 0 50%, rgba(200, 75, 91, 0.14), transparent 72%),
+      rgba(255, 253, 249, 0.82);
 
     .item-icon {
       opacity: 1;
-      color: var(--hh-accent);
-      border-color: color-mix(in srgb, var(--hh-accent, #9c2c31) 52%, transparent);
-      filter: drop-shadow(0 0 8px var(--hh-glow-color));
-      animation: bud-bloom 2s ease-in-out infinite;
+      border-color: rgba(200, 75, 91, 0.34);
+      box-shadow: inset 0 0 14px rgba(200, 75, 91, 0.12);
+      animation: bud-bloom 2.2s ease-in-out infinite;
+    }
+
+    .flower-petal {
+      fill: rgba(200, 75, 91, 0.26);
+      stroke: rgba(200, 75, 91, 0.7);
+    }
+
+    .flower-core {
+      fill: rgba(200, 75, 91, 0.52);
+      stroke: rgba(200, 75, 91, 0.74);
     }
 
     .item-label {
-      color: var(--hh-accent);
+      color: var(--p2-blood);
     }
   }
 }
 
 @keyframes bud-bloom {
-  0%, 100% { filter: drop-shadow(0 0 6px var(--hh-glow-color)); opacity: 0.8; }
-  50% { filter: drop-shadow(0 0 14px var(--hh-glow-color)); opacity: 1; }
+  0%, 100% { transform: scale(1); opacity: 0.86; }
+  50% { transform: scale(1.03); opacity: 1; }
 }
 
 /* 牝阴决 */
 .yinjue-section {
   border: none;
-  border-radius: 0;
-  padding: 10px 14px;
-  background: color-mix(in srgb, var(--hh-bg-surface) 62%, transparent);
-  opacity: 0.84;
+  border-radius: 2px;
+  padding: 10px 14px 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 249, 0.62), rgba(255, 253, 249, 0.88));
+  box-shadow: inset 0 0 0 1px rgba(163, 131, 83, 0.08);
 }
 
 .yinjue-header {
@@ -467,64 +517,68 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--hh-gold-glow);
+    border: 1px solid rgba(163, 131, 83, 0.28);
     border-radius: 3px;
-    background: var(--hh-gold-glow);
+    background: rgba(255, 253, 249, 0.56);
   }
 
   .yinjue-title {
     font-family: $font-铭文;
     font-size: 13px;
-    color: var(--hh-text-secondary);
-    letter-spacing: 4px;
+    color: rgba(90, 66, 58, 0.78);
+    letter-spacing: 3px;
     flex: 1;
   }
 
   .yinjue-value {
-    font-family: "Cinzel", Georgia, serif;
     font-size: 20px;
     font-weight: 700;
-    color: var(--hh-text-primary);
-    text-shadow: 0 0 8px var(--hh-glow-color);
+    color: var(--p2-blood);
+    text-shadow: 0 0 8px rgba(200, 75, 91, 0.18);
     letter-spacing: 2px;
   }
 }
 
 .yinjue-bar {
-  height: 3px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 2px;
+  height: 10px;
+  padding: 2px;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(234, 168, 155, 0.34), rgba(163, 131, 83, 0.18)),
+    rgba(255, 253, 249, 0.7);
+  box-shadow:
+    inset 0 1px 2px rgba(80, 50, 40, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.72);
   overflow: visible;
-  border: none;
   position: relative;
 
   .yinjue-fill {
     height: 100%;
-    border-radius: 2px;
+    border-radius: inherit;
     transition: width 0.6s ease;
-    background: var(--hh-progress-fill);
-    box-shadow: 0 0 8px var(--hh-glow-color), 0 0 16px var(--hh-glow-color);
-    animation: incense-burn 3s ease-in-out infinite;
+    background: linear-gradient(90deg, rgba(90, 66, 58, 0.72), rgba(200, 75, 91, 0.76));
+    box-shadow: 0 0 8px rgba(200, 75, 91, 0.14), 0 0 16px rgba(200, 75, 91, 0.08);
+    animation: incense-burn 4s ease-in-out infinite;
     position: relative;
 
     &::after {
       content: '';
       position: absolute;
       right: -2px;
-      top: -3px;
+      top: -2px;
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--hh-accent);
-      box-shadow: 0 0 8px var(--hh-glow-color);
+      background: var(--p2-blood);
+      box-shadow: 0 0 8px rgba(200, 75, 91, 0.26);
       animation: ember-pulse 1.5s ease-in-out infinite;
     }
   }
 }
 
 @keyframes incense-burn {
-  0%, 100% { box-shadow: 0 0 6px var(--hh-glow-color); }
-  50% { box-shadow: 0 0 14px var(--hh-glow-color), 0 0 20px var(--hh-glow-color); }
+  0%, 100% { filter: saturate(0.96); }
+  50% { filter: saturate(1.18); }
 }
 
 @keyframes ember-pulse {
@@ -535,10 +589,11 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
 /* 拘束法器 */
 .item-section {
   border: none;
-  border-radius: 0;
+  border-radius: 2px;
   overflow: hidden;
-  background: color-mix(in srgb, var(--hh-bg-surface) 58%, transparent);
-  opacity: 0.78;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 249, 0.64), rgba(255, 253, 249, 0.9));
+  box-shadow: inset 0 0 0 1px rgba(163, 131, 83, 0.08);
 }
 
 .item-toggle {
@@ -549,14 +604,14 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
   padding: 10px 14px;
   background: none;
   border: none;
-  color: var(--hh-text-secondary);
+  color: rgba(90, 66, 58, 0.76);
   font-family: $font-铭文;
   font-size: 13px;
   cursor: pointer;
   transition: all 0.25s ease;
 
   &:hover {
-    background: linear-gradient(90deg, transparent, var(--hh-gold-glow), transparent);
+    background: linear-gradient(90deg, transparent, rgba(234, 168, 155, 0.18), transparent);
   }
 
   .item-glyph {
@@ -567,9 +622,9 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--hh-gold-glow);
+    border: 1px solid rgba(163, 131, 83, 0.28);
     border-radius: 3px;
-    background: var(--hh-gold-glow);
+    background: rgba(255, 253, 249, 0.56);
   }
 
   .item-arrow {
@@ -579,7 +634,7 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
 
 .item-count {
   margin-left: auto;
-  color: var(--hh-text-muted);
+  color: rgba(90, 66, 58, 0.52);
   font-size: 11px;
   letter-spacing: 2px;
 }
@@ -615,15 +670,17 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
 
   .chain-tray span {
     height: 7px;
-    border: 1px solid color-mix(in srgb, var(--hh-gold, #a38353) 28%, transparent);
+    border: 1px solid rgba(163, 131, 83, 0.28);
     transform: skewX(-18deg);
-    background: color-mix(in srgb, var(--hh-bg-main, #0f0a14) 44%, transparent);
+    background:
+      linear-gradient(90deg, rgba(163, 131, 83, 0.18), rgba(90, 66, 58, 0.1)),
+      rgba(255, 253, 249, 0.52);
   }
 
   .tray-text {
     font-family: $font-铭文;
     font-size: 11px;
-    color: var(--hh-text-muted);
+    color: rgba(90, 66, 58, 0.5);
     letter-spacing: 4px;
     opacity: 0.5;
   }
@@ -635,8 +692,8 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
   gap: 8px;
   padding: 7px 0;
   font-size: 12px;
-  color: var(--hh-text-secondary);
-  border-bottom: 1px solid var(--hh-gold-glow);
+  color: rgba(90, 66, 58, 0.78);
+  border-bottom: 1px solid rgba(163, 131, 83, 0.14);
 
   &:last-child {
     border-bottom: none;
@@ -648,7 +705,7 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
   height: 18px;
   display: grid;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--hh-gold, #a38353) 34%, transparent);
+  border: 1px solid rgba(163, 131, 83, 0.28);
   color: var(--hh-gold, #a38353);
   font-family: $font-铭文;
   font-size: 10px;
@@ -657,10 +714,13 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
 /* 淫纹视觉 — 子宫心印：从内到外的经脉符文生长 */
 .yinwen-section {
   border: none;
-  border-radius: 0;
-  padding: 14px 14px 10px;
+  border-radius: 2px;
+  padding: 14px 14px 12px;
   text-align: center;
-  background: radial-gradient(ellipse at 50% 42%, var(--hh-accent-glow) 0%, transparent 60%), color-mix(in srgb, var(--hh-bg-surface) 64%, transparent);
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(200, 75, 91, 0.2) 0%, transparent 62%),
+    linear-gradient(180deg, rgba(255, 253, 249, 0.84), rgba(255, 253, 249, 0.96));
+  box-shadow: inset 0 0 0 1px rgba(163, 131, 83, 0.08);
 }
 
 .yinwen-sigil {
@@ -674,7 +734,7 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
 /* 通用：所有符文层默认为幽灵线条 — 可见全貌但未激活 */
 .yinwen-piece {
   fill: none;
-  stroke: color-mix(in srgb, var(--hh-text-muted, #6b5d52) 30%, transparent);
+  stroke: rgba(90, 66, 58, 0.22);
   stroke-linecap: round;
   stroke-linejoin: round;
   transition: opacity 0.7s ease, stroke 0.7s ease, filter 0.7s ease;
@@ -699,30 +759,30 @@ function queueShameRumor(rumor: P2WhisperRumor & { 子区域?: string; 故事钩
 /* 激活态：符文点燃，从心印向外依次发光 */
 .yinwen-piece.active {
   opacity: 1;
-  stroke: color-mix(in srgb, var(--hh-accent, #ff3f92) 88%, var(--hh-gold, #a38353));
-  filter: drop-shadow(0 0 6px var(--hh-glow-color, rgba(255, 63, 146, 0.4)));
+  stroke: color-mix(in srgb, var(--p2-blood) 86%, var(--p2-gold));
+  filter: drop-shadow(0 0 6px rgba(200, 75, 91, 0.36));
   animation: yinwen-glow 3s ease-in-out infinite;
 }
 
 /* 心印激活：额外脉冲光晕 */
 .yinwen-piece--core.active {
   stroke-width: 2.4;
-  filter: drop-shadow(0 0 10px var(--hh-glow-color, rgba(255, 63, 146, 0.5)));
+  filter: drop-shadow(0 0 10px rgba(200, 75, 91, 0.46));
 }
 
 /* 心印外层爱心获得极淡粉色填充 */
 .yinwen-piece--core.active path:first-child {
-  fill: color-mix(in srgb, var(--hh-accent, #ff3f92) 12%, transparent);
+  fill: rgba(200, 75, 91, 0.12);
 }
 
 .yinwen-label {
   font-size: 11px;
-  color: var(--hh-text-muted);
+  color: rgba(90, 66, 58, 0.58);
   letter-spacing: 4px;
 }
 
 @keyframes yinwen-glow {
-  0%, 100% { opacity: 0.8; filter: drop-shadow(0 0 5px var(--hh-glow-color)); }
-  50% { opacity: 1; filter: drop-shadow(0 0 14px var(--hh-glow-color)); }
+  0%, 100% { opacity: 0.82; filter: drop-shadow(0 0 5px rgba(200, 75, 91, 0.18)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 14px rgba(200, 75, 91, 0.32)); }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <section :class="['p2-dominator-panel', dominator.className]" aria-label="牵丝凝视">
-    <div class="thread-field" aria-hidden="true"><span></span><span></span><span></span></div>
+  <section :class="['p2-dominator-panel', dominator.className]" :data-has-dominator="Boolean(current)" aria-label="牵丝凝视">
+    <div class="thread-field" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
     <div class="dominator-main">
       <span class="dominator-glyph" aria-hidden="true">{{ dominator.glyph }}</span>
       <div>
@@ -36,20 +36,25 @@ const topCounts = computed(() =>
 </script>
 
 <style lang="scss" scoped>
+@use '../../styles/variables' as *;
+
 .p2-dominator-panel {
-  --p2-blood: var(--hh-accent, #9c2c31);
-  --p2-gold: var(--hh-gold, #a38353);
-  --p2-jade: var(--hh-text-primary, #e6e1da);
+  --p2-skin: #fffdf9;
+  --p2-incense: #5a423a;
+  --p2-blood: #c84b5b;
+  --p2-gold: #a38353;
+  --p2-purple: #3d273c;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px 10px 12px 12px;
+  padding: 12px 12px 13px;
   border: 0;
-  border-radius: 0;
+  border-radius: 2px;
   background:
-    radial-gradient(ellipse at 20% 20%, color-mix(in srgb, var(--hh-accent, #9c2c31) 16%, transparent), transparent 60%),
-    linear-gradient(90deg, color-mix(in srgb, var(--hh-bg-surface, #0f0a14) 86%, transparent), transparent);
-  color: var(--p2-jade);
+    radial-gradient(ellipse at 72% 24%, rgba(61, 39, 60, 0.12), transparent 58%),
+    linear-gradient(90deg, transparent, rgba(234, 168, 155, 0.16), transparent),
+    var(--p2-skin);
+  color: var(--p2-incense);
   position: relative;
   overflow: hidden;
 }
@@ -57,17 +62,38 @@ const topCounts = computed(() =>
 .p2-dominator-panel::before {
   content: '';
   position: absolute;
-  inset: 0 0 auto;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(90, 66, 58, 0.08) 0 1px, transparent 1.5px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.48), transparent 22%, rgba(200, 75, 91, 0.06));
+  background-size: 19px 19px, 100% 100%;
+  opacity: 0.78;
+}
+
+.p2-dominator-panel::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--hh-divider-alpha, rgba(163, 131, 83, 0.25)), transparent);
+  background: linear-gradient(90deg, transparent, rgba(163, 131, 83, 0.42), transparent);
+}
+
+.p2-dominator-panel[data-has-dominator='true'] {
+  background:
+    radial-gradient(ellipse at 74% 22%, rgba(61, 39, 60, 0.28), transparent 56%),
+    radial-gradient(ellipse at 12% 50%, rgba(200, 75, 91, 0.1), transparent 62%),
+    var(--p2-skin);
 }
 
 .thread-field {
   position: absolute;
-  inset: 0 16px 0 auto;
-  width: 48px;
+  inset: 0 10px 0 auto;
+  width: 62px;
   pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
 .thread-field span {
@@ -75,50 +101,85 @@ const topCounts = computed(() =>
   top: 0;
   bottom: 0;
   width: 1px;
-  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--hh-gold, #a38353) 46%, transparent), transparent);
+  background: linear-gradient(180deg, transparent, rgba(163, 131, 83, 0.44), transparent);
   transform-origin: top;
-  animation: p2-thread-sway 5s ease-in-out infinite;
+  animation: p2-thread-sway 5.2s ease-in-out infinite;
 }
 
-.thread-field span:nth-child(1) { left: 8px; animation-delay: -0.8s; }
-.thread-field span:nth-child(2) { left: 24px; }
-.thread-field span:nth-child(3) { left: 40px; animation-delay: -1.4s; }
+.thread-field span:nth-child(1) { left: 7px; animation-delay: -0.8s; }
+.thread-field span:nth-child(2) { left: 22px; }
+.thread-field span:nth-child(3) { left: 39px; animation-delay: -1.4s; }
+.thread-field span:nth-child(4) { left: 55px; animation-delay: -2.1s; }
 
 .dominator--liu .thread-field span {
-  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--hh-accent, #9c2c31) 62%, transparent), transparent);
+  background: linear-gradient(180deg, transparent, rgba(200, 75, 91, 0.58), transparent);
+}
+
+.p2-dominator-panel[data-has-dominator='true']:hover .thread-field span {
+  animation-duration: 1.6s;
+  opacity: 0.88;
 }
 
 .dominator-main {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   position: relative;
   z-index: 1;
 }
 
 .dominator-glyph {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 44px;
   display: grid;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--hh-accent, #d44d54) 42%, transparent);
-  border-radius: 50%;
-  color: color-mix(in srgb, var(--hh-accent, #d44d54) 80%, var(--hh-text-primary, #e6e1da));
-  background: radial-gradient(circle, color-mix(in srgb, var(--hh-accent, #d44d54) 18%, transparent), transparent 64%);
-  box-shadow: 0 0 14px var(--hh-glow-color, rgba(212, 77, 84, 0.2));
+  color: var(--p2-blood);
+  font-family: $font-铭文;
+  font-size: 17px;
+  background:
+    linear-gradient(180deg, rgba(200, 75, 91, 0.1), transparent),
+    rgba(255, 253, 249, 0.26);
+  box-shadow:
+    inset 0 0 0 1px rgba(200, 75, 91, 0.28),
+    inset 0 0 22px rgba(163, 131, 83, 0.09);
+  clip-path: polygon(50% 0, 100% 14%, 88% 100%, 12% 100%, 0 14%);
 }
 
 .dominator-title {
-  color: var(--p2-jade);
-  font-size: 14px;
+  width: fit-content;
+  color: rgba(90, 66, 58, 0.7);
+  font-family: $font-行书;
+  font-size: 17px;
   letter-spacing: 1px;
-  text-shadow: 0 0 10px var(--hh-glow-color, rgba(156, 44, 49, 0.2));
+  line-height: 1.35;
+  position: relative;
+}
+
+.dominator-title::after {
+  content: '';
+  position: absolute;
+  left: -3px;
+  right: -10px;
+  bottom: 1px;
+  height: 7px;
+  background: linear-gradient(90deg, rgba(200, 75, 91, 0.26), transparent);
+  transform: rotate(-1.5deg);
+  z-index: -1;
+}
+
+.p2-dominator-panel[data-has-dominator='true'] .dominator-title {
+  color: var(--p2-gold);
+  text-shadow: 0 0 10px rgba(61, 39, 60, 0.22);
+}
+
+.dominator--none {
+  opacity: 0.72;
 }
 
 .dominator-last,
 .dominator-counts,
 .dominator-empty {
-  color: var(--hh-text-secondary, rgba(230, 225, 218, 0.68));
+  color: rgba(90, 66, 58, 0.58);
   font-size: 11px;
 }
 
@@ -133,7 +194,7 @@ const topCounts = computed(() =>
 .dominator-counts span {
   padding: 2px 0;
   border: 0;
-  color: color-mix(in srgb, var(--hh-text-secondary, #e6e1da) 80%, transparent);
+  color: rgba(90, 66, 58, 0.7);
 }
 
 .dominator-counts span::before {

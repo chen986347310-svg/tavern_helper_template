@@ -7,9 +7,9 @@
       v-else
       :key="rumor.id || rumor.风声文本"
       type="button"
-      class="whisper-item"
+      :class="['whisper-item', { 'whisper-item--locked': lockedRumorId === (rumor.id || rumor.风声文本) }]"
       data-testid="p2-whisper-action"
-      @click="emit('chase-rumor', rumor)"
+      @click="lockRumor(rumor)"
     >
       <span class="whisper-head">
         <span class="whisper-marker" aria-hidden="true">{{ get羞名Marker(rumor.羞名等级).glyph }}</span>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { get羞名Marker } from '../../data/phase2Display';
 
 export type P2WhisperRumor = {
@@ -41,22 +41,33 @@ const props = defineProps<{ rumors: P2WhisperRumor[] }>();
 const emit = defineEmits<{ 'chase-rumor': [rumor: P2WhisperRumor] }>();
 
 const visibleRumors = computed(() => (props.rumors ?? []).filter(rumor => rumor.状态 !== '已失效').slice(0, 3));
+const lockedRumorId = ref('');
+
+function lockRumor(rumor: P2WhisperRumor) {
+  lockedRumorId.value = rumor.id || rumor.风声文本;
+  emit('chase-rumor', rumor);
+}
 </script>
 
 <style lang="scss" scoped>
+@use '../../styles/variables' as *;
+
 .p2-whisper-panel {
-  --p2-gold: var(--hh-gold, #a38353);
-  --p2-jade: var(--hh-text-primary, #e6e1da);
+  --p2-skin: #fffdf9;
+  --p2-incense: #5a423a;
+  --p2-blood: #c84b5b;
+  --p2-gold: #a38353;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px 10px;
+  gap: 9px;
+  padding: 12px 12px 14px;
   border: 0;
-  border-radius: 0;
+  border-radius: 2px;
   background:
-    linear-gradient(90deg, transparent, color-mix(in srgb, var(--hh-bg-card, rgba(156, 44, 49, 0.08)) 70%, transparent), transparent),
-    color-mix(in srgb, var(--hh-bg-surface, #0f0a14) 72%, transparent);
-  color: var(--p2-jade);
+    radial-gradient(ellipse at 45% 20%, rgba(234, 168, 155, 0.12), transparent 58%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(234, 222, 209, 0.12)),
+    var(--p2-skin);
+  color: var(--p2-incense);
   position: relative;
   overflow: hidden;
 }
@@ -68,7 +79,7 @@ const visibleRumors = computed(() => (props.rumors ?? []).filter(rumor => rumor.
   left: 10px;
   right: 10px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--hh-divider-alpha, rgba(163, 131, 83, 0.25)), transparent);
+  background: linear-gradient(90deg, transparent, rgba(163, 131, 83, 0.42), transparent);
 }
 
 .p2-whisper-panel::before { top: 0; }
@@ -81,6 +92,8 @@ const visibleRumors = computed(() => (props.rumors ?? []).filter(rumor => rumor.
   display: flex;
   align-items: center;
   gap: 6px;
+  position: relative;
+  z-index: 1;
 }
 
 .panel-kicker span {
@@ -88,16 +101,35 @@ const visibleRumors = computed(() => (props.rumors ?? []).filter(rumor => rumor.
   height: 17px;
   display: grid;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--hh-gold, #a38353) 34%, transparent);
-  color: var(--hh-accent, #9c2c31);
+  border: 1px solid rgba(163, 131, 83, 0.34);
+  color: var(--p2-blood);
   font-size: 10px;
 }
 
 .whisper-empty {
-  color: var(--hh-text-muted, rgba(230, 225, 218, 0.58));
+  color: rgba(90, 66, 58, 0.52);
   font-size: 12px;
   letter-spacing: 3px;
-  padding: 8px 0;
+  padding: 14px 0 12px;
+  position: relative;
+  text-align: center;
+}
+
+.whisper-empty::before,
+.whisper-empty::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 28%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(163, 131, 83, 0.28), transparent);
+}
+
+.whisper-empty::before { left: 0; }
+.whisper-empty::after { right: 0; }
+
+.whisper-empty {
+  animation: empty-bell-ripple 4s ease-in-out infinite;
 }
 
 .whisper-item {
@@ -105,26 +137,66 @@ const visibleRumors = computed(() => (props.rumors ?? []).filter(rumor => rumor.
   flex-direction: column;
   gap: 5px;
   width: 100%;
-  min-height: 48px;
-  padding: 9px 6px 9px 10px;
+  min-height: 46px;
+  padding: 8px 0 8px;
   border: 0;
-  border-left: 1px solid color-mix(in srgb, var(--hh-accent, #9c2c31) 34%, transparent);
   border-radius: 0;
   background:
-    radial-gradient(ellipse at 0 50%, color-mix(in srgb, var(--hh-accent, #9c2c31) 14%, transparent), transparent 72%),
+    linear-gradient(90deg, transparent, rgba(90, 66, 58, 0.1) 12%, transparent 88%),
     transparent;
   color: inherit;
   text-align: left;
   cursor: pointer;
-  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  transition: transform 0.25s ease, background 0.25s ease, filter 0.25s ease;
+}
+
+.whisper-item::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  top: 50%;
+  height: 15px;
+  background:
+    linear-gradient(90deg, transparent, rgba(90, 66, 58, 0.18), transparent),
+    radial-gradient(ellipse at 22% 50%, rgba(200, 75, 91, 0.16), transparent 46%);
+  transform: translateY(-50%) skewX(-12deg);
+  mask-image: linear-gradient(90deg, transparent 0%, black 16%, black 82%, transparent 100%);
+  opacity: 0.58;
+  pointer-events: none;
+}
+
+.whisper-item::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 75, 91, 0.52), rgba(163, 131, 83, 0.38), transparent);
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+  opacity: 0;
 }
 
 .whisper-item:hover,
 .whisper-item:focus-visible {
   transform: translateX(2px);
-  border-left-color: var(--hh-gold, #a38353);
-  background: radial-gradient(ellipse at 0 50%, color-mix(in srgb, var(--hh-accent, #9c2c31) 22%, transparent), transparent 72%);
+  background:
+    linear-gradient(90deg, rgba(200, 75, 91, 0.08), rgba(90, 66, 58, 0.08), transparent),
+    transparent;
   outline: none;
+}
+
+.whisper-item--locked::after {
+  opacity: 1;
+  animation: bind-rumor-thread 0.55s ease forwards;
+}
+
+.whisper-item--locked {
+  filter: saturate(1.2);
 }
 
 .whisper-head {
@@ -137,13 +209,17 @@ const visibleRumors = computed(() => (props.rumors ?? []).filter(rumor => rumor.
 }
 
 .whisper-marker {
-  color: color-mix(in srgb, var(--hh-accent, #9c2c31) 86%, var(--hh-text-primary, #e6e1da));
-  text-shadow: 0 0 8px var(--hh-glow-color, rgba(156, 44, 49, 0.3));
+  color: var(--p2-blood);
+  text-shadow: 0 0 8px rgba(200, 75, 91, 0.24);
 }
 
 .whisper-text {
+  position: relative;
+  z-index: 1;
+  font-family: $font-行书;
   font-size: 12px;
   line-height: 1.55;
+  color: rgba(90, 66, 58, 0.88);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -152,8 +228,20 @@ const visibleRumors = computed(() => (props.rumors ?? []).filter(rumor => rumor.
 }
 
 .whisper-hook {
-  color: var(--hh-text-secondary, rgba(230, 225, 218, 0.62));
+  color: rgba(200, 75, 91, 0.66);
   font-size: 11px;
   overflow-wrap: anywhere;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes bind-rumor-thread {
+  from { transform: translateY(-50%) scaleX(0); }
+  to { transform: translateY(-50%) scaleX(1); }
+}
+
+@keyframes empty-bell-ripple {
+  0%, 100% { opacity: 0.56; letter-spacing: 3px; }
+  50% { opacity: 0.82; letter-spacing: 4px; }
 }
 </style>

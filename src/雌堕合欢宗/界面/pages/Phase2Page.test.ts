@@ -213,6 +213,7 @@ describe('Phase2Page', () => {
       expect(items).toHaveLength(3);
       expect(items.map(item => item.find('.item-label').text())).toEqual(['乳泉', '后庭', '禁溺']);
       expect(items.map(item => item.find('.item-trace').text())).toEqual(['未启', '未驯', '未锁']);
+      expect(items.every(item => item.find('.transform-flower').exists())).toBe(true);
       expect(wrapper.findAll('.transform-item.done')).toHaveLength(0);
     });
 
@@ -221,7 +222,8 @@ describe('Phase2Page', () => {
       const wrapper = mount(Phase2Page);
       const doneItems = wrapper.findAll('.transform-item.done');
       expect(doneItems).toHaveLength(1);
-      expect(doneItems[0].find('.item-icon').text()).toBe('沁');
+      expect(doneItems[0].find('.transform-flower').exists()).toBe(true);
+      expect(doneItems[0].find('.flower-core').exists()).toBe(true);
       expect(doneItems[0].find('.item-label').text()).toBe('乳泉');
       expect(doneItems[0].find('.item-trace').text()).toBe('已醒');
     });
