@@ -2,12 +2,14 @@
   "scripts": {
     "build:dev": "webpack --mode development",
     "build": "webpack --mode production",
+    "build:cloud": "pnpm build && pnpm sync:hehuan-cloud",
     "watch": "webpack --mode development --watch --progress",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,scss,html,vue}\" --no-error-on-unmatched-pattern",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "dump": "node dump_schema.ts",
     "sync": "node tavern_sync.mjs",
+    "sync:hehuan-cloud": "node scripts/sync-hehuan-cloud-assets.mjs",
     "check:mvu": "node cdp-v4-mvu-check.mjs"
   },
   "browserslist": [

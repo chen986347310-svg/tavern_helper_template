@@ -78,7 +78,9 @@ describe('itemDisplay', () => {
     expect(runtime).toContain("import { buildOutfitPrompt } from '../服装叙事注入/outfitPrompt';");
     expect(runtime).toContain('hehuan-current-outfit-summary');
     expect(indexYaml).toContain('名称: 后端校验');
-    expect(indexYaml).toContain("import 'http://localhost:5500/dist/backend_validate.js';");
+    expect(indexYaml).toContain(
+      "import 'https://testingcf.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/scripts/backend_validate.js';",
+    );
     expect(indexYaml).not.toContain('名称: 服装叙事注入');
   });
 
@@ -92,7 +94,9 @@ describe('itemDisplay', () => {
     expect(runtime).toContain("import { buildContrabandPrompt } from '../服装叙事注入/contrabandPrompt';");
     expect(runtime).toContain('hehuan-current-contraband-summary');
     expect(indexYaml).toContain('名称: 后端校验');
-    expect(indexYaml).toContain("import 'http://localhost:5500/dist/backend_validate.js';");
+    expect(indexYaml).toContain(
+      "import 'https://testingcf.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/scripts/backend_validate.js';",
+    );
     expect(indexYaml).not.toContain('名称: 禁器叙事注入');
   });
 

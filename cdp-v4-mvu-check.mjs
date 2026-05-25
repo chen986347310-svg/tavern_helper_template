@@ -9,10 +9,12 @@ const DEFAULT_PORTS = [9222, 9223];
 const CORE_NPCS = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'];
 const REQUIRED_SYSTEM_KEYS = ['时辰', '当前场景', '待处理交互', '场景上下文', '风声列表', '当前追查风声ID'];
 const REQUIRED_SCENE_CONTEXT_KEYS = ['地点', '子区域', '场景来源', '公开度', '在场NPC', 'NPC活动', '氛围', '故事钩子', '特殊事件'];
-const LOCAL_ENDPOINTS = [
-  'http://localhost:5500/dist/var_structure.js',
-  'http://localhost:5500/dist/backend_validate.js',
-  'http://localhost:5500/dist/%E9%9B%8C%E5%A0%95%E5%90%88%E6%AC%A2%E5%AE%97/index.html',
+const CLOUD_BASE =
+  'https://testingcf.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan';
+const CLOUD_ENDPOINTS = [
+  `${CLOUD_BASE}/scripts/var_structure.js`,
+  `${CLOUD_BASE}/scripts/backend_validate.js`,
+  `${CLOUD_BASE}/status/index.html`,
 ];
 
 const args = new Set(process.argv.slice(2));
@@ -219,7 +221,7 @@ function printHuman(summary) {
 }
 
 async function main() {
-  const endpointResults = await Promise.all(LOCAL_ENDPOINTS.map(async url => ({ url, ...(await headOk(url)) })));
+  const endpointResults = await Promise.all(CLOUD_ENDPOINTS.map(async url => ({ url, ...(await headOk(url)) })));
   const discovery = await discoverPage();
   const client = new CdpClient(discovery.page.webSocketDebuggerUrl);
   let summary;

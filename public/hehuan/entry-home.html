@@ -1,0 +1,424 @@
+<div class="hh-entry-home" data-hh-entry-home>
+  <style>
+    .hh-entry-home {
+      --paper: #fffdf9;
+      --paper-deep: #f7eee7;
+      --ink: #3f2f2a;
+      --muted: #7d6860;
+      --gold: #a38353;
+      --blood: #c84b5b;
+      --peach: #eaa89b;
+      --line: rgba(90, 66, 58, 0.18);
+      width: min(920px, 100%);
+      margin: 0 auto;
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(234, 168, 155, 0.2), transparent 28%),
+        radial-gradient(circle at 82% 4%, rgba(163, 131, 83, 0.18), transparent 26%),
+        linear-gradient(180deg, #fffaf1 0%, var(--paper) 38%, #fff8f6 100%);
+      border: 1px solid rgba(163, 131, 83, 0.26);
+      border-radius: 18px;
+      box-shadow: 0 18px 48px rgba(90, 66, 58, 0.16);
+      overflow: hidden;
+    }
+
+    .hh-entry-inner {
+      padding: clamp(20px, 4vw, 42px);
+      background-image:
+        linear-gradient(90deg, transparent, rgba(90, 66, 58, 0.05), transparent),
+        radial-gradient(circle, rgba(90, 66, 58, 0.055) 0 1px, transparent 1.4px);
+      background-size: 100% 1px, 18px 18px;
+    }
+
+    .hh-entry-kicker {
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .hh-entry-title {
+      margin: 0;
+      color: #3a2824;
+      font-size: clamp(34px, 8vw, 68px);
+      line-height: 1.02;
+      font-weight: 800;
+    }
+
+    .hh-entry-subtitle {
+      margin: 14px 0 0;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: clamp(15px, 2.6vw, 20px);
+      line-height: 1.8;
+    }
+
+    .hh-entry-section {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+
+    .hh-entry-grid,
+    .hh-entry-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .hh-entry-buttons {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 14px;
+      gap: 12px;
+    }
+
+    .hh-entry-field,
+    .hh-entry-check,
+    .hh-entry-button {
+      background: rgba(255, 253, 249, 0.76);
+      border: 1px solid rgba(163, 131, 83, 0.18);
+      border-radius: 12px;
+    }
+
+    .hh-entry-field {
+      min-height: 118px;
+      padding: 16px;
+    }
+
+    .hh-entry-field h3,
+    .hh-entry-readme h3,
+    .hh-entry-picks h3 {
+      margin: 0 0 8px;
+      color: #4a332d;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .hh-entry-field p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .hh-entry-readme {
+      display: grid;
+      gap: 10px;
+    }
+
+    .hh-entry-check {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 13px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .hh-entry-mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-weight: 900;
+      background: rgba(163, 131, 83, 0.12);
+      color: var(--gold);
+    }
+
+    .hh-entry-mark.bad {
+      background: rgba(200, 75, 91, 0.12);
+      color: var(--blood);
+    }
+
+    .hh-entry-button {
+      position: relative;
+      min-height: 138px;
+      padding: 15px;
+      overflow: hidden;
+      text-align: left;
+      cursor: pointer;
+      color: #3d2b27;
+      background:
+        linear-gradient(145deg, rgba(255, 253, 249, 0.96), rgba(247, 238, 231, 0.88)),
+        radial-gradient(circle at 85% 0%, rgba(234, 168, 155, 0.25), transparent 42%);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.36);
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+      font: inherit;
+    }
+
+    .hh-entry-button::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 12px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--peach), transparent);
+      opacity: 0.75;
+    }
+
+    .hh-entry-button:hover {
+      transform: translateY(-2px);
+      border-color: rgba(200, 75, 91, 0.48);
+      box-shadow: 0 14px 26px rgba(90, 66, 58, 0.14);
+    }
+
+    .hh-entry-button strong {
+      display: block;
+      color: #33231f;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .hh-entry-button span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .hh-entry-difficulty {
+      display: inline-flex;
+      margin-bottom: 10px;
+      padding: 4px 8px;
+      color: #fffdf9;
+      background: #5a423a;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .hh-entry-difficulty.hard { background: var(--blood); }
+    .hh-entry-difficulty.easy { background: var(--gold); }
+    .hh-entry-difficulty.p2 { background: #4d3449; }
+
+    .hh-entry-status {
+      min-height: 20px;
+      margin-top: 12px;
+      color: var(--blood);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .hh-entry-thanks {
+      position: relative;
+      padding: 18px;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255, 253, 249, 0.72), rgba(247, 238, 231, 0.58)),
+        radial-gradient(circle at 12% 0%, rgba(234, 168, 155, 0.22), transparent 34%),
+        radial-gradient(circle at 90% 100%, rgba(163, 131, 83, 0.16), transparent 38%);
+      border: 1px solid rgba(163, 131, 83, 0.18);
+      border-radius: 14px;
+    }
+
+    .hh-entry-thanks::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent, rgba(200, 75, 91, 0.12), transparent);
+      opacity: 0.52;
+      pointer-events: none;
+    }
+
+    .hh-entry-thanks h3,
+    .hh-entry-thanks p,
+    .hh-entry-thanks-list {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hh-entry-thanks h3 {
+      margin: 0;
+      color: #4a332d;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .hh-entry-thanks p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .hh-entry-thanks-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .hh-entry-thanks-item {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      background: rgba(255, 253, 249, 0.62);
+      border: 1px solid rgba(163, 131, 83, 0.16);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .hh-entry-thanks-seal {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      color: #fffdf9;
+      background: linear-gradient(135deg, var(--gold), #6b4d38);
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 6px 14px rgba(90, 66, 58, 0.16);
+    }
+
+    .hh-entry-thanks-item strong {
+      display: block;
+      color: #4a332d;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 780px) {
+      .hh-entry-grid,
+      .hh-entry-buttons,
+      .hh-entry-thanks-list {
+        grid-template-columns: 1fr;
+      }
+
+      .hh-entry-button {
+        min-height: 116px;
+      }
+    }
+  </style>
+
+  <div class="hh-entry-inner">
+    <div class="hh-entry-kicker">Hehuan Sect Interactive Character Card</div>
+    <h1 class="hh-entry-title">雌堕合欢宗</h1>
+    <p class="hh-entry-subtitle">从三十日掌门攻略，到欲海追猎、牝奴期规训与状态栏前端联动，一张主打沉浸、选择与身体变化反馈的成人向仙侠角色卡。</p>
+
+    <section class="hh-entry-section">
+      <div class="hh-entry-grid">
+        <div class="hh-entry-field">
+          <h3>故事简介</h3>
+          <p>你穿越为合欢宗外门男弟子，意外握住一部被伪装成练阳诀的九天驭奴诀。三十日内，你可以试着攻略掌门柳素衣，也可能一步步被欲海锁定，走向完全不同的命运线。</p>
+        </div>
+        <div class="hh-entry-field">
+          <h3>主角</h3>
+          <p>你不是旁观剧情的空壳，而是清醒、会判断、会抗拒、也会感到羞耻的穿越者。攻略期可以主动布局，牝奴期也会保留主体感，只是身体与处境会持续受到牝印、日课和法器影响。</p>
+        </div>
+        <div class="hh-entry-field">
+          <h3>背景</h3>
+          <p>陨真大陆、合欢宗、欲海核心与青云宗旧因果交织成主线。前期是攻略、经营与风险推进；后期则进入宗门制度、风声记录、法器改造与身份变化共同作用的沉浸流程。</p>
+        </div>
+        <div class="hh-entry-field">
+          <h3>主题</h3>
+          <p>核心体验是权力反转、身份滑落、身体改写与被凝视感。你会看到选择带来的后果，也会在羞名传播、法器影响和清醒抗拒之间感到持续拉扯。</p>
+        </div>
+        <div class="hh-entry-field">
+          <h3>视角</h3>
+          <p>采用第二人称沉浸式叙事，让玩家始终站在局中。系统会强调你的选择、承受、反抗与被记录过程，让每一次变量变化都能回到剧情和身体反馈里。</p>
+        </div>
+        <div class="hh-entry-field">
+          <h3>游戏游玩机制提示</h3>
+          <p>本卡内置状态栏与 MVU 变量联动。商城、背包、执事库、法器匣、日课、风声、心音和烙名录会记录你的推进结果，并在后续楼层中继续影响剧情、任务与身体状态。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="hh-entry-section hh-entry-readme">
+      <h3>使用前必读</h3>
+      <div class="hh-entry-check"><span class="hh-entry-mark bad">✕</span><span>必须关闭【小白X】插件（如果有的话）</span></div>
+      <div class="hh-entry-check"><span class="hh-entry-mark">✓</span><span>必须安装并启用【提示词模板】插件</span></div>
+      <div class="hh-entry-check"><span class="hh-entry-mark">✓</span><span>必须安装并更新【酒馆助手】至最新版</span></div>
+      <div class="hh-entry-check"><span class="hh-entry-mark">★</span><span>推荐安装【数据库插件】（更好的剧情记忆与查询体验）</span></div>
+    </section>
+
+    <section class="hh-entry-section hh-entry-picks">
+      <h3>选择入口</h3>
+      <div class="hh-entry-buttons">
+        <button class="hh-entry-button" type="button" data-hh-swipe="1">
+          <em class="hh-entry-difficulty">标准</em>
+          <strong>莲灯前苑</strong>
+          <span>30天 / 2000灵石 / 欲海平静。适合第一次进入完整攻略主线。</span>
+        </button>
+        <button class="hh-entry-button" type="button" data-hh-swipe="2">
+          <em class="hh-entry-difficulty hard">困难</em>
+          <strong>欲海微动</strong>
+          <span>24天 / 1000灵石 / 搜寻18。更快进入追猎压力与风险抉择。</span>
+        </button>
+        <button class="hh-entry-button" type="button" data-hh-swipe="3">
+          <em class="hh-entry-difficulty easy">宽裕</em>
+          <strong>宗门晨课</strong>
+          <span>30天 / 4000灵石 / 日常切入。资源宽裕，适合慢慢熟悉系统。</span>
+        </button>
+        <button class="hh-entry-button" type="button" data-hh-swipe="4">
+          <em class="hh-entry-difficulty p2">牝奴期</em>
+          <strong>阴阳池验印</strong>
+          <span>直接进入 P2。跳过攻略期，体验牝印初醒后的规训线。</span>
+        </button>
+      </div>
+      <div class="hh-entry-status" data-hh-entry-status></div>
+    </section>
+
+    <section class="hh-entry-section hh-entry-thanks">
+      <h3>鸣谢</h3>
+      <p>这张角色卡的完成离不开社区支持，也感谢所有参与测试、反馈与陪跑的玩家。</p>
+      <div class="hh-entry-thanks-list">
+        <div class="hh-entry-thanks-item">
+          <span class="hh-entry-thanks-seal">码</span>
+          <span><strong>円批公益站</strong>感谢代码支持，让入口页与状态栏联动更稳定。</span>
+        </div>
+        <div class="hh-entry-thanks-item">
+          <span class="hh-entry-thanks-seal">愿</span>
+          <span><strong>鱼鱼枕大佬</strong>感谢 token 支持，让剧情测试与内容打磨能继续推进。</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.currentScript.closest('[data-hh-entry-home]');
+      const status = root?.querySelector('[data-hh-entry-status]');
+      const setStatus = text => {
+        if (status) status.textContent = text;
+      };
+      let api = globalThis.setChatMessages;
+      try {
+        if (typeof api !== 'function' && globalThis.parent && globalThis.parent !== globalThis) {
+          api = globalThis.parent.setChatMessages;
+        }
+      } catch (error) {}
+      root?.querySelectorAll('[data-hh-swipe]').forEach(button => {
+        button.addEventListener('click', async () => {
+          const swipeId = Number(button.dataset.hhSwipe);
+          if (!Number.isFinite(swipeId)) return;
+          if (typeof api !== 'function') {
+            setStatus(`当前环境未暴露开场切换接口，请在多开场白中手动选择第 ${swipeId + 1} 个入口。`);
+            return;
+          }
+          button.disabled = true;
+          setStatus('正在切换入口，请稍候...');
+          try {
+            await api([{ message_id: 0, swipe_id: swipeId }], { refresh: 'all' });
+          } catch (error) {
+            button.disabled = false;
+            setStatus(`自动切换失败，请手动选择第 ${swipeId + 1} 个开场白。`);
+          }
+        });
+      });
+    })();
+  </script>
+</div>

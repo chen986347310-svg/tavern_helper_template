@@ -25,7 +25,9 @@ describe('角色卡正则', () => {
     expect(replacement).toContain('querySelectorAll');
     expect(replacement).toContain('iframe[data-hehuan-status-frame="1"]');
     expect(replacement).toContain('slice(0, -1)');
-    expect(replacement).toContain("http://localhost:5500/dist/%E9%9B%8C%E5%A0%95%E5%90%88%E6%AC%A2%E5%AE%97/index.html");
+    expect(replacement).toContain(
+      'https://testingcf.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/status/index.html',
+    );
 
     expect(cleanupRegex).toMatchObject({
       启用: true,
