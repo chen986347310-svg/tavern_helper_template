@@ -575,7 +575,7 @@
         </head>
         <body>
         <script>
-        $('body').load('https://testingcf.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/entry-home.html')
+        $('body').load('https://cdn.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/entry-home.html')
         </script>
         </body>
         </html>
@@ -627,7 +627,7 @@
             });
           }
         } catch (error) {}
-        $('body').load('https://testingcf.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/status/index.html')
+        $('body').load('https://cdn.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/status/index.html')
         </script>
         </body>
         </html>
@@ -658,16 +658,16 @@
         启用: true
         类型: 脚本
         内容: |-
-          import 'https://testingcf.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/scripts/mvu.js';
+          import 'https://cdn.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/scripts/mvu.js';
 
       - 名称: 变量结构
         启用: true
         类型: 脚本
         内容: |-
-          import 'https://testingcf.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/scripts/var_structure.js';
+          import 'https://cdn.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/scripts/var_structure.js';
 
       - 名称: 后端校验
         启用: true
         类型: 脚本
         内容: |-
-          import 'https://testingcf.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/scripts/backend_validate.js';
+          import 'https://cdn.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/scripts/backend_validate.js';
