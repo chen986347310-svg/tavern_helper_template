@@ -4350,3 +4350,79 @@ P1 闭环验收：
 - P1 物品、丹药、特殊道具、场景令牌、剧情钥匙、图鉴与风声入口闭环通过。
 - P2 法器 `己身` 扣合逻辑未被 P1 修复破坏。
 - P1/P2 前端语义隔离、MVU 校验、运行时提示注入和构建链均通过最终收口。
+
+## 阶段 AY-32：发布、角色卡 JSON 打包与入口主页修复
+
+时间：2026-05-26
+
+目标：
+
+- 将状态栏、入口主页、MVU 脚本、变量结构脚本、后端校验脚本发布到公开仓库并由 CDN 加载。
+- 打包可导入酒馆的角色卡。
+- 修复导入后入口主页点击入口无反应的问题。
+
+发布路线结论：
+
+- 当前主仓库已设为公开仓库：`chen986347310-svg/tavern_helper_template`。
+- 当前运行资源目录为 `public/hehuan/`。
+- 当前角色卡运行资源统一使用：
+  - `https://cdn.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan`
+- 已废弃路线：
+  - 本地 `5500` 端口交付。
+  - 独立 `hehuan-cloud-assets` 仓库。
+  - 私有仓库直接给 CDN 读取。
+  - JSON 内容伪装为 `.png` 交付。
+
+角色卡打包问题与修复：
+
+- 根因：
+  - `src/雌堕合欢宗/index.yaml` 中 `头像: null`。
+  - `tavern_sync.mjs bundle 雌堕合欢宗` 在头像为空时生成的是 JSON 内容。
+  - 工具仍按 `导出文件路径` 输出为 `dist/雌堕合欢宗.png`，导致酒馆按图片导入失败。
+- 处理：
+  - 打包后将 `dist/雌堕合欢宗.png` 改名为 `dist/雌堕合欢宗.json`。
+  - 确认 JSON 可解析，规格为 `chara_card_v3`，`spec_version = 3.0`。
+
+入口主页点击无反应问题：
+
+- 根因：
+  - 入口页通过 `$('body').load(...)` 注入后，旧脚本依赖 `document.currentScript.closest('[data-hh-entry-home]')`。
+  - 在酒馆 iframe / jQuery load 场景中，`document.currentScript` 可能无法稳定指向入口页脚本，导致根节点为空、按钮事件未绑定。
+- 修复：
+  - 改为 `document.querySelectorAll('[data-hh-entry-home]')` 获取最后一个入口根节点。
+  - 点击时再从 `globalThis`、`parent`、`top` 多路径解析 `setChatMessages`。
+  - 若 API 不存在，必须在入口页显示提示，不再静默失败。
+- 本地最小验证：
+  - 4 个入口按钮均能绑定 click。
+  - 点击第 4 个入口会调用 `setChatMessages([{ message_id: 0, swipe_id: 3 }], { refresh: 'all' })`。
+
+CDN 缓存处理：
+
+- `testingcf.jsdelivr.net @main` 在本次发布中持续返回旧入口页缓存。
+- 使用 `https://www.jsdelivr.com/tools/purge` 刷新标准 `cdn.jsdelivr.net` URL 后，`cdn.jsdelivr.net @main` 已返回新版入口页。
+- 后续发布统一使用 `cdn.jsdelivr.net`，并用 jsDelivr purge 工具刷新：
+  - `entry-home.html`
+  - `status/index.html`
+  - `mvu.js`
+  - `var_structure.js`
+  - `backend_validate.js`
+
+验证记录：
+
+- `cdn.jsdelivr.net` 入口页检查：
+  - `stableRootSelector = True`
+  - `oldCurrentScriptCode = False`
+  - `resolveApi = True`
+- 定向测试：
+  - `pnpm vitest run "src/雌堕合欢宗/characterRegex.test.ts" "src/雌堕合欢宗/界面/data/itemDisplay.test.ts"`
+  - 结果：2 files passed，20 tests passed。
+- 角色卡 JSON 检查：
+  - 包含 `cdn.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan`。
+  - 不包含 `testingcf.jsdelivr.net`。
+  - 包含入口主页和状态栏地址。
+
+文档沉淀：
+
+- 新增 `docs/雌堕合欢宗-发布维护与开发经验-2026-05-26.md`，作为后续发布和维护的权威手册。
+- 更新 `docs/前端架构指南.md` 与 `docs/教程/开发规范与智能体协作指南.md` 的当前发布口径。
+- 更新状态栏和前端构建教程，将 `localhost:5500` 降级为历史本地调试方式。
