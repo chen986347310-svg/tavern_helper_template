@@ -453,4 +453,27 @@ describe('sanitizeMvuCommands', () => {
 
     expect(data.系统.心音回响).toEqual([existingEcho]);
   });
+
+  it('rejects soul echo with invalid result value like 可窥探', () => {
+    const echoWithBadResult = {
+      id: 'echo_suyun_bad',
+      npc: '苏芸',
+      text: '心音波动被感知。',
+      stage: '警戒',
+      result: '可窥探',
+      scene: '阴阳池',
+      time: '酉时',
+      is_new: true,
+    };
+    const commands = [
+      appendCommand('系统.心音回响', JSON.stringify(echoWithBadResult)),
+      command('set', 'NPC.苏芸.心声探测态', '"已捕获"'),
+    ];
+    const diagnostics = sanitizeMvuCommands(commands);
+
+    // The echo with invalid result should be dropped
+    expect(commands.filter(item => item.args[0] === '系统.心音回响')).toHaveLength(0);
+    expect(diagnostics.dropped).toBeGreaterThanOrEqual(1);
+    expect(diagnostics.droppedCommands.some(item => item.reason === 'invalid_soul_echo_result')).toBe(true);
+  });
 });

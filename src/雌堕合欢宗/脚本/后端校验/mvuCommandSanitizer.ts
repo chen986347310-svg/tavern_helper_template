@@ -111,6 +111,7 @@ const FALLBACK_PATHS = new Set([
 ]);
 
 const SOUL_PROBE_RESULT_STATES = new Set(['已捕获', '反震', '锁闭']);
+const VALID_ECHO_RESULT_STATES = new Set(['捕获', '反震', '锁闭']);
 
 const SELECTABLE_PATHS = new Set([
   ...CRITICAL_PATHS,
@@ -439,6 +440,12 @@ export function sanitizeMvuCommands(commands: SanitizedCommand[] | undefined): C
           continue;
         }
         keptSoulEchoKeys.add(soulEchoKey);
+      }
+      // Validate 心音回响[].result against allowed enum values
+      const echoValue = parseLiteral(getCommandValueLiteral(appendCommand));
+      if (isPlainRecord(echoValue) && typeof echoValue.result === 'string' && !VALID_ECHO_RESULT_STATES.has(echoValue.result)) {
+        droppedCommands.push(drop(appendCommand, 'invalid_soul_echo_result'));
+        continue;
       }
       keptSafeAppends.push(appendCommand);
       continue;
