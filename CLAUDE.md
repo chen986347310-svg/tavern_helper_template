@@ -8,5 +8,8 @@
 @.cursor/rules/脚本.mdc
 @.cursor/rules/mvu变量框架.mdc
 @.cursor/rules/mvu角色卡.mdc
+<<<<<<< HEAD
 
 @docs/教程/开发规范与智能体协作指南.md
+=======
+>>>>>>> 1edcc383164d8213f030dcdfabc0b6563966ae13
