@@ -10,7 +10,6 @@
     "dump": "node dump_schema.ts",
     "sync": "node tavern_sync.mjs",
     "sync:hehuan-cloud": "node scripts/sync-hehuan-cloud-assets.mjs",
-    "publish:hehuan-cloud": "node scripts/publish-hehuan-cloud-repo.mjs",
     "check:mvu": "node cdp-v4-mvu-check.mjs"
   },
   "browserslist": [
