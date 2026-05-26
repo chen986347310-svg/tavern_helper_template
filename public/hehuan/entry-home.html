@@ -390,21 +390,35 @@
 
   <script>
     (() => {
-      const root = document.currentScript.closest('[data-hh-entry-home]');
+      const roots = Array.from(document.querySelectorAll('[data-hh-entry-home]'));
+      const root = roots[roots.length - 1];
       const status = root?.querySelector('[data-hh-entry-status]');
       const setStatus = text => {
         if (status) status.textContent = text;
       };
-      let api = globalThis.setChatMessages;
-      try {
-        if (typeof api !== 'function' && globalThis.parent && globalThis.parent !== globalThis) {
-          api = globalThis.parent.setChatMessages;
+      const resolveApi = () => {
+        const candidates = [globalThis];
+        try {
+          if (globalThis.parent && globalThis.parent !== globalThis) candidates.push(globalThis.parent);
+        } catch (error) {}
+        try {
+          if (globalThis.top && globalThis.top !== globalThis && !candidates.includes(globalThis.top)) {
+            candidates.push(globalThis.top);
+          }
+        } catch (error) {}
+        for (const candidate of candidates) {
+          try {
+            if (typeof candidate.setChatMessages === 'function') return candidate.setChatMessages.bind(candidate);
+          } catch (error) {}
         }
-      } catch (error) {}
+        return null;
+      };
+      if (!root) return;
       root?.querySelectorAll('[data-hh-swipe]').forEach(button => {
         button.addEventListener('click', async () => {
           const swipeId = Number(button.dataset.hhSwipe);
           if (!Number.isFinite(swipeId)) return;
+          const api = resolveApi();
           if (typeof api !== 'function') {
             setStatus(`当前环境未暴露开场切换接口，请在多开场白中手动选择第 ${swipeId + 1} 个入口。`);
             return;
