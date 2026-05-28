@@ -20043,13 +20043,22 @@ config(en_default());
 // src/雌堕合欢宗/schema.ts
 var NPC\u540DSchema = external_exports.enum(["\u767D\u82B7", "\u82CF\u82B8", "\u7EAA\u5170", "\u6C88\u6708\u79CB", "\u67F3\u7D20\u8863"]);
 var TimeNameSchema = external_exports.enum(["\u6668\u65F6", "\u5348\u65F6", "\u9149\u65F6", "\u4EA5\u65F6"]);
+var RecordTimeNameSchema = external_exports.string().prefault("\u6668\u65F6");
 var SceneNameSchema = external_exports.string().prefault("\u83B2\u706F\u524D\u82D1");
 var \u5FC3\u58F0\u63A2\u6D4B\u6001Schema = external_exports.enum(["\u65E0\u6CE2\u52A8", "\u53EF\u7AA5\u63A2", "\u5DF2\u6355\u83B7", "\u53CD\u9707", "\u9501\u95ED"]);
+var \u5FC3\u97F3\u7ED3\u679CSchema = external_exports.preprocess(
+  (value) => value === "\u53EF\u7AA5\u63A2" || value === "\u5DF2\u6355\u83B7" ? "\u6355\u83B7" : value,
+  external_exports.enum(["\u6355\u83B7", "\u53CD\u9707", "\u9501\u95ED"]).prefault("\u6355\u83B7")
+);
+var \u516C\u5F00\u5EA6Schema = external_exports.enum(["\u516C\u5F00", "\u534A\u79C1\u5BC6", "\u79C1\u5BC6", "\u7981\u5730"]);
+var \u6B32\u6D77\u8B66\u6212\u7B49\u7EA7Schema = external_exports.enum(["\u5E73\u9759", "\u5FAE\u52A8", "\u8B66\u89C9", "\u9501\u5B9A", "\u5DF2\u6539\u5199"]);
+var \u7F9E\u540D\u7B49\u7EA7Schema = external_exports.enum(["\u5FAE\u95FB", "\u4F20\u5F00", "\u6302\u724C", "\u793A\u4F17", "\u70D9\u540D"]);
+var P2\u652F\u914D\u8005Schema = external_exports.union([NPC\u540DSchema, external_exports.literal("")]);
 var \u573A\u666F\u4E0A\u4E0B\u6587Schema = external_exports.object({
   \u5730\u70B9: external_exports.string().prefault("\u83B2\u706F\u524D\u82D1"),
   \u5B50\u533A\u57DF: external_exports.string().prefault(""),
   \u573A\u666F\u6765\u6E90: external_exports.enum(["\u6838\u5FC3\u5730\u70B9", "\u4E16\u754C\u4E66\u6269\u5C55", "AI\u751F\u6210", "\u4E34\u65F6\u8FC7\u6E21"]).prefault("\u6838\u5FC3\u5730\u70B9"),
-  \u516C\u5F00\u5EA6: external_exports.enum(["\u516C\u5F00", "\u534A\u79C1\u5BC6", "\u79C1\u5BC6", "\u7981\u5730"]).prefault("\u516C\u5F00"),
+  \u516C\u5F00\u5EA6: \u516C\u5F00\u5EA6Schema.prefault("\u516C\u5F00"),
   \u5728\u573ANPC: external_exports.array(NPC\u540DSchema).prefault([]),
   NPC\u6D3B\u52A8: external_exports.partialRecord(NPC\u540DSchema, external_exports.string()).prefault({}),
   \u6C1B\u56F4: external_exports.array(external_exports.string()).prefault([]),
@@ -20058,7 +20067,23 @@ var \u573A\u666F\u4E0A\u4E0B\u6587Schema = external_exports.object({
 }).prefault({});
 var \u98CE\u58F0Schema = external_exports.object({
   id: external_exports.string().prefault(""),
-  \u6765\u6E90: external_exports.enum(["\u5F1F\u5B50\u4F20\u95FB", "\u7075\u6C14\u5F02\u52A8", "\u5668\u7269\u6B8B\u75D5", "NPC\u884C\u8E2A", "\u5B97\u95E8\u544A\u793A", "\u68A6\u5146"]).prefault("\u5F1F\u5B50\u4F20\u95FB"),
+  \u6765\u6E90: external_exports.enum([
+    "\u5F1F\u5B50\u4F20\u95FB",
+    "\u7075\u6C14\u5F02\u52A8",
+    "\u5668\u7269\u6B8B\u75D5",
+    "NPC\u884C\u8E2A",
+    "\u5B97\u95E8\u544A\u793A",
+    "\u68A6\u5146",
+    "\u5267\u60C5\u94A5\u5319",
+    "\u573A\u666F\u4EE4\u724C",
+    "\u7279\u6B8A\u4E8B\u4EF6",
+    "\u725D\u5974\u65E5\u8BFE",
+    "\u725D\u5370\u547D\u4EE4",
+    "\u8C03\u6559\u4F59\u6CE2",
+    "\u5B97\u95E8\u95F2\u8C08",
+    "\u516C\u5F00\u793A\u4F17",
+    "\u652F\u914D\u8005\u4F20\u5524"
+  ]).prefault("\u5F1F\u5B50\u4F20\u95FB"),
   \u5730\u70B9: external_exports.string().prefault("\u83B2\u706F\u524D\u82D1"),
   \u5B50\u533A\u57DF: external_exports.string().prefault(""),
   \u76F8\u5173NPC: external_exports.array(NPC\u540DSchema).prefault([]),
@@ -20070,14 +20095,35 @@ var \u98CE\u58F0Schema = external_exports.object({
   \u53EF\u4FE1\u5EA6: external_exports.coerce.number().optional(),
   \u662F\u5426\u9677\u9631: external_exports.boolean().optional(),
   \u53CD\u5236NPC: NPC\u540DSchema.optional(),
-  \u540E\u7EED\u98CE\u58F0ID: external_exports.string().optional()
+  \u540E\u7EED\u98CE\u58F0ID: external_exports.string().optional(),
+  \u51DD\u89C6\u6765\u6E90: external_exports.string().optional(),
+  \u7F9E\u540D\u7B49\u7EA7: \u7F9E\u540D\u7B49\u7EA7Schema.optional(),
+  \u7F9E\u540D\u6807\u7B7E: external_exports.array(external_exports.string()).max(8).optional(),
+  \u53CD\u566C\u65E5\u8BFE: external_exports.string().optional(),
+  \u662F\u5426\u53EF\u627F\u63A5: external_exports.boolean().optional()
 });
+var \u65F6\u95F4\u72B6\u6001Schema = external_exports.object({
+  \u5F53\u524D\u65E5: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 1, 999)).prefault(1),
+  \u65F6\u6BB5\u8FDB\u5EA6: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 3)).prefault(0),
+  \u6700\u8FD1\u8017\u65F6: external_exports.string().prefault(""),
+  \u6700\u8FD1\u7ED3\u7B97\u539F\u56E0: external_exports.string().prefault(""),
+  \u6700\u8FD1\u4E8B\u4EF6\u7C7B\u578B: external_exports.string().prefault(""),
+  \u662F\u5426\u8FC7\u591C: external_exports.boolean().prefault(false)
+}).prefault({});
+var \u6B32\u6D77\u72B6\u6001Schema = external_exports.object({
+  \u641C\u5BFB\u8FDB\u5EA6: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 100)).prefault(0),
+  \u8B66\u6212\u7B49\u7EA7: \u6B32\u6D77\u8B66\u6212\u7B49\u7EA7Schema.prefault("\u5E73\u9759"),
+  \u906E\u853D\u5269\u4F59\u65F6\u6BB5: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 99)).prefault(0),
+  \u906E\u853D\u6765\u6E90: external_exports.string().prefault(""),
+  \u6700\u8FD1\u66B4\u9732\u539F\u56E0: external_exports.string().prefault(""),
+  \u5DF2\u88AB\u5B9A\u4F4D: external_exports.boolean().prefault(false)
+}).prefault({});
 var \u5FC3\u97F3\u56DE\u54CDSchema = external_exports.object({
   id: external_exports.string().prefault(""),
   npc: NPC\u540DSchema,
   text: external_exports.string().prefault(""),
   stage: external_exports.enum(["\u8B66\u6212", "\u52A8\u6447", "\u6C89\u6CA6"]).prefault("\u8B66\u6212"),
-  result: external_exports.enum(["\u6355\u83B7", "\u53CD\u9707", "\u9501\u95ED"]).prefault("\u6355\u83B7"),
+  result: \u5FC3\u97F3\u7ED3\u679CSchema,
   scene: external_exports.string().prefault(""),
   time: TimeNameSchema.prefault("\u6668\u65F6"),
   floor: external_exports.coerce.number().optional(),
@@ -20091,6 +20137,35 @@ var \u5DF2\u751F\u6548\u9053\u5177\u6548\u679CSchema = external_exports.object({
   \u6548\u679C\u6807\u7B7E: external_exports.array(external_exports.string()).prefault([]),
   \u53EF\u88ABAI\u8986\u76D6: external_exports.boolean().prefault(true)
 });
+var \u7EBF\u7D22\u72B6\u6001Schema = external_exports.object({
+  \u7C7B\u578B: external_exports.enum(["\u5267\u60C5\u94A5\u5319", "\u573A\u666F\u4EE4\u724C", "\u7279\u6B8A\u4E8B\u4EF6"]).prefault("\u5267\u60C5\u94A5\u5319"),
+  \u72B6\u6001: external_exports.enum(["\u53EF\u8FFD\u67E5", "\u8FFD\u67E5\u4E2D", "\u5DF2\u89E6\u53D1", "\u5DF2\u5931\u6548"]).prefault("\u53EF\u8FFD\u67E5"),
+  \u98CE\u58F0ID: external_exports.string().prefault(""),
+  \u5173\u8054\u540D\u79F0: external_exports.string().prefault(""),
+  \u5173\u8054NPC: external_exports.string().prefault(""),
+  \u63A8\u8350\u573A\u666F: external_exports.array(external_exports.string()).prefault([]),
+  \u89E6\u53D1\u6B21\u6570: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 999)).prefault(0),
+  \u6700\u8FD1\u573A\u666F: external_exports.string().prefault("")
+});
+var \u4E8B\u4EF6\u8BB0\u5F55Schema = external_exports.object({
+  id: external_exports.string().prefault(""),
+  \u7C7B\u578B: external_exports.string().prefault(""),
+  \u6458\u8981: external_exports.string().prefault(""),
+  \u65E5: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 1, 999)).prefault(1),
+  \u65F6\u8FB0: RecordTimeNameSchema,
+  \u5730\u70B9: external_exports.string().prefault("\u83B2\u706F\u524D\u82D1"),
+  \u6D89\u53CANPC: external_exports.array(NPC\u540DSchema).prefault([]),
+  \u516C\u5F00\u5EA6: \u516C\u5F00\u5EA6Schema.prefault("\u516C\u5F00"),
+  \u540E\u679C\u6807\u7B7E: external_exports.array(external_exports.string()).prefault([]),
+  \u5DF2\u751F\u6210\u98CE\u58F0: external_exports.boolean().prefault(false)
+});
+var \u8C03\u6559\u8BB0\u5F55Schema = external_exports.object({
+  id: external_exports.string().prefault(""),
+  \u65F6\u8FB0: RecordTimeNameSchema,
+  \u652F\u914D\u8005: external_exports.string().prefault(""),
+  \u6458\u8981: external_exports.string().prefault(""),
+  \u7F9E\u540D\u7B49\u7EA7: \u7F9E\u540D\u7B49\u7EA7Schema.prefault("\u5FAE\u95FB")
+});
 var Schema = external_exports.object({
   \u7CFB\u7EDF: external_exports.object({
     \u9636\u6BB5: external_exports.enum(["\u653B\u7565\u671F", "\u725D\u5974\u671F"]).prefault("\u653B\u7565\u671F"),
@@ -20099,9 +20174,11 @@ var Schema = external_exports.object({
     \u5DF2\u4F7F\u7528\u9635\u6CD5: external_exports.boolean().prefault(false),
     \u65F6\u8FB0: TimeNameSchema.prefault("\u6668\u65F6"),
     \u5F53\u524D\u573A\u666F: SceneNameSchema,
+    \u65F6\u95F4\u72B6\u6001: \u65F6\u95F4\u72B6\u6001Schema,
+    \u6B32\u6D77\u72B6\u6001: \u6B32\u6D77\u72B6\u6001Schema,
     \u5F85\u5904\u7406\u4EA4\u4E92: external_exports.array(
       external_exports.object({
-        \u7C7B\u578B: external_exports.enum(["\u88C5\u5907", "\u5378\u4E0B", "\u8D2D\u4E70", "\u7075\u8BC6\u7A83\u53D6", "\u88C5\u5907\u9053\u5177", "\u8D2D\u4E70\u7269\u54C1", "\u4F7F\u7528\u7269\u54C1", "\u8FFD\u67E5\u98CE\u58F0"]).prefault("\u8D2D\u4E70"),
+        \u7C7B\u578B: external_exports.enum(["\u88C5\u5907", "\u5378\u4E0B", "\u8D2D\u4E70", "\u7075\u8BC6\u7A83\u53D6", "\u88C5\u5907\u9053\u5177", "\u8D2D\u4E70\u7269\u54C1", "\u4F7F\u7528\u7269\u54C1", "\u8FFD\u67E5\u98CE\u58F0", "\u9886\u53D7\u6CD5\u5668"]).prefault("\u8D2D\u4E70"),
         \u76EE\u6807: external_exports.string().prefault(""),
         \u9053\u5177: external_exports.string().prefault(""),
         \u6570\u91CF: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 999)).prefault(1),
@@ -20117,6 +20194,11 @@ var Schema = external_exports.object({
         \u4F5C\u7528\u90E8\u4F4D: external_exports.string().prefault(""),
         \u4E39\u836F\u5206\u7C7B: external_exports.string().prefault(""),
         \u4F5C\u7528\u7EBF: external_exports.string().prefault(""),
+        \u5267\u60C5\u7EBF: external_exports.string().prefault(""),
+        \u5173\u8054NPC: external_exports.string().prefault(""),
+        \u79D8\u5BC6\u4E3B\u9898: external_exports.string().prefault(""),
+        \u5165\u53E3\u7C7B\u578B: external_exports.enum(["", "\u5267\u60C5\u94A5\u5319", "\u573A\u666F\u4EE4\u724C", "\u7279\u6B8A\u4E8B\u4EF6"]).prefault(""),
+        \u7EBF\u7D22ID: external_exports.string().prefault(""),
         AI\u77ED\u63D0\u793A: external_exports.string().prefault("")
       })
     ).prefault([]),
@@ -20129,6 +20211,16 @@ var Schema = external_exports.object({
   \u725D\u5974: external_exports.object({
     \u5815\u843D\u5EA6: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 100)).prefault(0),
     \u725D\u9634\u51B3\u5C42\u6570: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 9)).prefault(0),
+    \u5165\u573A\u65E5: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 999)).prefault(0),
+    \u5F53\u524D\u65E5\u8BFE: external_exports.string().prefault("\u5019\u547D"),
+    \u5F53\u524D\u652F\u914D\u8005: P2\u652F\u914D\u8005Schema.prefault(""),
+    \u5F53\u524D\u547D\u4EE4: external_exports.string().prefault(""),
+    \u547D\u4EE4\u5F3A\u5EA6: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 100)).prefault(0),
+    \u4ECA\u65E5\u8C03\u6559\u6B21\u6570: external_exports.coerce.number().transform((value) => import_lodash.default.clamp(value, 0, 99)).prefault(0),
+    \u5F85\u6267\u884C\u65E5\u8BFE: external_exports.array(external_exports.string()).max(8).prefault([]),
+    \u6700\u8FD1\u8C03\u6559\u7ED3\u7B97: external_exports.string().prefault(""),
+    \u7F9E\u540D\u6807\u7B7E: external_exports.array(external_exports.string()).max(8).prefault([]),
+    \u8C03\u6559\u8BB0\u5F55: external_exports.array(\u8C03\u6559\u8BB0\u5F55Schema).max(10).prefault([]),
     \u4E0A\u6B21\u652F\u914D\u8005: external_exports.string().prefault(""),
     \u652F\u914D\u6B21\u6570: external_exports.record(
       NPC\u540DSchema,
@@ -20178,7 +20270,9 @@ var Schema = external_exports.object({
     \u5DF2\u89E3\u9501: external_exports.array(external_exports.string()).prefault([])
   }).prefault({}),
   \u5267\u60C5: external_exports.object({
-    \u5DF2\u89E3\u9501: external_exports.array(external_exports.string()).prefault([])
+    \u5DF2\u89E3\u9501: external_exports.array(external_exports.string()).prefault([]),
+    \u7EBF\u7D22\u72B6\u6001: external_exports.record(external_exports.string(), \u7EBF\u7D22\u72B6\u6001Schema).prefault({}),
+    \u4E8B\u4EF6\u8BB0\u5F55: external_exports.array(\u4E8B\u4EF6\u8BB0\u5F55Schema).max(20).prefault([])
   }).prefault({})
 });
 

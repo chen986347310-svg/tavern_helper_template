@@ -13,6 +13,14 @@ const NPC列表 = ['白芷', '苏芸', '纪兰', '沈月秋', '柳素衣'] as co
 const NPC_SET = new Set<string>(NPC列表);
 const TIME_NAMES = ['晨时', '午时', '酉时', '亥时'] as const;
 const TIME_NAME_SET = new Set<string>(TIME_NAMES);
+const SOUL_ECHO_STAGE_SET = new Set<string>(['警戒', '动摇', '沉沦']);
+const SOUL_ECHO_RESULT_ALIASES: Record<string, '捕获' | '反震' | '锁闭'> = {
+  捕获: '捕获',
+  可窥探: '捕获',
+  已捕获: '捕获',
+  反震: '反震',
+  锁闭: '锁闭',
+};
 
 /**
  * 强制转换为有效数字，处理 AI 脏数据
@@ -159,12 +167,17 @@ function normalizeSoulEchoLedger(new_data: Record<string, any>): void {
     return;
   }
 
+  const currentTime = normalizeTimeName(_.get(new_data, '系统.时辰', '晨时'));
   const seenIds = new Set<string>();
   const seenSemanticKeys = new Set<string>();
   const normalized: any[] = [];
 
   for (const echo of echoes) {
     if (!_.isPlainObject(echo)) continue;
+    echo.stage = typeof echo.stage === 'string' && SOUL_ECHO_STAGE_SET.has(echo.stage) ? echo.stage : '警戒';
+    echo.result = typeof echo.result === 'string' ? (SOUL_ECHO_RESULT_ALIASES[echo.result] ?? '捕获') : '捕获';
+    echo.time = normalizeTimeName(echo.time, currentTime);
+
     const id = typeof echo.id === 'string' ? echo.id.trim() : '';
     if (id && seenIds.has(id)) continue;
 

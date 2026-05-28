@@ -1024,6 +1024,59 @@ describe('v4 system migration defaults', () => {
     expect(new_data.系统.心音回响.some((echo: any) => echo.id === 'echo_suyun_01')).toBe(false);
   });
 
+  it('校验时将误写入心音回响 result 的探测态规整为合法结果', () => {
+    const old_data = makeData();
+    const new_data = makeData({
+      系统: {
+        心音回响: [
+          {
+            id: 'echo_baizhi_probe_state',
+            npc: '白芷',
+            text: '她的心音浮到水面，又迅速沉下去。',
+            stage: '越界',
+            result: '可窥探',
+            scene: '听风廊前',
+            time: '辰时',
+          },
+          {
+            id: 'echo_suyun_captured_state',
+            npc: '苏芸',
+            text: '她不想承认自己已经被看见。',
+            result: '已捕获',
+            scene: '药庐',
+            time: '未时',
+          },
+        ],
+      },
+    });
+
+    validateVariables(new_data, old_data);
+
+    expect(new_data.系统.心音回响).toMatchObject([
+      { id: 'echo_baizhi_probe_state', result: '捕获', stage: '警戒', time: '晨时' },
+      { id: 'echo_suyun_captured_state', result: '捕获', stage: '警戒', time: '午时' },
+    ]);
+    expect(() => Schema.parse({ 系统: { 心音回响: new_data.系统.心音回响 } })).not.toThrow();
+  });
+
+  it('schema 兼容旧楼层中误写为探测态的心音回响 result', () => {
+    const result = Schema.parse({
+      系统: {
+        心音回响: [
+          {
+            id: 'echo_legacy_bad_result',
+            npc: '沈月秋',
+            text: '库房里的铜铃没有响，她却已经察觉。',
+            result: '可窥探',
+            time: '晨时',
+          },
+        ],
+      },
+    });
+
+    expect(result.系统.心音回响[0].result).toBe('捕获');
+  });
+
   it('牝奴期发生调教事件但AI漏写P2主控台字段时自动补最小调教结算', () => {
     const old_data = makeData({
       系统: { 阶段: '牝奴期', 时辰: '酉时', 当前场景: '阴阳池' },

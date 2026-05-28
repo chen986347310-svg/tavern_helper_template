@@ -6,6 +6,10 @@ const TimeNameSchema = z.enum(['晨时', '午时', '酉时', '亥时']);
 const RecordTimeNameSchema = z.string().prefault('晨时');
 const SceneNameSchema = z.string().prefault('莲灯前苑');
 const 心声探测态Schema = z.enum(['无波动', '可窥探', '已捕获', '反震', '锁闭']);
+const 心音结果Schema = z.preprocess(
+  value => (value === '可窥探' || value === '已捕获' ? '捕获' : value),
+  z.enum(['捕获', '反震', '锁闭']).prefault('捕获'),
+);
 const 公开度Schema = z.enum(['公开', '半私密', '私密', '禁地']);
 const 欲海警戒等级Schema = z.enum(['平静', '微动', '警觉', '锁定', '已改写']);
 const 羞名等级Schema = z.enum(['微闻', '传开', '挂牌', '示众', '烙名']);
@@ -92,7 +96,7 @@ const 心音回响Schema = z.object({
   npc: NPC名Schema,
   text: z.string().prefault(''),
   stage: z.enum(['警戒', '动摇', '沉沦']).prefault('警戒'),
-  result: z.enum(['捕获', '反震', '锁闭']).prefault('捕获'),
+  result: 心音结果Schema,
   scene: z.string().prefault(''),
   time: TimeNameSchema.prefault('晨时'),
   floor: z.coerce.number().optional(),
