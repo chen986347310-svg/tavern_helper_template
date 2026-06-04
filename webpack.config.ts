@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import { FSWatcher, watch } from 'chokidar';
+=======
+import { FSWatcher, watch } from 'chokidar';
+>>>>>>> 821d0f7fc2e1ba1b9ee76aa4a9f6fc81238c4bfb
 import HtmlInlineScriptWebpackPlugin from 'html-inline-script-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import _ from 'lodash';
@@ -16,6 +20,10 @@ import { VueUseComponentsResolver, VueUseDirectiveResolver } from 'unplugin-vue-
 import unpluginVueComponents from 'unplugin-vue-components/webpack';
 import { VueLoaderPlugin } from 'vue-loader';
 import webpack from 'webpack';
+<<<<<<< HEAD
+=======
+import WebpackObfuscator from 'webpack-obfuscator';
+>>>>>>> 821d0f7fc2e1ba1b9ee76aa4a9f6fc81238c4bfb
 const require = createRequire(import.meta.url);
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
 
@@ -182,6 +190,12 @@ function tavern_sync(compiler: webpack.Compiler) {
 }
 
 function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Configuration {
+<<<<<<< HEAD
+=======
+  const should_obfuscate = fs
+    .readFileSync(path.join(import.meta.dirname, entry.script), 'utf-8')
+    .includes('@obfuscate');
+>>>>>>> 821d0f7fc2e1ba1b9ee76aa4a9f6fc81238c4bfb
   const script_filepath = path.parse(entry.script);
 
   return (_env, argv) => ({
@@ -341,11 +355,14 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
               test: /\.ya?ml$/,
               loader: 'yaml-loader',
             },
+<<<<<<< HEAD
             {
               test: /\.(png|jpe?g|gif|webp)$/i,
               include: path.resolve(import.meta.dirname, 'src/雌堕合欢宗/界面/assets/avatars'),
               type: 'asset/inline'
             },
+=======
+>>>>>>> 821d0f7fc2e1ba1b9ee76aa4a9f6fc81238c4bfb
           ].concat(
             entry.html === undefined
               ? ([
@@ -451,7 +468,13 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
             '@vueuse/core',
             { from: 'dedent', imports: [['default', 'dedent']] },
             { from: 'klona', imports: ['klona'] },
+<<<<<<< HEAD
             { from: 'zod', imports: ['z'] },
+=======
+            { from: 'vue-final-modal', imports: ['useModal'] },
+            { from: 'zod', imports: ['z'] },
+            { from: 'type-fest', imports: [['*', 'TypeFest']], type: true },
+>>>>>>> 821d0f7fc2e1ba1b9ee76aa4a9f6fc81238c4bfb
           ],
         }),
         unpluginVueComponents({
@@ -466,6 +489,23 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
           __VUE_PROD_DEVTOOLS__: process.env.CI !== 'true',
           __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
         }),
+<<<<<<< HEAD
+=======
+      )
+      .concat(
+        should_obfuscate
+          ? [
+              new WebpackObfuscator({
+                controlFlowFlattening: true,
+                numbersToExpressions: true,
+                selfDefending: true,
+                simplify: true,
+                splitStrings: true,
+                seed: 1,
+              }),
+            ]
+          : [],
+>>>>>>> 821d0f7fc2e1ba1b9ee76aa4a9f6fc81238c4bfb
       ),
     optimization: {
       minimize: true,
@@ -555,6 +595,9 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
 }
 
 export default config.entries.map(parse_configuration);
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 821d0f7fc2e1ba1b9ee76aa4a9f6fc81238c4bfb
