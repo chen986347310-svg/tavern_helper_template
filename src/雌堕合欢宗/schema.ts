@@ -270,7 +270,7 @@ export const Schema = z.object({
       }),
     )
     .prefault({
-      白芷: {},
+      白芷: { 状态: '进行中' },
       苏芸: {},
       纪兰: {},
       沈月秋: {},

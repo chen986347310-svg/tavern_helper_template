@@ -5,7 +5,11 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  try {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  } catch (e) {
+    throw mod = 0, e;
+  }
 };
 var __export = (target, all) => {
   for (var name in all)
@@ -20249,7 +20253,7 @@ var Schema = external_exports.object({
       }).prefault({})
     })
   ).prefault({
-    \u767D\u82B7: {},
+    \u767D\u82B7: { \u72B6\u6001: "\u8FDB\u884C\u4E2D" },
     \u82CF\u82B8: {},
     \u7EAA\u5170: {},
     \u6C88\u6708\u79CB: {},

@@ -410,7 +410,7 @@ export function validateVariables(new_data: Record<string, any>, old_data: Recor
       continue;
     }
 
-    if (粘滞计数 >= 3 && 好感度 >= 30) {
+    if (粘滞计数 >= 3 && canIncrease攻略值(npc as any, currentNpc as any, 好感度)) {
       const 增量 = calculate攻略值增量(10, 好感度);
       const 新攻略值 = Math.min(当前攻略值 + 增量, 100);
       _.set(new_data, `NPC.${npc}.攻略值`, 新攻略值);

@@ -142,6 +142,27 @@ describe('Scenario 3: 粘滞 auto-trigger', () => {
     expect(new_data.NPC['白芷'].攻略值).toBe(10);
     expect(new_data.NPC['白芷'].粘滞计数).toBe(2);
   });
+
+  it('非当前攻略NPC即使好感度足够且粘滞满层，也不会开启攻略值', () => {
+    const old_data = makeData({
+      NPC: {
+        白芷: { 好感度: 50, 攻略值: 10, 粘滞计数: 0, 状态: '进行中' },
+        苏芸: { 好感度: 60, 攻略值: 0, 粘滞计数: 2, 状态: '未开始' },
+      },
+    });
+    const new_data = makeData({
+      NPC: {
+        白芷: { 好感度: 50, 攻略值: 10, 粘滞计数: 0, 状态: '进行中' },
+        苏芸: { 好感度: 60, 攻略值: 0, 粘滞计数: 3, 状态: '未开始' },
+      },
+    });
+
+    validateVariables(new_data, old_data);
+
+    expect(new_data.NPC['苏芸'].好感度).toBe(60);
+    expect(new_data.NPC['苏芸'].攻略值).toBe(0);
+    expect(new_data.NPC['苏芸'].粘滞计数).toBe(3);
+  });
 });
 
 // ══════════════════════════════════════════
@@ -712,6 +733,15 @@ describe('Schema defaults: 开放场景与风声字段', () => {
     expect(result.系统.当前追查风声ID).toBe('');
     expect(result.道具.已生效效果).toEqual([]);
     expect(result.剧情.线索状态).toEqual({});
+  });
+
+  it('默认开局让攻略链第一位白芷进入可交互状态', () => {
+    const result = Schema.parse({});
+    expect(result.NPC.白芷.状态).toBe('进行中');
+    expect(result.NPC.苏芸.状态).toBe('未开始');
+    expect(result.NPC.纪兰.状态).toBe('未开始');
+    expect(result.NPC.沈月秋.状态).toBe('未开始');
+    expect(result.NPC.柳素衣.状态).toBe('未开始');
   });
 
   it('旧存档自动补齐世界运行核心字段', () => {

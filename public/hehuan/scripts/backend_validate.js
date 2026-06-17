@@ -1,5 +1,6 @@
 // src/雌堕合欢宗/脚本/后端校验/validate.ts
-const _2 = window._;
+import _2 from "lodash";
+
 // src/雌堕合欢宗/界面/guards.ts
 var \u653B\u7565\u94FE = ["\u767D\u82B7", "\u82CF\u82B8", "\u7EAA\u5170", "\u6C88\u6708\u79CB", "\u67F3\u7D20\u8863"];
 var \u597D\u611F\u5EA6\u95E8\u69DB = {
@@ -1242,7 +1243,7 @@ function validateVariables(new_data, old_data) {
       _2.set(new_data, `NPC.${npc}.\u7C98\u6EDE\u8BA1\u6570`, 0);
       continue;
     }
-    if (\u7C98\u6EDE\u8BA1\u6570 >= 3 && \u597D\u611F\u5EA6 >= 30) {
+    if (\u7C98\u6EDE\u8BA1\u6570 >= 3 && canIncrease\u653B\u7565\u503C(npc, currentNpc, \u597D\u611F\u5EA6)) {
       const \u589E\u91CF = calculate\u653B\u7565\u503C\u589E\u91CF(10, \u597D\u611F\u5EA6);
       const \u65B0\u653B\u7565\u503C = Math.min(\u5F53\u524D\u653B\u7565\u503C + \u589E\u91CF, 100);
       _2.set(new_data, `NPC.${npc}.\u653B\u7565\u503C`, \u65B0\u653B\u7565\u503C);
@@ -2121,7 +2122,7 @@ function applySanitizedCommandFallback(newData, diagnostics) {
 }
 
 // src/雌堕合欢宗/脚本/后端校验/p2DominanceBaseline.ts
-const _3 = window._;
+import _3 from "lodash";
 var NPC\u5217\u88682 = ["\u767D\u82B7", "\u82CF\u82B8", "\u7EAA\u5170", "\u6C88\u6708\u79CB", "\u67F3\u7D20\u8863"];
 function getTrainingRecordIds(data) {
   const records = _3.get(data, "\u725D\u5974.\u8C03\u6559\u8BB0\u5F55", []);
@@ -2204,7 +2205,7 @@ eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, (new_variables, old_variables) => {
   applySanitizedCommandFallback(new_data, window.__HEHUAN_MVU_COMMAND_SANITIZER_LAST__);
 });
 if (typeof window !== "undefined") {
-  let __TEST_computeDiff = function(before, after) {
+  let __TEST_computeDiff2 = function(before, after) {
     const changes = [];
     const bObj = JSON.parse(before);
     const aObj = JSON.parse(after);
@@ -2223,7 +2224,7 @@ if (typeof window !== "undefined") {
     walk(bObj, aObj, "");
     return changes;
   };
-  __TEST_computeDiff2 = __TEST_computeDiff;
+  __TEST_computeDiff = __TEST_computeDiff2;
   window.__HEHUAN_MVU_COMMAND_SANITIZER_LAST__ = {
     strategy: "path_scoring_v2",
     scanned: 0,
@@ -2252,7 +2253,7 @@ if (typeof window !== "undefined") {
     const before = JSON.stringify(new_data);
     validateVariables(new_data, old_data);
     const after = JSON.stringify(new_data);
-    const trace = before !== after ? __TEST_computeDiff(before, after) : [];
+    const trace = before !== after ? __TEST_computeDiff2(before, after) : [];
     const mvuData = Mvu.getMvuData({ type: "message", message_id: "latest" });
     const clone = structuredClone(mvuData);
     clone.stat_data = new_data;
@@ -2260,4 +2261,4 @@ if (typeof window !== "undefined") {
     return { stat_data: new_data, trace };
   };
 }
-var __TEST_computeDiff2;
+var __TEST_computeDiff;
