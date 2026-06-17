@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/character.zh.json
-头像: null
+头像: 界面/assets/avatars/雌堕合欢宗v1.0.png
 版本: '1.0.0'
 作者: ''
 备注: ''
@@ -670,4 +670,4 @@
         启用: true
         类型: 脚本
         内容: |-
-          import 'https://cdn.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@main/public/hehuan/scripts/backend_validate.js?v=20260618-bridge';
+          import 'https://cdn.jsdelivr.net/gh/chen986347310-svg/tavern_helper_template@92c46a5/public/hehuan/scripts/backend_validate.js';
