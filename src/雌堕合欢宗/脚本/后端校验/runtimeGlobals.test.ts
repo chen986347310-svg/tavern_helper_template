@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { exposeRuntimeGlobal, requireRuntimeGlobal, resolveRuntimeGlobal } from './runtimeGlobals';
+import { exposeRuntimeGlobal, requireRuntimeGlobal, resolveRuntimeGlobal, waitForRuntimeGlobal } from './runtimeGlobals';
 
 describe('runtime global resolver', () => {
   it('resolves Mvu from parent scope when the script iframe scope does not own it', () => {
@@ -26,5 +26,18 @@ describe('runtime global resolver', () => {
 
     expect(iframe.__TEST_applyValidatedUpdate).toBe('hook');
     expect(parent.__TEST_applyValidatedUpdate).toBe('hook');
+  });
+
+  it('waits for Mvu initialization before resolving parent scope Mvu', async () => {
+    const parent: any = {};
+    const iframe: any = {
+      parent,
+      top: parent,
+      waitGlobalInitialized: async (name: string) => {
+        parent[name] = { events: { VARIABLE_UPDATE_ENDED: 'mag_variable_update_ended' } };
+      },
+    };
+
+    await expect(waitForRuntimeGlobal('Mvu', [iframe, iframe.parent, iframe.top])).resolves.toBe(parent.Mvu);
   });
 });

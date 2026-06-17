@@ -40,6 +40,18 @@ export function requireRuntimeGlobal<T = any>(name: string, scopes = runtimeScop
   return value;
 }
 
+export async function waitForRuntimeGlobal<T = any>(name: string, scopes = runtimeScopes()): Promise<T> {
+  const initialValue = resolveRuntimeGlobal<T>(name, scopes);
+  if (initialValue !== undefined && initialValue !== null) return initialValue;
+
+  const waitGlobalInitialized = resolveRuntimeGlobal<(name: string) => Promise<unknown>>('waitGlobalInitialized', scopes);
+  if (waitGlobalInitialized) {
+    await waitGlobalInitialized(name);
+  }
+
+  return requireRuntimeGlobal<T>(name, scopes);
+}
+
 export function exposeRuntimeGlobal(name: string, value: unknown, scopes = runtimeScopes()): void {
   for (const scope of scopes) {
     try {
