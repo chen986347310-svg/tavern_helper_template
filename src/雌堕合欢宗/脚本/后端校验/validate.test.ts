@@ -169,6 +169,47 @@ describe('Scenario 3: 粘滞 auto-trigger', () => {
 // Scenario 4: 攻略链顺序强制 — 苏芸 rejected
 // ══════════════════════════════════════════
 describe('Scenario 4: 攻略链 enforcement', () => {
+  it('白芷攻略值达到100后自动标记已完成，并推进苏芸为进行中', () => {
+    const old_data = makeData({
+      NPC: {
+        白芷: { 好感度: 100, 攻略值: 95, 状态: '进行中' },
+        苏芸: { 好感度: 0, 攻略值: 0, 状态: '未开始' },
+      },
+    });
+    const new_data = makeData({
+      NPC: {
+        白芷: { 好感度: 100, 攻略值: 100, 状态: '进行中' },
+        苏芸: { 好感度: 0, 攻略值: 0, 状态: '未开始' },
+      },
+    });
+
+    validateVariables(new_data, old_data);
+
+    expect(new_data.NPC['白芷'].状态).toBe('已完成');
+    expect(new_data.NPC['苏芸'].状态).toBe('进行中');
+    expect(new_data.NPC['苏芸'].攻略值).toBe(0);
+  });
+
+  it('白芷已完成但苏芸仍未开始时，苏芸作为当前攻略目标可以开启攻略值', () => {
+    const old_data = makeData({
+      NPC: {
+        白芷: { 好感度: 100, 攻略值: 100, 状态: '已完成' },
+        苏芸: { 好感度: 35, 攻略值: 0, 状态: '未开始' },
+      },
+    });
+    const new_data = makeData({
+      NPC: {
+        白芷: { 好感度: 100, 攻略值: 100, 状态: '已完成' },
+        苏芸: { 好感度: 35, 攻略值: 5, 状态: '未开始' },
+      },
+    });
+
+    validateVariables(new_data, old_data);
+
+    expect(new_data.NPC['苏芸'].状态).toBe('进行中');
+    expect(new_data.NPC['苏芸'].攻略值).toBe(5);
+  });
+
   it('白芷 is current, 苏芸 攻略值 0→5 → reverted', () => {
     const old_data = makeData({
       NPC: { 白芷: { 好感度: 50, 攻略值: 10, 状态: '进行中' }, 苏芸: { 好感度: 40, 攻略值: 0 } },

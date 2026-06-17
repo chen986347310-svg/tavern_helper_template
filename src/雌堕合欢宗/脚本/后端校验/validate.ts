@@ -299,6 +299,51 @@ function preserveP2TrainingLedger(new_data: Record<string, any>, old_data: Recor
   _.set(new_data, '牝奴.今日调教次数', coerceNumeric(_.get(old_data, '牝奴.今日调教次数', oldRecords.length), 99, 0));
   _.set(new_data, '牝奴.最近调教结算', _.get(old_data, '牝奴.最近调教结算', ''));
 }
+
+function buildNpcStatesFromData(data: Record<string, any>): Record<NpcName, { 状态: string }> {
+  const npcStates = {} as Record<NpcName, { 状态: string }>;
+  for (const npc of NPC列表) {
+    npcStates[npc] = { 状态: _.get(data, `NPC.${npc}.状态`, '未开始') };
+  }
+  return npcStates;
+}
+
+function getEligibleCurrentNpc(new_data: Record<string, any>, old_data: Record<string, any>): NpcName | null {
+  const npcStates = buildNpcStatesFromData(old_data);
+
+  for (const npc of NPC列表) {
+    if (_.get(old_data, `NPC.${npc}.攻略值`, 0) >= 100) {
+      npcStates[npc].状态 = '已完成';
+      continue;
+    }
+    if (npcStates[npc].状态 === '已完成') continue;
+    npcStates[npc].状态 = '进行中';
+    break;
+  }
+
+  return getCurrentNpc(npcStates);
+}
+
+function normalizeStrategyChainStatus(new_data: Record<string, any>): void {
+  let hasActive = false;
+
+  for (const npc of NPC列表) {
+    const 攻略值 = _.get(new_data, `NPC.${npc}.攻略值`, 0);
+    if (攻略值 >= 100) {
+      _.set(new_data, `NPC.${npc}.攻略值`, 100);
+      _.set(new_data, `NPC.${npc}.状态`, '已完成');
+      continue;
+    }
+
+    if (!hasActive) {
+      _.set(new_data, `NPC.${npc}.状态`, '进行中');
+      hasActive = true;
+      continue;
+    }
+
+    _.set(new_data, `NPC.${npc}.状态`, '未开始');
+  }
+}
 /**
  * Pure backend validation function.
  * Mutates new_data in place to enforce all game rules.
@@ -341,11 +386,7 @@ export function validateVariables(new_data: Record<string, any>, old_data: Recor
     normalizeP2DominanceCounts(new_data, old_data);
   }
   // 1b. 攻略链顺序强制
-  const npcStates: Record<string, { 状态: string }> = {};
-  for (const npc of NPC列表) {
-    npcStates[npc] = { 状态: _.get(new_data, `NPC.${npc}.状态`, '未开始') };
-  }
-  const currentNpc = getCurrentNpc(npcStates);
+  const currentNpc = 当前阶段 === '攻略期' ? getEligibleCurrentNpc(new_data, old_data) : getCurrentNpc(buildNpcStatesFromData(new_data));
 
   for (const npc of NPC列表) {
     const old_好感度 = _.get(old_data, `NPC.${npc}.好感度`, 0);
@@ -416,6 +457,9 @@ export function validateVariables(new_data: Record<string, any>, old_data: Recor
       _.set(new_data, `NPC.${npc}.攻略值`, 新攻略值);
       _.set(new_data, `NPC.${npc}.粘滞计数`, 0);
     }
+  }
+  if (当前阶段 === '攻略期') {
+    normalizeStrategyChainStatus(new_data);
   }
   // 灵石不能为负
   const 灵石 = _.get(new_data, '系统.灵石', 0);

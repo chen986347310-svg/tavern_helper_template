@@ -1,5 +1,5 @@
 // src/雌堕合欢宗/脚本/后端校验/validate.ts
-import _2 from "lodash";
+const _2 = window._;
 
 // src/雌堕合欢宗/界面/guards.ts
 var \u653B\u7565\u94FE = ["\u767D\u82B7", "\u82CF\u82B8", "\u7EAA\u5170", "\u6C88\u6708\u79CB", "\u67F3\u7D20\u8863"];
@@ -1157,6 +1157,43 @@ function preserveP2TrainingLedger(new_data, old_data) {
   _2.set(new_data, "\u725D\u5974.\u4ECA\u65E5\u8C03\u6559\u6B21\u6570", coerceNumeric(_2.get(old_data, "\u725D\u5974.\u4ECA\u65E5\u8C03\u6559\u6B21\u6570", oldRecords.length), 99, 0));
   _2.set(new_data, "\u725D\u5974.\u6700\u8FD1\u8C03\u6559\u7ED3\u7B97", _2.get(old_data, "\u725D\u5974.\u6700\u8FD1\u8C03\u6559\u7ED3\u7B97", ""));
 }
+function buildNpcStatesFromData(data) {
+  const npcStates = {};
+  for (const npc of NPC\u5217\u8868) {
+    npcStates[npc] = { \u72B6\u6001: _2.get(data, `NPC.${npc}.\u72B6\u6001`, "\u672A\u5F00\u59CB") };
+  }
+  return npcStates;
+}
+function getEligibleCurrentNpc(new_data, old_data) {
+  const npcStates = buildNpcStatesFromData(old_data);
+  for (const npc of NPC\u5217\u8868) {
+    if (_2.get(old_data, `NPC.${npc}.\u653B\u7565\u503C`, 0) >= 100) {
+      npcStates[npc].\u72B6\u6001 = "\u5DF2\u5B8C\u6210";
+      continue;
+    }
+    if (npcStates[npc].\u72B6\u6001 === "\u5DF2\u5B8C\u6210") continue;
+    npcStates[npc].\u72B6\u6001 = "\u8FDB\u884C\u4E2D";
+    break;
+  }
+  return getCurrentNpc(npcStates);
+}
+function normalizeStrategyChainStatus(new_data) {
+  let hasActive = false;
+  for (const npc of NPC\u5217\u8868) {
+    const \u653B\u7565\u503C = _2.get(new_data, `NPC.${npc}.\u653B\u7565\u503C`, 0);
+    if (\u653B\u7565\u503C >= 100) {
+      _2.set(new_data, `NPC.${npc}.\u653B\u7565\u503C`, 100);
+      _2.set(new_data, `NPC.${npc}.\u72B6\u6001`, "\u5DF2\u5B8C\u6210");
+      continue;
+    }
+    if (!hasActive) {
+      _2.set(new_data, `NPC.${npc}.\u72B6\u6001`, "\u8FDB\u884C\u4E2D");
+      hasActive = true;
+      continue;
+    }
+    _2.set(new_data, `NPC.${npc}.\u72B6\u6001`, "\u672A\u5F00\u59CB");
+  }
+}
 function validateVariables(new_data, old_data) {
   ensureV4SystemFields(new_data);
   normalizeSoulEchoLedger(new_data);
@@ -1188,11 +1225,7 @@ function validateVariables(new_data, old_data) {
     preserveP2TrainingLedger(new_data, old_data);
     normalizeP2DominanceCounts(new_data, old_data);
   }
-  const npcStates = {};
-  for (const npc of NPC\u5217\u8868) {
-    npcStates[npc] = { \u72B6\u6001: _2.get(new_data, `NPC.${npc}.\u72B6\u6001`, "\u672A\u5F00\u59CB") };
-  }
-  const currentNpc = getCurrentNpc(npcStates);
+  const currentNpc = \u5F53\u524D\u9636\u6BB5 === "\u653B\u7565\u671F" ? getEligibleCurrentNpc(new_data, old_data) : getCurrentNpc(buildNpcStatesFromData(new_data));
   for (const npc of NPC\u5217\u8868) {
     const old_\u597D\u611F\u5EA6 = _2.get(old_data, `NPC.${npc}.\u597D\u611F\u5EA6`, 0);
     const new_\u597D\u611F\u5EA6 = _2.get(new_data, `NPC.${npc}.\u597D\u611F\u5EA6`, 0);
@@ -1249,6 +1282,9 @@ function validateVariables(new_data, old_data) {
       _2.set(new_data, `NPC.${npc}.\u653B\u7565\u503C`, \u65B0\u653B\u7565\u503C);
       _2.set(new_data, `NPC.${npc}.\u7C98\u6EDE\u8BA1\u6570`, 0);
     }
+  }
+  if (\u5F53\u524D\u9636\u6BB5 === "\u653B\u7565\u671F") {
+    normalizeStrategyChainStatus(new_data);
   }
   const \u7075\u77F3 = _2.get(new_data, "\u7CFB\u7EDF.\u7075\u77F3", 0);
   if (\u7075\u77F3 < 0) {
@@ -2122,7 +2158,7 @@ function applySanitizedCommandFallback(newData, diagnostics) {
 }
 
 // src/雌堕合欢宗/脚本/后端校验/p2DominanceBaseline.ts
-import _3 from "lodash";
+const _3 = window._;
 var NPC\u5217\u88682 = ["\u767D\u82B7", "\u82CF\u82B8", "\u7EAA\u5170", "\u6C88\u6708\u79CB", "\u67F3\u7D20\u8863"];
 function getTrainingRecordIds(data) {
   const records = _3.get(data, "\u725D\u5974.\u8C03\u6559\u8BB0\u5F55", []);
@@ -2154,44 +2190,100 @@ function selectP2DominanceBaseline(input) {
   return lowerCandidates.reduce((best, candidate) => dominanceTotal(candidate) < dominanceTotal(best) ? candidate : best);
 }
 
+// src/雌堕合欢宗/脚本/后端校验/runtimeGlobals.ts
+function runtimeScopes(root = globalThis) {
+  const scopes = [];
+  const seen = /* @__PURE__ */ new Set();
+  const add = (scope) => {
+    if (!scope || typeof scope !== "object") return;
+    const typed = scope;
+    if (seen.has(typed)) return;
+    seen.add(typed);
+    scopes.push(typed);
+  };
+  add(root);
+  try {
+    add(root.window);
+  } catch {
+  }
+  try {
+    add(root.parent);
+  } catch {
+  }
+  try {
+    add(root.top);
+  } catch {
+  }
+  return scopes;
+}
+function resolveRuntimeGlobal(name, scopes = runtimeScopes()) {
+  for (const scope of scopes) {
+    if (scope[name] !== void 0 && scope[name] !== null) return scope[name];
+  }
+  return void 0;
+}
+function requireRuntimeGlobal(name, scopes = runtimeScopes()) {
+  const value = resolveRuntimeGlobal(name, scopes);
+  if (value === void 0 || value === null) {
+    throw new Error(`[hehuan backend_validate] Missing runtime global: ${name}`);
+  }
+  return value;
+}
+function exposeRuntimeGlobal(name, value, scopes = runtimeScopes()) {
+  for (const scope of scopes) {
+    try {
+      scope[name] = value;
+    } catch {
+    }
+  }
+}
+
 // src/雌堕合欢宗/脚本/后端校验/index.ts
+var RuntimeMvu = requireRuntimeGlobal("Mvu");
+var RuntimeEventOn = requireRuntimeGlobal("eventOn");
+var RuntimeTavernEvents = requireRuntimeGlobal("tavern_events");
+var RuntimeInjectPrompts = requireRuntimeGlobal("injectPrompts");
+var RuntimeUninjectPrompts = requireRuntimeGlobal("uninjectPrompts");
+exposeRuntimeGlobal("Mvu", RuntimeMvu);
 var narrativePromptRuntime = createNarrativePromptRuntime({
-  getStatData: () => findStatDataForNarrativePrompt((message_id) => Mvu.getMvuData({ type: "message", message_id })?.stat_data),
-  injectPrompts,
-  uninjectPrompts
+  getStatData: () => findStatDataForNarrativePrompt((message_id) => RuntimeMvu.getMvuData({ type: "message", message_id })?.stat_data),
+  injectPrompts: RuntimeInjectPrompts,
+  uninjectPrompts: RuntimeUninjectPrompts
 });
-await waitGlobalInitialized("Mvu");
 function getRecentStatDataHistory() {
   const history = [];
   for (let offset = -1; offset >= -8; offset--) {
     try {
-      const statData = _.get(Mvu.getMvuData({ type: "message", message_id: offset }), "stat_data");
+      const statData = _.get(RuntimeMvu.getMvuData({ type: "message", message_id: offset }), "stat_data");
       if (statData && typeof statData === "object") history.push(statData);
     } catch {
     }
   }
   return history;
 }
-eventOn(tavern_events.MESSAGE_SENT, () => narrativePromptRuntime.refresh("message_sent"));
-eventOn(tavern_events.GENERATION_STARTED, () => narrativePromptRuntime.refresh("generation_started"));
-eventOn(tavern_events.GENERATE_BEFORE_COMBINE_PROMPTS, () => narrativePromptRuntime.refresh("before_combine_prompts"));
-eventOn(tavern_events.GENERATION_ENDED, narrativePromptRuntime.clear);
-eventOn(tavern_events.CHAT_CHANGED, narrativePromptRuntime.clear);
-eventOn(Mvu.events.BEFORE_MESSAGE_UPDATE, (data) => {
+RuntimeEventOn(RuntimeTavernEvents.MESSAGE_SENT, () => narrativePromptRuntime.refresh("message_sent"));
+RuntimeEventOn(RuntimeTavernEvents.GENERATION_STARTED, () => narrativePromptRuntime.refresh("generation_started"));
+RuntimeEventOn(
+  RuntimeTavernEvents.GENERATE_BEFORE_COMBINE_PROMPTS,
+  () => narrativePromptRuntime.refresh("before_combine_prompts")
+);
+RuntimeEventOn(RuntimeTavernEvents.GENERATION_ENDED, narrativePromptRuntime.clear);
+RuntimeEventOn(RuntimeTavernEvents.CHAT_CHANGED, narrativePromptRuntime.clear);
+RuntimeEventOn(RuntimeMvu.events.BEFORE_MESSAGE_UPDATE, (data) => {
   if (data && data.message_content && typeof data.message_content === "string") {
     if (!data.message_content.includes("<StatusPlaceHolderImpl/>")) {
       data.message_content += "\n<StatusPlaceHolderImpl/>";
     }
   }
 });
-eventOn(Mvu.events.COMMAND_PARSED, (...args) => {
+RuntimeEventOn(RuntimeMvu.events.COMMAND_PARSED, (...args) => {
   const commands = args.find((arg) => Array.isArray(arg));
   const diagnostics = sanitizeMvuCommands(commands);
   if (typeof window !== "undefined") {
-    window.__HEHUAN_MVU_COMMAND_SANITIZER_LAST__ = diagnostics;
+    exposeRuntimeGlobal("__HEHUAN_MVU_COMMAND_SANITIZER_LAST__", diagnostics);
   }
 });
-eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, (new_variables, old_variables) => {
+RuntimeEventOn(RuntimeMvu.events.VARIABLE_UPDATE_ENDED, (new_variables, old_variables) => {
   const new_data = _.get(new_variables, "stat_data");
   const event_old_data = _.get(old_variables, "stat_data");
   if (!new_data || !event_old_data) return;
@@ -2225,7 +2317,8 @@ if (typeof window !== "undefined") {
     return changes;
   };
   __TEST_computeDiff = __TEST_computeDiff2;
-  window.__HEHUAN_MVU_COMMAND_SANITIZER_LAST__ = {
+  exposeRuntimeGlobal("__HEHUAN_BACKEND_VALIDATE_READY__", true);
+  exposeRuntimeGlobal("__HEHUAN_MVU_COMMAND_SANITIZER_LAST__", {
     strategy: "path_scoring_v2",
     scanned: 0,
     kept: 0,
@@ -2233,14 +2326,16 @@ if (typeof window !== "undefined") {
     droppedCommands: [],
     keptCommands: [],
     selectedPathCount: 0
-  };
-  window.__HEHUAN_NARRATIVE_PROMPT_SNAPSHOT__ = () => narrativePromptRuntime.getSnapshot();
-  window.__TEST_refreshNarrativePrompts = (reason = "test_manual_refresh") => {
+  });
+  exposeRuntimeGlobal("__HEHUAN_NARRATIVE_PROMPT_SNAPSHOT__", () => narrativePromptRuntime.getSnapshot());
+  exposeRuntimeGlobal("__TEST_refreshNarrativePrompts", (reason = "test_manual_refresh") => {
     narrativePromptRuntime.refresh(reason);
     return narrativePromptRuntime.getSnapshot();
-  };
-  window.__TEST_applyValidatedUpdate = async function(pairs) {
-    const event_old_data = structuredClone(_.get(Mvu.getMvuData({ type: "message", message_id: "latest" }), "stat_data"));
+  });
+  exposeRuntimeGlobal("__TEST_applyValidatedUpdate", async function(pairs) {
+    const event_old_data = structuredClone(
+      _.get(RuntimeMvu.getMvuData({ type: "message", message_id: "latest" }), "stat_data")
+    );
     const old_data = selectP2DominanceBaseline({
       newData: event_old_data,
       eventOldData: event_old_data,
@@ -2254,11 +2349,11 @@ if (typeof window !== "undefined") {
     validateVariables(new_data, old_data);
     const after = JSON.stringify(new_data);
     const trace = before !== after ? __TEST_computeDiff2(before, after) : [];
-    const mvuData = Mvu.getMvuData({ type: "message", message_id: "latest" });
+    const mvuData = RuntimeMvu.getMvuData({ type: "message", message_id: "latest" });
     const clone = structuredClone(mvuData);
     clone.stat_data = new_data;
-    await Mvu.replaceMvuData(clone, { type: "message", message_id: "latest" });
+    await RuntimeMvu.replaceMvuData(clone, { type: "message", message_id: "latest" });
     return { stat_data: new_data, trace };
-  };
+  });
 }
 var __TEST_computeDiff;
