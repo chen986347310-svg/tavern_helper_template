@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import { FSWatcher, watch } from 'chokidar';
+=======
+import { FSWatcher, watch } from 'chokidar';
+>>>>>>> c6777179271f97bed734047fcdd7a3d0067157ec
 import HtmlInlineScriptWebpackPlugin from 'html-inline-script-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import _ from 'lodash';
@@ -16,6 +20,10 @@ import { VueUseComponentsResolver, VueUseDirectiveResolver } from 'unplugin-vue-
 import unpluginVueComponents from 'unplugin-vue-components/webpack';
 import { VueLoaderPlugin } from 'vue-loader';
 import webpack from 'webpack';
+<<<<<<< HEAD
+=======
+import WebpackObfuscator from 'webpack-obfuscator';
+>>>>>>> c6777179271f97bed734047fcdd7a3d0067157ec
 const require = createRequire(import.meta.url);
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
 
@@ -182,6 +190,12 @@ function tavern_sync(compiler: webpack.Compiler) {
 }
 
 function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Configuration {
+<<<<<<< HEAD
+=======
+  const should_obfuscate = fs
+    .readFileSync(path.join(import.meta.dirname, entry.script), 'utf-8')
+    .includes('@obfuscate');
+>>>>>>> c6777179271f97bed734047fcdd7a3d0067157ec
   const script_filepath = path.parse(entry.script);
 
   return (_env, argv) => ({
@@ -341,11 +355,14 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
               test: /\.ya?ml$/,
               loader: 'yaml-loader',
             },
+<<<<<<< HEAD
             {
               test: /\.(png|jpe?g|gif|webp)$/i,
               include: path.resolve(import.meta.dirname, 'src/雌堕合欢宗/界面/assets/avatars'),
               type: 'asset/inline'
             },
+=======
+>>>>>>> c6777179271f97bed734047fcdd7a3d0067157ec
           ].concat(
             entry.html === undefined
               ? ([
@@ -451,7 +468,13 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
             '@vueuse/core',
             { from: 'dedent', imports: [['default', 'dedent']] },
             { from: 'klona', imports: ['klona'] },
+<<<<<<< HEAD
             { from: 'zod', imports: ['z'] },
+=======
+            { from: 'vue-final-modal', imports: ['useModal'] },
+            { from: 'zod', imports: ['z'] },
+            { from: 'type-fest', imports: [['*', 'TypeFest']], type: true },
+>>>>>>> c6777179271f97bed734047fcdd7a3d0067157ec
           ],
         }),
         unpluginVueComponents({
@@ -466,6 +489,23 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
           __VUE_PROD_DEVTOOLS__: process.env.CI !== 'true',
           __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
         }),
+<<<<<<< HEAD
+=======
+      )
+      .concat(
+        should_obfuscate
+          ? [
+              new WebpackObfuscator({
+                controlFlowFlattening: true,
+                numbersToExpressions: true,
+                selfDefending: true,
+                simplify: true,
+                splitStrings: true,
+                seed: 1,
+              }),
+            ]
+          : [],
+>>>>>>> c6777179271f97bed734047fcdd7a3d0067157ec
       ),
     optimization: {
       minimize: true,
@@ -546,15 +586,32 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       const cdn = {
         sass: 'https://jspm.dev/sass',
       };
+<<<<<<< HEAD
       return callback(
         null,
         'module-import ' + (cdn[request as keyof typeof cdn] ?? `https://testingcf.jsdelivr.net/npm/${request}/+esm`),
+=======
+      const package_json = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'package.json'), 'utf-8')) as {
+        dependencies?: Record<string, string>;
+        devDependencies?: Record<string, string>;
+      };
+      const package_versions = { ...package_json.devDependencies, ...package_json.dependencies };
+      const version = package_versions[request]?.replace(/^[~^]/, '');
+      const versioned_request = /^[.\d]+$/.test(version) ? `${request}@${version}` : request;
+      return callback(
+        null,
+        'module-import ' +
+          (cdn[request as keyof typeof cdn] ?? `https://testingcf.jsdelivr.net/npm/${versioned_request}/+esm`),
+>>>>>>> c6777179271f97bed734047fcdd7a3d0067157ec
       );
     },
   });
 }
 
 export default config.entries.map(parse_configuration);
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> c6777179271f97bed734047fcdd7a3d0067157ec
