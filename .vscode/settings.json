@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿{
+=======
+{
+>>>>>>> 2dc3a4c6557394b004089da10a6c56467e18b325
     "editor.formatOnSave":  true,
     "editor.codeActionsOnSave":  {
                                      "source.addMissingImports.ts":  "explicit",
@@ -49,6 +53,10 @@
     "[vue]":  {
                   "editor.defaultFormatter":  "esbenp.prettier-vscode"
               },
+<<<<<<< HEAD
     "typescript.tsdk":  "node_modules/typescript/lib",
     "liveServer.settings.port":  5500
+=======
+  "typescript.tsdk": "node_modules/typescript/lib"
+>>>>>>> 2dc3a4c6557394b004089da10a6c56467e18b325
 }
