@@ -1,9 +1,21 @@
+<<<<<<< HEAD
 ﻿<template>
   <div v-if="html" v-html="html"></div>
   <slot v-else />
 </template>
 
 <script setup lang="ts">
+=======
+<template>
+  <WordHighlighter :query="query" highlight-class="StreamingMessage--mark" :html-to-highlight="html">
+    <slot />
+  </WordHighlighter>
+</template>
+
+<script setup lang="ts">
+import WordHighlighter from 'vue-word-highlighter';
+
+>>>>>>> ef49cc74019348a1696eda4d988d4f4ddc0d1b9b
 defineProps<{ query: string; html?: string }>();
 </script>
 
